@@ -88,7 +88,7 @@ implementation 'dev.benjaminor:spring-validation-plus-spring-boot-starter:0.1.0-
 </dependency>
 ```
 
-> **Disponibilidad:** la versión `0.1.0-SNAPSHOT` requiere instalación local hasta la publicación en Maven Central (ver [Roadmap](#roadmap)).
+> **Disponibilidad:** la versión `0.1.0-SNAPSHOT` requiere instalación local hasta publicar en Maven Central. Ver [PUBLISHING.es.md](PUBLISHING.es.md) (checklist para mantenedores).
 >
 > ```bash
 > git clone https://github.com/benjaminor/spring-validation-plus.git
@@ -727,7 +727,7 @@ docker compose run --rm maven mvn clean install
 
 ## Roadmap
 
-- Publicación en Maven Central / GitHub Packages
+- Publicación en Maven Central — ver [PUBLISHING.es.md](PUBLISHING.es.md) (GitHub Actions pendiente)
 - Soporte `TYPE_USE` en constraints (`List<@EmailAddress String>`)
 - Mejoras al manejo de multipart y path variables en el `ControllerAdvice`
 - Tests de integración JPA para `@Unique` / `@Exists`

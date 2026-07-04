@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copy to ~/.m2/settings.xml (merge with your existing settings).
+  Do NOT commit real tokens to git.
+
+  Central Portal: https://central.sonatype.com → Generate User Token
+-->
+<settings xmlns="http://maven.apache.org/SETTINGS/1.2.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.2.0 https://maven.apache.org/xsd/settings-1.2.0.xsd">
+
+    <servers>
+        <server>
+            <id>central</id>
+            <username><!-- Central Portal token username --></username>
+            <password><!-- Central Portal token password --></password>
+        </server>
+    </servers>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <properties>
+                <!-- gpg --list-secret-keys --keyid-format long -->
+                <gpg.keyname>XXXXXXXXXXXXXXXX</gpg.keyname>
+            </properties>
+        </profile>
+    </profiles>
+
+</settings>

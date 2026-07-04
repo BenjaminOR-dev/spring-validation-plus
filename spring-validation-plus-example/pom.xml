@@ -14,6 +14,10 @@
     <name>Spring Validation Plus Example</name>
     <description>Referencia ejecutable de integración — ver README.md del módulo</description>
 
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>dev.benjaminor</groupId>
