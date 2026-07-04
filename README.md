@@ -664,7 +664,7 @@ spring.validation-plus.enabled=true
 | `@MinValue` / `@MaxValue` | Minimum/maximum numeric value |
 | `@Between` | Numeric range, text length, or collection size |
 | `@Size` | Exact size (text, collection, or number) |
-| `@Accepted` / `@Declined` | Acceptance values (yes/no, true/false, 1/0) |
+| `@Accepted` / `@Declined` | Truthy/falsy values: `true`/`false`, `yes`/`no`, `on`/`off`, `1`/`0`, `true`/`false` strings, `T`/`F` (case-insensitive) |
 | `@In` / `@NotIn` | Value in/out of a list |
 | `@Regex` / `@NotRegex` | Matches/does not match pattern |
 | `@Url` | Valid URL |
@@ -746,9 +746,10 @@ To build unreleased versions from source, clone the repo and run `mvn clean inst
 
 ## Roadmap
 
+- GitHub Actions release workflow on version tags (see [PUBLISHING.md](PUBLISHING.md))
 - `TYPE_USE` support in constraints (`List<@EmailAddress String>`)
 - Multipart file handling improvements in `ValidationExceptionHandler`
-- JPA end-to-end integration tests in CI
+- `autoPublish=true` in Central Portal after release automation is stable
 
 ## License
 

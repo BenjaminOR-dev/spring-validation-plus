@@ -3,7 +3,7 @@ package dev.benjaminor.validationplus.support;
 import jakarta.validation.ConstraintValidatorContext;
 
 /**
- * Utilidades compartidas para validaciones cruzadas a nivel clase.
+ * Shared utilities for class-level cross-field validations.
  */
 public final class CrossFieldValidationUtils {
 

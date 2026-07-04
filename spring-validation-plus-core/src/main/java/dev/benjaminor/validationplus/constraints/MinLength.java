@@ -10,8 +10,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Valida la longitud mínima de cadenas, colecciones, mapas o arreglos.
+ * Validates the minimum length of strings, collections, maps, or arrays.
  */
 @Documented
 @Constraint(validatedBy = MinLengthValidator.class)
@@ -26,7 +27,7 @@ public @interface MinLength {
     Class<? extends Payload>[] payload() default {};
 
     /**
-     * Longitud mínima permitida.
+     * Minimum allowed length.
      */
     int value();
 }

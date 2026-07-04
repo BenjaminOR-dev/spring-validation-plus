@@ -11,8 +11,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Valida que un campo sea obligatorio a menos que otro campo tenga un valor específico.
+ * Validates that a field is required unless another field has a specific value.
  */
 @Documented
 @Repeatable(RequiredUnless.List.class)
@@ -28,17 +29,17 @@ public @interface RequiredUnless {
     Class<? extends Payload>[] payload() default {};
 
     /**
-     * Campo observado.
+     * Observed field.
      */
     String field();
 
     /**
-     * Valor que exime la obligatoriedad.
+     * Value that exempts the requirement.
      */
     String value();
 
     /**
-     * Campo que debe estar presente salvo la excepción.
+     * Field that must be present except for the exemption.
      */
     String required();
 

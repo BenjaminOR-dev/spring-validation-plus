@@ -6,7 +6,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 /**
- * Validator para {@link Date}.
+ * Validator for {@link Date}.
  */
 public class DateValidator implements ConstraintValidator<Date, Object> {
 

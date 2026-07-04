@@ -11,8 +11,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Valida que un campo coincida con su campo de confirmación.
+ * Validates that a field matches its confirmation field.
  */
 @Documented
 @Repeatable(Confirmed.List.class)
@@ -28,12 +29,12 @@ public @interface Confirmed {
     Class<? extends Payload>[] payload() default {};
 
     /**
-     * Campo que debe confirmarse.
+     * Field that must be confirmed.
      */
     String field();
 
     /**
-     * Campo de confirmación. Por defecto se usa {@code {field}Confirmation}.
+     * Confirmation field. Defaults to {@code {field}Confirmation}.
      */
     String confirmation() default "";
 

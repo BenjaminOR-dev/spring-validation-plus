@@ -1,12 +1,12 @@
 package dev.benjaminor.validationplus.spi;
 
 /**
- * SPI para comprobar unicidad de un valor contra un origen de datos externo.
+ * SPI for checking whether a value is unique against an external data source.
  */
 public interface UniquenessChecker {
 
     /**
-     * Indica si el valor es único en el contexto indicado.
+     * Returns whether the value is unique in the given context.
      */
     boolean isUnique(UniqueCheckRequest request);
 }

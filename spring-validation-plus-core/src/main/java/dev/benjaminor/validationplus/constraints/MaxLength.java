@@ -10,8 +10,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Valida la longitud máxima de cadenas, colecciones, mapas o arreglos.
+ * Validates the maximum length of strings, collections, maps, or arrays.
  */
 @Documented
 @Constraint(validatedBy = MaxLengthValidator.class)
@@ -26,7 +27,7 @@ public @interface MaxLength {
     Class<? extends Payload>[] payload() default {};
 
     /**
-     * Longitud máxima permitida.
+     * Maximum allowed length.
      */
     int value();
 }

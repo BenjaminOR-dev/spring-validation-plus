@@ -3,13 +3,13 @@ package dev.benjaminor.validationplus.properties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * Propiedades de configuración de Spring Validation Plus.
+ * Configuration properties for Spring Validation Plus.
  */
 @ConfigurationProperties(prefix = "spring.validation-plus")
 public class SpringValidationPlusProperties {
 
     /**
-     * Habilita o deshabilita la integración de Spring Validation Plus.
+     * Enables or disables the Spring Validation Plus integration.
      */
     private boolean enabled = true;
 
@@ -34,7 +34,7 @@ public class SpringValidationPlusProperties {
     public static class ExceptionHandler {
 
         /**
-         * Habilita el {@code ControllerAdvice} para errores de validación y conversión.
+         * Enables the {@code ControllerAdvice} for validation and conversion errors.
          */
         private boolean enabled = true;
 

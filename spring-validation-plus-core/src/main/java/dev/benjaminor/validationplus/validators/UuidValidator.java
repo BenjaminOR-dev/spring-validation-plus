@@ -6,7 +6,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 /**
- * Validator para {@link Uuid}.
+ * Validator for {@link Uuid}.
  */
 public class UuidValidator implements ConstraintValidator<Uuid, Object> {
 

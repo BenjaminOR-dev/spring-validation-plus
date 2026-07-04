@@ -6,7 +6,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 /**
- * Validator para {@link MaxValue}.
+ * Validator for {@link MaxValue}.
  */
 public class MaxValueValidator implements ConstraintValidator<MaxValue, Number> {
 

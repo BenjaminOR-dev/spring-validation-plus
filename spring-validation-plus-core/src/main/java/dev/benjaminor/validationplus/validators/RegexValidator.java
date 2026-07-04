@@ -8,7 +8,7 @@ import jakarta.validation.ConstraintValidatorContext;
 import java.util.regex.Pattern;
 
 /**
- * Validator para {@link Regex}.
+ * Validator for {@link Regex}.
  */
 public class RegexValidator implements ConstraintValidator<Regex, Object> {
 

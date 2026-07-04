@@ -11,8 +11,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Valida que dos campos tengan valores distintos.
+ * Validates that two fields have different values.
  */
 @Documented
 @Repeatable(Different.List.class)
@@ -28,12 +29,12 @@ public @interface Different {
     Class<? extends Payload>[] payload() default {};
 
     /**
-     * Campo de referencia.
+     * Reference field.
      */
     String field();
 
     /**
-     * Campo que debe ser distinto de {@link #field()}.
+     * Field that must differ from {@link #field()}.
      */
     String other();
 

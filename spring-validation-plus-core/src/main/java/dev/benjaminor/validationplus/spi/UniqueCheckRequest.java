@@ -1,7 +1,7 @@
 package dev.benjaminor.validationplus.spi;
 
 /**
- * Contexto de una comprobación de unicidad para {@code @Unique}.
+ * Context for a {@code @Unique} uniqueness check.
  */
 public record UniqueCheckRequest(
         Class<?> entity,

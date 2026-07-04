@@ -7,7 +7,7 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Interpolador de mensajes que soporta placeholders personalizados como {@code {field}} y {@code {other}}.
+ * Message interpolator that supports custom placeholders such as {@code {field}} and {@code {other}}.
  */
 public class ValidationPlusMessageInterpolator implements MessageInterpolator {
 

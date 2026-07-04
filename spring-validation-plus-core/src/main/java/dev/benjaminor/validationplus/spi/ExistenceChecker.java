@@ -1,12 +1,12 @@
 package dev.benjaminor.validationplus.spi;
 
 /**
- * SPI para comprobar que un valor existe en un origen de datos externo.
+ * SPI for checking whether a value exists in an external data source.
  */
 public interface ExistenceChecker {
 
     /**
-     * Indica si el valor existe en el contexto indicado.
+     * Returns whether the value exists in the given context.
      */
     boolean exists(ExistenceCheckRequest request);
 }

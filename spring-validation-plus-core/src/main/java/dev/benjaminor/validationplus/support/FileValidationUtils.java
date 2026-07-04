@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Utilidades para validaciones de archivos e imágenes subidas.
+ * Utilities for uploaded file and image validations.
  */
 public final class FileValidationUtils {
 

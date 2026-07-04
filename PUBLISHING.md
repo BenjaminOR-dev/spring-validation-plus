@@ -2,9 +2,9 @@
 
 [🇪🇸 Versión en español](PUBLISHING.es.md)
 
-This guide covers **manual** publication of `spring-validation-plus-core` and `spring-validation-plus-spring-boot-starter` to [Maven Central](https://central.sonatype.com/).
+This guide covers publication of `spring-validation-plus-core` and `spring-validation-plus-spring-boot-starter` to [Maven Central](https://central.sonatype.com/).
 
-> **Not included yet:** GitHub Actions workflow (planned).
+Deploy options: **Docker** (local `.env`) or **GitHub Actions** (on `v*` tags — see [.github/workflows/release.yml](.github/workflows/release.yml)).
 
 ## What gets published
 
@@ -13,7 +13,7 @@ This guide covers **manual** publication of `spring-validation-plus-core` and `s
 | `spring-validation-plus-core` | Yes |
 | `spring-validation-plus-spring-boot-starter` | Yes |
 | `spring-validation-plus` (parent POM) | Yes |
-| `spring-validation-plus-example` | **No** (`maven.deploy.skip=true`) |
+| `spring-validation-plus-example` | **No** (excluded via `-pl core,starter -am` on deploy) |
 
 ## Prerequisites (one-time)
 
@@ -81,7 +81,13 @@ Ensure `.env` exists (from `.env.example`) and GPG key is in `.local/`.
 docker compose run --rm maven ./docker/deploy-release.sh
 ```
 
-The script reads credentials from `.env`, generates `/root/.m2/settings.xml` inside the container, imports the signing key from `.local/`, and runs `mvn deploy -Prelease`.
+The script reads `.env`, generates `settings.xml` inside the container, imports the signing key from `.local/`, and runs:
+
+```bash
+mvn clean deploy -Prelease -pl spring-validation-plus-core,spring-validation-plus-spring-boot-starter -am
+```
+
+The `-pl … -am` flags deploy only **core**, **starter**, and the parent POM. The **example** module is built locally for development but is **not** uploaded to Maven Central.
 
 Notes:
 
@@ -93,10 +99,30 @@ Alternatively, run deploy **on the host** (outside Docker) if you have Maven and
 
 ```bash
 export GPG_TTY=$(tty)
-mvn clean deploy -Prelease
+mvn clean deploy -Prelease \
+  -pl spring-validation-plus-core,spring-validation-plus-spring-boot-starter \
+  -am
 ```
 
-### 4. Publish in Central Portal
+### 4. GitHub Actions release (optional)
+
+Push a version tag (`v0.2.0`, etc.) after the POM version is a **release** (no `-SNAPSHOT`). Workflow: [.github/workflows/release.yml](.github/workflows/release.yml).
+
+Configure these [repository secrets](https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions):
+
+| Secret | Value |
+|--------|-------|
+| `CENTRAL_USERNAME` | Central Portal user token username |
+| `CENTRAL_PASSWORD` | Central Portal user token password |
+| `GPG_KEY_ID` | GPG key id (long format) |
+| `GPG_PASSPHRASE` | GPG key passphrase |
+| `GPG_PRIVATE_KEY` | Armored private key (contents of `.local/gpg-signing-private.asc`) |
+
+The workflow verifies the POM is not a SNAPSHOT, imports GPG, and deploys only **core**, **starter**, and the parent POM — same as `deploy-release.sh`.
+
+> **Note:** `0.1.0` on Maven Central accidentally included `spring-validation-plus-example`. Releases **`0.2.0+`** exclude it.
+
+### 5. Publish in Central Portal
 
 With `autoPublish=false` (current default), after upload:
 
@@ -106,7 +132,7 @@ With `autoPublish=false` (current default), after upload:
 
 Wait a few minutes until the artifact appears on [search.maven.org](https://search.maven.org/).
 
-### 5. Git tag
+### 6. Git tag
 
 ```bash
 git tag -a v0.1.0 -m "Release 0.1.0"
@@ -115,7 +141,7 @@ git push origin v0.1.0
 
 Update `<scm><tag>v0.1.0</tag></scm>` in `pom.xml` for the next release commit.
 
-### 6. Bump to next development version
+### 7. Bump to next development version
 
 ```xml
 <version>0.2.0-SNAPSHOT</version>
@@ -149,9 +175,9 @@ No extra repository configuration required.
 | GPG signing fails | Verify `gpg.keyname`, mount `~/.gnupg`, or run `export GPG_TTY=$(tty)` |
 | Namespace not allowed | Confirm `groupId` is `io.github.benjaminor-dev` and namespace shows **Verified** in Central Portal |
 | Javadoc errors | `failOnError=false` is set in the release profile; fix docs over time |
-| Example module uploaded | Confirm `maven.deploy.skip=true` in example `pom.xml` |
+| Example module uploaded | Deploy uses `-pl core,starter -am`; example is excluded from Central |
 
 ## Pending
 
-- [ ] GitHub Actions release workflow
-- [ ] `autoPublish=true` once the first manual release succeeds
+- [ ] Configure GitHub Actions secrets and validate a tag-based release
+- [ ] `autoPublish=true` once automated releases are stable

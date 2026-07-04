@@ -10,7 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Utilidades para resolver mensajes de validación desde archivos {@code ValidationMessages*.properties}.
+ * Utilities for resolving validation messages from {@code ValidationMessages*.properties} files.
  */
 public final class ValidationMessageUtils {
 
@@ -22,7 +22,7 @@ public final class ValidationMessageUtils {
     }
 
     /**
-     * Resuelve una clave de mensaje usando el bundle estándar de Jakarta Validation.
+     * Resolves a message key using the standard Jakarta Validation bundle.
      */
     public static String resolve(String messageKey, Locale locale, Map<String, Object> parameters) {
         String template = getBundle(locale).getString(messageKey);
@@ -30,7 +30,7 @@ public final class ValidationMessageUtils {
     }
 
     /**
-     * Resuelve una plantilla de mensaje, incluyendo claves entre llaves.
+     * Resolves a message template, including brace-delimited keys.
      */
     public static String resolveTemplate(String template, Locale locale, Map<String, Object> parameters) {
         String resolved = template;
@@ -46,7 +46,7 @@ public final class ValidationMessageUtils {
     }
 
     /**
-     * Interpola placeholders en una plantilla de mensaje.
+     * Interpolates placeholders in a message template.
      */
     public static String interpolate(String template, Map<String, Object> parameters) {
         if (template == null || parameters == null || parameters.isEmpty()) {
@@ -65,7 +65,7 @@ public final class ValidationMessageUtils {
     }
 
     /**
-     * Extrae el nombre del campo desde el contexto del interpolador.
+     * Extracts the field name from the interpolator context.
      */
     public static String extractFieldName(MessageInterpolator.Context context) {
         if (context == null) {

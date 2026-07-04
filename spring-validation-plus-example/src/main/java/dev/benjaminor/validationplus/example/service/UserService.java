@@ -44,7 +44,7 @@ public class UserService {
         user.setName(request.getName());
         user.setEmail(request.getEmail());
         if (StringUtils.hasText(request.getPassword())) {
-            // Demo: en una app real aquí iría el hash de contraseña
+            // Demo: in a real app the password hash would go here
         }
         return userRepository.save(user);
     }

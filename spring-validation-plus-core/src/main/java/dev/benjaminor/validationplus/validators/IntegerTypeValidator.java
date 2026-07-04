@@ -6,7 +6,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 /**
- * Validator para {@link IntegerType}.
+ * Validator for {@link IntegerType}.
  */
 public class IntegerTypeValidator implements ConstraintValidator<IntegerType, Object> {
 

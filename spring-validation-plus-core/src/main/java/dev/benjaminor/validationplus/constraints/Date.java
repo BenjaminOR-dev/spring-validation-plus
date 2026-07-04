@@ -10,8 +10,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Valida que el valor sea una fecha válida con el formato especificado.
+ * Validates that the value is a valid date with the specified format.
  */
 @Documented
 @Constraint(validatedBy = DateValidator.class)
@@ -26,7 +27,7 @@ public @interface Date {
     Class<? extends Payload>[] payload() default {};
 
     /**
-     * Formato de fecha esperado.
+     * Expected date format.
      */
     String format() default "";
 }

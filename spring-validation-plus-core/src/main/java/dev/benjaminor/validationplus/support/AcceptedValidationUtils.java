@@ -4,12 +4,12 @@ import java.util.Locale;
 import java.util.Set;
 
 /**
- * Utilidades para {@code @Accepted} y {@code @Declined}.
+ * Utilities for {@code @Accepted} and {@code @Declined}.
  */
 public final class AcceptedValidationUtils {
 
-    private static final Set<String> ACCEPTED = Set.of("yes", "on", "1", "true");
-    private static final Set<String> DECLINED = Set.of("no", "off", "0", "false");
+    private static final Set<String> ACCEPTED = Set.of("yes", "on", "1", "true", "t");
+    private static final Set<String> DECLINED = Set.of("no", "off", "0", "false", "f");
 
     private AcceptedValidationUtils() {
     }

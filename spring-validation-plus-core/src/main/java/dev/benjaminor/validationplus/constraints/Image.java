@@ -10,8 +10,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Valida que el valor sea una imagen subida con dimensiones opcionales.
+ * Validates that the value is an uploaded image with optional dimension constraints.
  */
 @Documented
 @Constraint(validatedBy = ImageValidator.class)
@@ -26,32 +27,32 @@ public @interface Image {
     Class<? extends Payload>[] payload() default {};
 
     /**
-     * Tamaño máximo en kilobytes. {@code 0} significa sin límite.
+     * Maximum size in kilobytes. {@code 0} means no limit.
      */
     int max() default 0;
 
     /**
-     * Tipos MIME o extensiones permitidas. Vacío usa tipos de imagen comunes.
+     * Allowed MIME types or extensions. Empty uses common image types.
      */
     String[] mimeTypes() default {};
 
     /**
-     * Ancho mínimo en píxeles. {@code 0} significa sin límite.
+     * Minimum width in pixels. {@code 0} means no limit.
      */
     int minWidth() default 0;
 
     /**
-     * Ancho máximo en píxeles. {@code 0} significa sin límite.
+     * Maximum width in pixels. {@code 0} means no limit.
      */
     int maxWidth() default 0;
 
     /**
-     * Alto mínimo en píxeles. {@code 0} significa sin límite.
+     * Minimum height in pixels. {@code 0} means no limit.
      */
     int minHeight() default 0;
 
     /**
-     * Alto máximo en píxeles. {@code 0} significa sin límite.
+     * Maximum height in pixels. {@code 0} means no limit.
      */
     int maxHeight() default 0;
 }

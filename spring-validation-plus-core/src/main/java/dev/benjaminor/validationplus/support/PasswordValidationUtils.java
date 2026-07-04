@@ -1,7 +1,7 @@
 package dev.benjaminor.validationplus.support;
 
 /**
- * Utilidades para {@code @Password}.
+ * Utilities for {@code @Password}.
  */
 public final class PasswordValidationUtils {
 

@@ -8,7 +8,7 @@ import jakarta.validation.ConstraintValidatorContext;
 import java.util.regex.Pattern;
 
 /**
- * Validator para {@link EmailAddress}.
+ * Validator for {@link EmailAddress}.
  */
 public class EmailAddressValidator implements ConstraintValidator<EmailAddress, CharSequence> {
 

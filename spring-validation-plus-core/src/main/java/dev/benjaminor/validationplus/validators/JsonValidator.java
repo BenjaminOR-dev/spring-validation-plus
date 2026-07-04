@@ -6,7 +6,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 /**
- * Validator para {@link Json}.
+ * Validator for {@link Json}.
  */
 public class JsonValidator implements ConstraintValidator<Json, Object> {
 

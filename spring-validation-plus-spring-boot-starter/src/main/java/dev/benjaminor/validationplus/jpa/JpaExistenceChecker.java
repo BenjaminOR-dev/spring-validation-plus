@@ -6,7 +6,7 @@ import jakarta.persistence.EntityManager;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Implementación JPA de {@link ExistenceChecker}.
+ * JPA implementation of {@link ExistenceChecker}.
  */
 @Transactional(readOnly = true)
 public class JpaExistenceChecker implements ExistenceChecker {

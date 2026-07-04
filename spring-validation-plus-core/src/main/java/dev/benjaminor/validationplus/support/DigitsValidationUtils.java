@@ -3,7 +3,7 @@ package dev.benjaminor.validationplus.support;
 import java.math.BigDecimal;
 
 /**
- * Utilidades para {@code @Digits}.
+ * Utilities for {@code @Digits}.
  */
 public final class DigitsValidationUtils {
 

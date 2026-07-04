@@ -10,8 +10,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Valida que la fecha sea posterior a otra fecha de referencia.
+ * Validates that the date is after another reference date.
  */
 @Documented
 @Constraint(validatedBy = AfterValidator.class)
@@ -26,17 +27,17 @@ public @interface After {
     Class<? extends Payload>[] payload() default {};
 
     /**
-     * Fecha de referencia fija.
+     * Fixed reference date.
      */
     String value() default "";
 
     /**
-     * Campo del objeto que contiene la fecha de referencia.
+     * Object field containing the reference date.
      */
     String field() default "";
 
     /**
-     * Formato de fecha esperado.
+     * Expected date format.
      */
     String format() default "";
 }

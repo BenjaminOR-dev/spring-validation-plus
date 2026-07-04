@@ -10,8 +10,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Valida que el valor sea rechazado (por ejemplo, un booleano falso o una cadena "no"/"off"/"0").
+ * Validates that the value is declined (for example, false, or strings such as "no", "off", "0", "false", or "F").
  */
 @Documented
 @Constraint(validatedBy = DeclinedValidator.class)

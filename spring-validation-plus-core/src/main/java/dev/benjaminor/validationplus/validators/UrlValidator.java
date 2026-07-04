@@ -6,7 +6,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 /**
- * Validator para {@link Url}.
+ * Validator for {@link Url}.
  */
 public class UrlValidator implements ConstraintValidator<Url, Object> {
 

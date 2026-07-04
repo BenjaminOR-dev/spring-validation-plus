@@ -6,7 +6,7 @@ import jakarta.validation.ConstraintValidatorContext;
 import java.util.Optional;
 
 /**
- * Utilidades compartidas para validaciones de base de datos vía SPI.
+ * Shared utilities for database validations via SPI.
  */
 public final class DatabaseValidationUtils {
 
@@ -43,7 +43,7 @@ public final class DatabaseValidationUtils {
     }
 
     /**
-     * Limpia checkers registrados. Delegación para tests.
+     * Clears registered checkers. Delegation hook for tests.
      */
     public static void resetCheckers() {
         ValidationPlusCheckers.reset();

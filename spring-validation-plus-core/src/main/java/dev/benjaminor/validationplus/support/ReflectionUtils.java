@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 /**
- * Utilidades de reflexión para validaciones a nivel clase.
+ * Reflection utilities for class-level validations.
  */
 public final class ReflectionUtils {
 
@@ -12,11 +12,11 @@ public final class ReflectionUtils {
     }
 
     /**
-     * Lee el valor de un campo por nombre, incluyendo campos heredados.
+     * Reads a field value by name, including inherited fields.
      *
      * @param target    instancia objetivo
-     * @param fieldName nombre del campo
-     * @return valor del campo o {@code null} si no existe
+     * @param fieldName field name
+     * @return field value, or {@code null} if it does not exist
      */
     public static Object getFieldValue(Object target, String fieldName) {
         Field field = findField(target.getClass(), fieldName);

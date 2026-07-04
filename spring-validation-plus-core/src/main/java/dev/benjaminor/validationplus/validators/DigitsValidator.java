@@ -6,7 +6,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 /**
- * Validator para {@link Digits}.
+ * Validator for {@link Digits}.
  */
 public class DigitsValidator implements ConstraintValidator<Digits, Number> {
 

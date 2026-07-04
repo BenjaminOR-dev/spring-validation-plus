@@ -7,7 +7,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import java.util.Locale;
 
 /**
- * Interpolador que usa el locale de la petición HTTP ({@link LocaleContextHolder}) cuando está disponible.
+ * Message interpolator that uses the HTTP request locale ({@link LocaleContextHolder}) when available.
  */
 public class SpringLocaleValidationPlusMessageInterpolator extends ValidationPlusMessageInterpolator {
 

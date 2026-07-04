@@ -6,7 +6,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 /**
- * Validator para {@link Declined}.
+ * Validator for {@link Declined}.
  */
 public class DeclinedValidator implements ConstraintValidator<Declined, Object> {
 

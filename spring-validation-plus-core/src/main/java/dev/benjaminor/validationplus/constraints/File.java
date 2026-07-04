@@ -10,8 +10,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Valida que el valor sea un archivo subido ({@code MultipartFile}, {@code Part} o {@link dev.benjaminor.validationplus.support.UploadHandle}).
+ * Validates that the value is an uploaded file ({@code MultipartFile}, {@code Part}, or {@link dev.benjaminor.validationplus.support.UploadHandle}).
  */
 @Documented
 @Constraint(validatedBy = FileValidator.class)
@@ -26,7 +27,7 @@ public @interface File {
     Class<? extends Payload>[] payload() default {};
 
     /**
-     * Tamaño máximo en kilobytes. {@code 0} significa sin límite.
+     * Maximum size in kilobytes. {@code 0} means no limit.
      */
     int max() default 0;
 

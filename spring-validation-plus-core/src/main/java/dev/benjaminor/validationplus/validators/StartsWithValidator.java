@@ -6,7 +6,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 /**
- * Validator para {@link StartsWith}.
+ * Validator for {@link StartsWith}.
  */
 public class StartsWithValidator implements ConstraintValidator<StartsWith, Object> {
 

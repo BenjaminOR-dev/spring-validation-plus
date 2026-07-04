@@ -6,7 +6,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 /**
- * Validator para {@link StringType}.
+ * Validator for {@link StringType}.
  */
 public class StringTypeValidator implements ConstraintValidator<StringType, Object> {
 

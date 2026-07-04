@@ -6,7 +6,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 /**
- * Validator para {@link Between}.
+ * Validator for {@link Between}.
  */
 public class BetweenValidator implements ConstraintValidator<Between, Object> {
 

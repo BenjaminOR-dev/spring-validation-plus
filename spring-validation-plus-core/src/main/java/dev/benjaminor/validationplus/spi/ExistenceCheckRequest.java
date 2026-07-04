@@ -1,7 +1,7 @@
 package dev.benjaminor.validationplus.spi;
 
 /**
- * Contexto de una comprobación de existencia para {@code @Exists}.
+ * Context for an {@code @Exists} existence check.
  */
 public record ExistenceCheckRequest(
         Class<?> entity,

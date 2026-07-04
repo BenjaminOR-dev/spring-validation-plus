@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * Endpoints CRUD — patrones documentados en {@code spring-validation-plus-example/README.md}.
+ * CRUD endpoints — patterns documented in {@code spring-validation-plus-example/README.md}.
  */
 @RestController
 @Validated
@@ -35,25 +35,25 @@ public class UserController {
         this.userService = userService;
     }
 
-    /** Patrón: {@code @Valid @ModelAttribute} para query params. */
+    /** Pattern: {@code @Valid @ModelAttribute} for query params. */
     @GetMapping
     public List<User> search(@Valid @ModelAttribute UserSearchRequest request) {
         return userService.search(request);
     }
 
-    /** Patrón: {@code @Validated} + constraint en {@code @PathVariable}. */
+    /** Pattern: {@code @Validated} + constraint on {@code @PathVariable}. */
     @GetMapping("/{id}")
     public User find(@PathVariable @MinValue(1) Long id) {
         return userService.findById(id);
     }
 
-    /** Patrón: {@code @Unique} en create. */
+    /** Pattern: {@code @Unique} on create. */
     @PostMapping
     public ResponseEntity<User> create(@Valid @RequestBody UserCreateRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(request));
     }
 
-    /** Patrón: {@code @Unique} + {@code excludeParameter} en update. */
+    /** Pattern: {@code @Unique} + {@code excludeParameter} on update. */
     @PutMapping("/{id}")
     public User update(@PathVariable Long id, @Valid @RequestBody UserUpdateRequest request) {
         return userService.update(id, request);

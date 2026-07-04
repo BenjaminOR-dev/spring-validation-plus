@@ -12,7 +12,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 /**
- * Validator para {@link Exists}.
+ * Validator for {@link Exists}.
  */
 public class ExistsValidator implements ConstraintValidator<Exists, Object> {
 

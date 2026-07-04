@@ -6,7 +6,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 /**
- * Validator para {@link MinValue}.
+ * Validator for {@link MinValue}.
  */
 public class MinValueValidator implements ConstraintValidator<MinValue, Number> {
 

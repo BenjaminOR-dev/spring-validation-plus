@@ -10,8 +10,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Valida que un valor numérico tenga la cantidad especificada de dígitos enteros y decimales.
+ * Validates that a numeric value has the specified number of integer and fractional digits.
  */
 @Documented
 @Constraint(validatedBy = DigitsValidator.class)
@@ -26,12 +27,12 @@ public @interface Digits {
     Class<? extends Payload>[] payload() default {};
 
     /**
-     * Cantidad máxima de dígitos enteros.
+     * Maximum number of integer digits.
      */
     int integer();
 
     /**
-     * Cantidad máxima de dígitos decimales.
+     * Maximum number of fractional digits.
      */
     int fraction() default 0;
 }

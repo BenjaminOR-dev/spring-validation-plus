@@ -3,7 +3,7 @@ package dev.benjaminor.validationplus.support;
 import java.math.BigDecimal;
 
 /**
- * Utilidades para {@code @Between} y {@code @Size}.
+ * Utilities for {@code @Between} and {@code @Size}.
  */
 public final class RangeValidationUtils {
 

@@ -10,8 +10,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Valida que un valor numérico sea menor o igual al máximo permitido.
+ * Validates that a numeric value is less than or equal to the allowed maximum.
  */
 @Documented
 @Constraint(validatedBy = MaxValueValidator.class)
@@ -26,7 +27,7 @@ public @interface MaxValue {
     Class<? extends Payload>[] payload() default {};
 
     /**
-     * Valor máximo permitido.
+     * Allowed maximum value.
      */
     double value();
 }

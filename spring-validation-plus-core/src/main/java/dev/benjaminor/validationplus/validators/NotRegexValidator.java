@@ -8,7 +8,7 @@ import jakarta.validation.ConstraintValidatorContext;
 import java.util.regex.Pattern;
 
 /**
- * Validator para {@link NotRegex}.
+ * Validator for {@link NotRegex}.
  */
 public class NotRegexValidator implements ConstraintValidator<NotRegex, Object> {
 

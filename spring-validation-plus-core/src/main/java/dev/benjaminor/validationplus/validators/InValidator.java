@@ -6,7 +6,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 /**
- * Validator para {@link In}.
+ * Validator for {@link In}.
  */
 public class InValidator implements ConstraintValidator<In, Object> {
 

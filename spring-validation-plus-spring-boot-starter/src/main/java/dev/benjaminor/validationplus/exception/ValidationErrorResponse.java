@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Respuesta estándar de errores de validación estilo Laravel.
+ * Standard Laravel-style validation error response.
  *
  * @param errors mapa de campo a lista de mensajes
  */

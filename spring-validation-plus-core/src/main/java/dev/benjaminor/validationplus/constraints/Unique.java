@@ -11,11 +11,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Valida que el valor de un campo sea único en la entidad indicada.
+ * Validates that a field value is unique in the specified entity.
  * <p>
- * Requiere una implementación de {@link dev.benjaminor.validationplus.spi.UniquenessChecker}
- * registrada en runtime (p. ej. JPA vía el starter).
+ * Requires a {@link dev.benjaminor.validationplus.spi.UniquenessChecker} implementation
+ * registered at runtime (for example, JPA via the starter).
  */
 @Documented
 @Repeatable(Unique.List.class)
@@ -31,39 +32,39 @@ public @interface Unique {
     Class<? extends Payload>[] payload() default {};
 
     /**
-     * Entidad JPA u objeto de dominio consultado por el checker.
+     * JPA entity or domain object queried by the checker.
      */
     Class<?> entity();
 
     /**
-     * Campo del DTO cuyo valor se valida y donde se reporta el error.
+     * DTO field whose value is validated and where the error is reported.
      */
     String field();
 
     /**
-     * Campo/columna de la entidad usado en la consulta de unicidad.
+     * Entity field/column used in the uniqueness query.
      */
     String column();
 
     /**
-     * Campo del DTO con el identificador a excluir en actualizaciones.
+     * DTO field containing the identifier to exclude on updates.
      */
     String excludeField() default "";
 
     /**
-     * Nombre del parámetro de ruta o query del que leer el identificador a excluir
-     * (p. ej. {@code "id"} en {@code PUT /users/{id}}). Se usa si {@link #excludeField()} está vacío
-     * o su valor en el DTO es {@code null}.
+     * Path or query parameter name used to read the identifier to exclude
+     * (for example, {@code "id"} in {@code PUT /users/{id}}). Used when {@link #excludeField()} is empty
+     * or its DTO value is {@code null}.
      */
     String excludeParameter() default "";
 
     /**
-     * Campo identificador de la entidad usado para excluir el registro actual.
+     * Entity identifier field used to exclude the current record.
      */
     String excludeColumn() default "id";
 
     /**
-     * Compara ignorando mayúsculas/minúsculas cuando el valor es textual.
+     * Compares case-insensitively when the value is textual.
      */
     boolean ignoreCase() default true;
 

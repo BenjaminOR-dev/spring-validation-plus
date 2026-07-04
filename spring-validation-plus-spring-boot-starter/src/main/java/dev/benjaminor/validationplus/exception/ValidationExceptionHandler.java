@@ -28,7 +28,7 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Transforma errores de validación y conversión de Spring en respuestas amigables.
+ * Transforms Spring validation and conversion errors into friendly responses.
  */
 @RestControllerAdvice
 public class ValidationExceptionHandler {

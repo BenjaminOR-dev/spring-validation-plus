@@ -10,8 +10,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Valida que el campo no sea nulo ni vacío.
+ * Validates that the field is not null or empty.
  */
 @Documented
 @Constraint(validatedBy = RequiredValidator.class)

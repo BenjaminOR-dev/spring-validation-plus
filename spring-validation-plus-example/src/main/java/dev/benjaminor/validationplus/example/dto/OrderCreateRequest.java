@@ -10,7 +10,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 /**
- * Patrón: array/colección + validación anidada con {@code @Valid}.
+ * Pattern: array/collection + nested validation with {@code @Valid}.
  */
 public class OrderCreateRequest {
 

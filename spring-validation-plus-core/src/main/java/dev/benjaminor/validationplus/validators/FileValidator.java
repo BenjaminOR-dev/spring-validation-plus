@@ -6,7 +6,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 /**
- * Validator para {@link File}.
+ * Validator for {@link File}.
  */
 public class FileValidator implements ConstraintValidator<File, Object> {
 

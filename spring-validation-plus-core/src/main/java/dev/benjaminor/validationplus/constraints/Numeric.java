@@ -10,8 +10,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Valida que el valor sea un {@link Number} de Java.
+ * Validates that the value is a Java {@link Number}.
  */
 @Documented
 @Constraint(validatedBy = NumericValidator.class)

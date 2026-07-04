@@ -9,7 +9,7 @@ import dev.benjaminor.validationplus.constraints.Nullable;
 import dev.benjaminor.validationplus.constraints.StringType;
 
 /**
- * Patrón: GET query params con {@code @Valid @ModelAttribute}.
+ * Pattern: GET query params with {@code @Valid @ModelAttribute}.
  */
 public class UserSearchRequest {
 

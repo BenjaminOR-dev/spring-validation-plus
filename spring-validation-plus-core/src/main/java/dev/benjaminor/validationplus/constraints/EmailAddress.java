@@ -10,8 +10,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Valida que el valor sea una dirección de correo electrónico válida.
+ * Validates that the value is a valid email address.
  */
 @Documented
 @Constraint(validatedBy = EmailAddressValidator.class)

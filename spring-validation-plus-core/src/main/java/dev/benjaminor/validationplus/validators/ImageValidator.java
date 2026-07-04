@@ -6,7 +6,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 /**
- * Validator para {@link Image}.
+ * Validator for {@link Image}.
  */
 public class ImageValidator implements ConstraintValidator<Image, Object> {
 

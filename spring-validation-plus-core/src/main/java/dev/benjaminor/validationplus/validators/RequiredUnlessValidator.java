@@ -10,7 +10,7 @@ import jakarta.validation.ConstraintValidatorContext;
 import java.util.Objects;
 
 /**
- * Validator para {@link RequiredUnless}.
+ * Validator for {@link RequiredUnless}.
  */
 public class RequiredUnlessValidator implements ConstraintValidator<RequiredUnless, Object> {
 

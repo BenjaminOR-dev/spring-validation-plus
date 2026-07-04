@@ -3,7 +3,7 @@ package dev.benjaminor.validationplus.support;
 import java.util.Locale;
 
 /**
- * Utilidades para {@code @Enum}.
+ * Utilities for {@code @Enum}.
  */
 public final class EnumValidationUtils {
 

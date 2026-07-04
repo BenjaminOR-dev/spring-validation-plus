@@ -18,7 +18,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.DispatcherServlet;
 
 /**
- * Auto-configuración principal de Spring Validation Plus.
+ * Main Spring Validation Plus auto-configuration.
  */
 @AutoConfiguration(before = ValidationAutoConfiguration.class)
 @ConditionalOnClass({LocalValidatorFactoryBean.class, DispatcherServlet.class})

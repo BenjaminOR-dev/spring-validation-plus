@@ -10,8 +10,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Valida que el valor sea un decimal de Java ({@link Float}, {@link Double} o {@link java.math.BigDecimal}).
+ * Validates that the value is a Java decimal ({@link Float}, {@link Double}, or {@link java.math.BigDecimal}).
  */
 @Documented
 @Constraint(validatedBy = DecimalTypeValidator.class)

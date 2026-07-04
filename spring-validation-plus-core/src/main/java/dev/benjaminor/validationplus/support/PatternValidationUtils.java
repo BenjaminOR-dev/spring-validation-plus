@@ -5,7 +5,7 @@ import java.net.URISyntaxException;
 import java.util.regex.Pattern;
 
 /**
- * Utilidades para validaciones basadas en patrones.
+ * Utilities for pattern-based validations.
  */
 public final class PatternValidationUtils {
 

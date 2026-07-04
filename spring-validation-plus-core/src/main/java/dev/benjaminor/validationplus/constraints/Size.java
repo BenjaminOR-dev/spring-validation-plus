@@ -10,8 +10,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Valida que el tamaño de cadenas, colecciones, mapas o arreglos sea exactamente el especificado.
+ * Validates that the size of strings, collections, maps, or arrays is exactly the specified value.
  */
 @Documented
 @Constraint(validatedBy = SizeValidator.class)
@@ -26,7 +27,7 @@ public @interface Size {
     Class<? extends Payload>[] payload() default {};
 
     /**
-     * Tamaño exacto requerido.
+     * Exact required size.
      */
     int value();
 }

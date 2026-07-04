@@ -10,8 +10,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Valida que la cadena comience con el prefijo especificado.
+ * Validates that the string starts with the specified prefix.
  */
 @Documented
 @Constraint(validatedBy = StartsWithValidator.class)

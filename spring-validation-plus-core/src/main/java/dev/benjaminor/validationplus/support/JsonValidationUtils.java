@@ -1,7 +1,7 @@
 package dev.benjaminor.validationplus.support;
 
 /**
- * Utilidades para {@code @Json}.
+ * Utilities for {@code @Json}.
  */
 public final class JsonValidationUtils {
 

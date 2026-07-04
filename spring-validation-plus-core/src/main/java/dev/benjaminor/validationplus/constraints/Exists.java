@@ -11,11 +11,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Valida que el valor de un campo exista en la entidad indicada.
+ * Validates that a field value exists in the specified entity.
  * <p>
- * Requiere una implementación de {@link dev.benjaminor.validationplus.spi.ExistenceChecker}
- * registrada en runtime (p. ej. JPA vía el starter).
+ * Requires an {@link dev.benjaminor.validationplus.spi.ExistenceChecker} implementation
+ * registered at runtime (for example, JPA via the starter).
  */
 @Documented
 @Repeatable(Exists.List.class)
@@ -31,28 +32,28 @@ public @interface Exists {
     Class<? extends Payload>[] payload() default {};
 
     /**
-     * Entidad JPA u objeto de dominio consultado por el checker.
+     * JPA entity or domain object queried by the checker.
      */
     Class<?> entity();
 
     /**
-     * Campo del DTO cuyo valor se valida y donde se reporta el error.
+     * DTO field whose value is validated and where the error is reported.
      */
     String field();
 
     /**
-     * Campo/columna de la entidad usado en la consulta de existencia.
+     * Entity field/column used in the existence query.
      */
     String column();
 
     /**
-     * Nombre del parámetro de ruta o query del que leer el valor a validar cuando el
-     * campo del DTO está vacío (p. ej. {@code "roleId"} en {@code /users/{roleId}/posts}).
+     * Path or query parameter name used to read the value to validate when the
+     * DTO field is empty (for example, {@code "roleId"} in {@code /users/{roleId}/posts}).
      */
     String parameter() default "";
 
     /**
-     * Compara ignorando mayúsculas/minúsculas cuando el valor es textual.
+     * Compares case-insensitively when the value is textual.
      */
     boolean ignoreCase() default true;
 

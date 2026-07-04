@@ -12,7 +12,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Utilidades para validaciones de fechas.
+ * Utilities for validaciones de fechas.
  */
 public final class DateValidationUtils {
 

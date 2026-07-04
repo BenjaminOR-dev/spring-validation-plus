@@ -658,7 +658,7 @@ spring.validation-plus.enabled=true
 | `@MinValue` / `@MaxValue` | Valor numérico mínimo/máximo |
 | `@Between` | Rango numérico, longitud de texto o tamaño de colección |
 | `@Size` | Tamaño exacto (texto, colección o número) |
-| `@Accepted` / `@Declined` | Valores de aceptación (yes/no, true/false, 1/0) |
+| `@Accepted` / `@Declined` | Valores truthy/falsy: `true`/`false`, `yes`/`no`, `on`/`off`, `1`/`0`, strings `true`/`false`, `T`/`F` (sin distinguir mayúsculas) |
 | `@In` / `@NotIn` | Valor dentro/fuera de una lista |
 | `@Regex` / `@NotRegex` | Coincide/no coincide con patrón |
 | `@Url` | URL válida |
@@ -740,9 +740,10 @@ Para compilar versiones no publicadas desde el código fuente, clona el repo y e
 
 ## Roadmap
 
+- Workflow de release en GitHub Actions al pushear tags (ver [PUBLISHING.es.md](PUBLISHING.es.md))
 - Soporte `TYPE_USE` en constraints (`List<@EmailAddress String>`)
 - Mejoras de multipart en `ValidationExceptionHandler`
-- Tests de integración JPA end-to-end en CI
+- `autoPublish=true` en Central Portal cuando la automatización de releases esté estable
 
 ## Licencia
 

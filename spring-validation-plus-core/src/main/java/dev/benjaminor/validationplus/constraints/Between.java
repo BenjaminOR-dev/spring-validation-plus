@@ -10,8 +10,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Valida que un valor numérico esté dentro del rango permitido (inclusive).
+ * Validates that a numeric value is within the allowed range (inclusive).
  */
 @Documented
 @Constraint(validatedBy = BetweenValidator.class)
@@ -26,12 +27,12 @@ public @interface Between {
     Class<? extends Payload>[] payload() default {};
 
     /**
-     * Valor mínimo del rango.
+     * Minimum range value.
      */
     double min();
 
     /**
-     * Valor máximo del rango.
+     * Maximum range value.
      */
     double max();
 }

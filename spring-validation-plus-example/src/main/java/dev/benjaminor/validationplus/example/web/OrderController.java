@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 /**
- * Patrón: listas con {@code @Valid} anidado ({@code items[0].quantity}, etc.).
+ * Pattern: lists with nested {@code @Valid} ({@code items[0].quantity}, etc.).
  */
 @RestController
 @RequestMapping("/api/orders")

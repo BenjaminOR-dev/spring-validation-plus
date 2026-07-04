@@ -5,7 +5,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 /**
- * Validator para {@link Nullable}. Siempre es válido.
+ * Validator for {@link Nullable}. Always valid.
  */
 public class NullableValidator implements ConstraintValidator<Nullable, Object> {
 

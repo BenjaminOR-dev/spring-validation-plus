@@ -8,7 +8,7 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 /**
- * Utilidades para validaciones de red.
+ * Utilities for validaciones de red.
  */
 public final class NetworkValidationUtils {
 

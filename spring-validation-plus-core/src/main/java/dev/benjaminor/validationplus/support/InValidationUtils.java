@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 /**
- * Utilidades para {@code @In} y {@code @NotIn}.
+ * Utilities for {@code @In} y {@code @NotIn}.
  */
 public final class InValidationUtils {
 

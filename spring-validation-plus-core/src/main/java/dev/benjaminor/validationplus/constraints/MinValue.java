@@ -10,8 +10,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Valida que un valor numérico sea mayor o igual al mínimo permitido.
+ * Validates that a numeric value is greater than or equal to the allowed minimum.
  */
 @Documented
 @Constraint(validatedBy = MinValueValidator.class)
@@ -26,7 +27,7 @@ public @interface MinValue {
     Class<? extends Payload>[] payload() default {};
 
     /**
-     * Valor mínimo permitido.
+     * Allowed minimum value.
      */
     double value();
 }

@@ -10,7 +10,7 @@ import jakarta.validation.ConstraintValidatorContext;
 import java.util.Objects;
 
 /**
- * Validator para {@link Same}.
+ * Validator for {@link Same}.
  */
 public class SameValidator implements ConstraintValidator<Same, Object> {
 

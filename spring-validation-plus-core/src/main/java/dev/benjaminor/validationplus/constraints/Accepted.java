@@ -10,8 +10,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Valida que el valor sea aceptado (por ejemplo, un booleano verdadero o una cadena "yes"/"on"/"1").
+ * Validates that the value is accepted (for example, true, or strings such as "yes", "on", "1", "true", or "T").
  */
 @Documented
 @Constraint(validatedBy = AcceptedValidator.class)

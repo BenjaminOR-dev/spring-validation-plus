@@ -7,7 +7,7 @@ import dev.benjaminor.validationplus.constraints.Required;
 import dev.benjaminor.validationplus.constraints.StringType;
 
 /**
- * Item anidado — se valida con {@code @Valid} en la lista del request padre.
+ * Nested item — validated with {@code @Valid} on the parent request list.
  */
 public class OrderItemRequest {
 

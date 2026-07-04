@@ -11,8 +11,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Valida que dos campos tengan el mismo valor.
+ * Validates that two fields have the same value.
  */
 @Documented
 @Repeatable(Same.List.class)
@@ -28,12 +29,12 @@ public @interface Same {
     Class<? extends Payload>[] payload() default {};
 
     /**
-     * Campo de referencia.
+     * Reference field.
      */
     String field();
 
     /**
-     * Campo que debe coincidir con {@link #field()}.
+     * Field that must match {@link #field()}.
      */
     String other();
 

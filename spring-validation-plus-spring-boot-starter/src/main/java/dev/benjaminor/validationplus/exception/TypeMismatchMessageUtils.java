@@ -5,7 +5,7 @@ import java.math.BigInteger;
 import java.util.Collection;
 
 /**
- * Resuelve claves i18n para errores de conversión de tipo (binding, JSON, query params).
+ * Resolves i18n keys for type conversion errors (binding, JSON, query params).
  */
 public final class TypeMismatchMessageUtils {
 

@@ -4,7 +4,7 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 /**
- * Utilidades para validaciones de texto tipo Laravel.
+ * Utilities for validaciones de texto tipo Laravel.
  */
 public final class TextValidationUtils {
 

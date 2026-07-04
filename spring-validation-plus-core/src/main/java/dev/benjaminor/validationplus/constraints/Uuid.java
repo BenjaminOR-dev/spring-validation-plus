@@ -10,8 +10,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Valida que el valor sea un UUID válido.
+ * Validates that the value is a valid UUID.
  */
 @Documented
 @Constraint(validatedBy = UuidValidator.class)

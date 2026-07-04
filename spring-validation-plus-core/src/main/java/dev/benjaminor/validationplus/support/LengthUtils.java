@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- * Utilidades para calcular longitudes de distintos tipos soportados por las validaciones.
+ * Utilities for calculating lengths of validation-supported types.
  */
 public final class LengthUtils {
 
@@ -13,10 +13,10 @@ public final class LengthUtils {
     }
 
     /**
-     * Obtiene la longitud de un valor soportado por {@code @MinLength} y {@code @MaxLength}.
+     * Returns the length of a value supported by {@code @MinLength} and {@code @MaxLength}.
      *
-     * @param value valor a medir
-     * @return longitud del valor o {@code -1} si el tipo no es soportado
+     * @param value value to measure
+     * @return value length, or {@code -1} if the type is not supported
      */
     public static int getLength(Object value) {
         if (value == null) {

@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 /**
- * Utilidades para validaciones numéricas.
+ * Utilities for numeric validations.
  */
 public final class NumberUtils {
 
@@ -12,7 +12,7 @@ public final class NumberUtils {
     }
 
     /**
-     * Indica si el valor representa un entero de Java (no texto ni decimal).
+     * Returns whether the value represents a Java integer (not text or decimal).
      */
     public static boolean isIntegerType(Object value) {
         if (value == null) {
@@ -26,7 +26,7 @@ public final class NumberUtils {
     }
 
     /**
-     * Indica si el valor es un {@link Number} de Java.
+     * Returns whether the value is a Java {@link Number}.
      */
     public static boolean isNumeric(Object value) {
         if (value == null) {
@@ -36,7 +36,7 @@ public final class NumberUtils {
     }
 
     /**
-     * Indica si el valor es un decimal de Java ({@link Float}, {@link Double} o {@link BigDecimal}).
+     * Returns whether the value is a Java decimal ({@link Float}, {@link Double}, or {@link BigDecimal}).
      */
     public static boolean isDecimalType(Object value) {
         if (value == null) {
@@ -48,7 +48,7 @@ public final class NumberUtils {
     }
 
     /**
-     * Indica si el valor numérico es mayor o igual al mínimo permitido.
+     * Returns whether the numeric value is greater than or equal to the allowed minimum.
      */
     public static boolean isMinValue(Number value, Number min) {
         if (value == null) {
@@ -58,7 +58,7 @@ public final class NumberUtils {
     }
 
     /**
-     * Indica si el valor numérico es menor o igual al máximo permitido.
+     * Returns whether the numeric value is less than or equal to the allowed maximum.
      */
     public static boolean isMaxValue(Number value, Number max) {
         if (value == null) {
@@ -68,7 +68,7 @@ public final class NumberUtils {
     }
 
     /**
-     * Convierte un {@link Number} a {@link BigDecimal} para comparaciones seguras.
+     * Converts a {@link Number} to {@link BigDecimal} for safe comparisons.
      */
     public static BigDecimal toBigDecimal(Number number) {
         if (number instanceof BigDecimal bigDecimal) {

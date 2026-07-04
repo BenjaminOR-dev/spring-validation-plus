@@ -4,8 +4,16 @@ import dev.benjaminor.validationplus.validators.LowercaseValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
+
+/**
+ * Validates that the string is entirely lowercase.
+ */
 @Documented
 @Constraint(validatedBy = LowercaseValidator.class)
 @Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})

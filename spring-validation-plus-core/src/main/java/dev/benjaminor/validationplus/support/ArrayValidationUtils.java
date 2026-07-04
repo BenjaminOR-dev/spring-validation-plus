@@ -7,7 +7,7 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- * Utilidades para validaciones de arreglos y colecciones.
+ * Utilities for validaciones de arreglos y colecciones.
  */
 public final class ArrayValidationUtils {
 

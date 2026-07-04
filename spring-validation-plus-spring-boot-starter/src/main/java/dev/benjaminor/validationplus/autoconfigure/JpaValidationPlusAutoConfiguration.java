@@ -18,7 +18,7 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 import org.springframework.context.annotation.Bean;
 
 /**
- * Auto-configuración JPA para {@code @Unique} y {@code @Exists}.
+ * JPA auto-configuration for {@code @Unique} and {@code @Exists}.
  */
 @AutoConfiguration(after = HibernateJpaAutoConfiguration.class)
 @ConditionalOnClass({EntityManager.class, EntityManagerFactory.class})

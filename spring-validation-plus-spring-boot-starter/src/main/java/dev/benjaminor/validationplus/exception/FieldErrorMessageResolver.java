@@ -7,7 +7,7 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Traduce {@link FieldError} de Spring (binding y validación) a mensajes i18n de validation-plus.
+ * Translates Spring {@link FieldError} instances (binding and validation) into validation-plus i18n messages.
  */
 public final class FieldErrorMessageResolver {
 

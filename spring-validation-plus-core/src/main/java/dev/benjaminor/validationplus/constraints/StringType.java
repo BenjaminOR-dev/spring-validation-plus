@@ -10,8 +10,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Valida que el valor sea una cadena de texto de Java.
+ * Validates that the value is a Java string.
  */
 @Documented
 @Constraint(validatedBy = StringTypeValidator.class)

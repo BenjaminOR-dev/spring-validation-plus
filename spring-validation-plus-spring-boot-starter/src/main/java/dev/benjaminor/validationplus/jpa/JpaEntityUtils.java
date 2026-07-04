@@ -6,7 +6,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 /**
- * Utilidades JPA para validaciones de unicidad y existencia.
+ * JPA utilities for uniqueness and existence validations.
  */
 public final class JpaEntityUtils {
 

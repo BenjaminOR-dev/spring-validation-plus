@@ -6,7 +6,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 /**
- * Validator para {@link EndsWith}.
+ * Validator for {@link EndsWith}.
  */
 public class EndsWithValidator implements ConstraintValidator<EndsWith, Object> {
 

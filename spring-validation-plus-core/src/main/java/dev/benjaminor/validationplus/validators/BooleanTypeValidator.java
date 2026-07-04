@@ -6,7 +6,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 /**
- * Validator para {@link BooleanType}.
+ * Validator for {@link BooleanType}.
  */
 public class BooleanTypeValidator implements ConstraintValidator<BooleanType, Object> {
 

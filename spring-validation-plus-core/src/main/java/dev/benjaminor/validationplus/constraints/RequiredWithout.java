@@ -11,8 +11,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Valida que un campo sea obligatorio cuando alguno de los campos indicados no está presente.
+ * Validates that a field is required when any of the specified fields is missing.
  */
 @Documented
 @Repeatable(RequiredWithout.List.class)
@@ -28,12 +29,12 @@ public @interface RequiredWithout {
     Class<? extends Payload>[] payload() default {};
 
     /**
-     * Campos observados.
+     * Observed fields.
      */
     String[] fields();
 
     /**
-     * Campo que se vuelve obligatorio.
+     * Field that becomes required.
      */
     String required();
 

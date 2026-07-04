@@ -10,15 +10,14 @@ import dev.benjaminor.validationplus.constraints.StringType;
 import dev.benjaminor.validationplus.constraints.Unique;
 
 /**
- * Patrón: PUT body + {@code excludeParameter} para ignorar el registro actual.
- * Password opcional: omitir el campo o enviar {@code null} (no {@code ""}).
+ * Pattern: PUT body + {@code excludeParameter} to ignore the current record.
+ * Optional password: omit the field or send {@code null} (not {@code ""}).
  */
 @Unique(
         entity = User.class,
         field = "email",
         column = "email",
-        excludeParameter = "id",
-        message = "El email ya está registrado por otro usuario."
+        excludeParameter = "id"
 )
 public class UserUpdateRequest {
 

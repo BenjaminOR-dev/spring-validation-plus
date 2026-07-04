@@ -12,7 +12,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 /**
- * Validator para {@link Unique}.
+ * Validator for {@link Unique}.
  */
 public class UniqueValidator implements ConstraintValidator<Unique, Object> {
 

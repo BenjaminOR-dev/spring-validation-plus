@@ -2,9 +2,9 @@
 
 [🇬🇧 English version](PUBLISHING.md)
 
-Guía para publicar **manualmente** `spring-validation-plus-core` y `spring-validation-plus-spring-boot-starter` en [Maven Central](https://central.sonatype.com/).
+Guía para publicar `spring-validation-plus-core` y `spring-validation-plus-spring-boot-starter` en [Maven Central](https://central.sonatype.com/).
 
-> **Pendiente:** workflow de GitHub Actions.
+Opciones de deploy: **Docker** (`.env` local) o **GitHub Actions** (tags `v*` — ver [.github/workflows/release.yml](.github/workflows/release.yml)).
 
 ## Qué se publica
 
@@ -13,7 +13,7 @@ Guía para publicar **manualmente** `spring-validation-plus-core` y `spring-vali
 | `spring-validation-plus-core` | Sí |
 | `spring-validation-plus-spring-boot-starter` | Sí |
 | `spring-validation-plus` (POM padre) | Sí |
-| `spring-validation-plus-example` | **No** (`maven.deploy.skip=true`) |
+| `spring-validation-plus-example` | **No** (excluido con `-pl core,starter -am` en el deploy) |
 
 ## Requisitos (una sola vez)
 
@@ -81,7 +81,13 @@ Asegúrate de tener `.env` (desde `.env.example`) y la clave GPG en `.local/`.
 docker compose run --rm maven ./docker/deploy-release.sh
 ```
 
-El script lee `.env`, genera `settings.xml` en el contenedor, importa la clave desde `.local/` y ejecuta `mvn deploy -Prelease`.
+El script lee `.env`, genera `settings.xml` en el contenedor, importa la clave desde `.local/` y ejecuta:
+
+```bash
+mvn clean deploy -Prelease -pl spring-validation-plus-core,spring-validation-plus-spring-boot-starter -am
+```
+
+Los flags `-pl … -am` publican solo **core**, **starter** y el POM padre. El módulo **example** se compila en local pero **no** se sube a Maven Central.
 
 Notas:
 
@@ -93,10 +99,30 @@ Alternativa: ejecutar el deploy **en el host** (fuera de Docker) si tienes Maven
 
 ```bash
 export GPG_TTY=$(tty)
-mvn clean deploy -Prelease
+mvn clean deploy -Prelease \
+  -pl spring-validation-plus-core,spring-validation-plus-spring-boot-starter \
+  -am
 ```
 
-### 4. Publicar en Central Portal
+### 4. Release con GitHub Actions (opcional)
+
+Push de un tag de versión (`v0.2.0`, etc.) cuando el POM ya esté en versión **release** (sin `-SNAPSHOT`). Workflow: [.github/workflows/release.yml](.github/workflows/release.yml).
+
+Configura estos [secrets del repositorio](https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions):
+
+| Secret | Valor |
+|--------|-------|
+| `CENTRAL_USERNAME` | Username del user token de Central Portal |
+| `CENTRAL_PASSWORD` | Password del user token de Central Portal |
+| `GPG_KEY_ID` | Id de clave GPG (formato long) |
+| `GPG_PASSPHRASE` | Passphrase de la clave GPG |
+| `GPG_PRIVATE_KEY` | Clave privada armored (contenido de `.local/gpg-signing-private.asc`) |
+
+El workflow verifica que el POM no sea SNAPSHOT, importa GPG y publica solo **core**, **starter** y el POM padre — igual que `deploy-release.sh`.
+
+> **Nota:** `0.1.0` en Maven Central incluyó por error `spring-validation-plus-example`. Releases **`0.2.0+`** lo excluyen.
+
+### 5. Publicar en Central Portal
 
 Con `autoPublish=false` (config actual), tras el upload:
 
@@ -106,7 +132,7 @@ Con `autoPublish=false` (config actual), tras el upload:
 
 En unos minutos debería aparecer en [search.maven.org](https://search.maven.org/).
 
-### 5. Tag en Git
+### 6. Tag en Git
 
 ```bash
 git tag -a v0.1.0 -m "Release 0.1.0"
@@ -115,7 +141,7 @@ git push origin v0.1.0
 
 Actualiza `<scm><tag>v0.1.0</tag></scm>` en el `pom.xml` en el commit del release.
 
-### 6. Subir versión de desarrollo
+### 7. Subir versión de desarrollo
 
 ```xml
 <version>0.2.0-SNAPSHOT</version>
@@ -149,9 +175,9 @@ Sin repositorios extra.
 | Falla firma GPG | Verifica `gpg.keyname`, monta `~/.gnupg`, o `export GPG_TTY=$(tty)` |
 | Namespace no permitido | Confirma `groupId` = `io.github.benjaminor-dev` y namespace **Verified** en Central Portal |
 | Errores de Javadoc | `failOnError=false` en el perfil release; mejora docs después |
-| Se subió el example | Confirma `maven.deploy.skip=true` en el pom del example |
+| Se subió el example | El deploy usa `-pl core,starter -am`; example queda excluido de Central |
 
 ## Pendiente
 
-- [ ] GitHub Actions para releases
-- [ ] `autoPublish=true` cuando el primer release manual funcione
+- [ ] Configurar secrets de GitHub Actions y validar un release por tag
+- [ ] `autoPublish=true` cuando los releases automatizados estén estables

@@ -12,19 +12,19 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 /**
- * Endpoints de demostración para reglas avanzadas (condicionales, confirmación).
+ * Demo endpoints for advanced rules (conditional fields, confirmation).
  */
 @RestController
 @RequestMapping("/api/demo")
 public class DemoController {
 
-    /** Patrón: {@code @RequiredIf} — si role=ADMIN, adminCode es obligatorio. */
+    /** Pattern: {@code @RequiredIf} — when role=ADMIN, adminCode is required. */
     @PostMapping("/conditional")
     public ResponseEntity<Map<String, String>> conditional(@Valid @RequestBody ConditionalUserRequest request) {
         return ResponseEntity.ok(Map.of("status", "ok"));
     }
 
-    /** Patrón: {@code @Confirmed} — password debe coincidir con passwordConfirmation. */
+    /** Pattern: {@code @Confirmed} — password must match passwordConfirmation. */
     @PostMapping("/password")
     public ResponseEntity<Map<String, String>> password(@Valid @RequestBody PasswordRequest request) {
         return ResponseEntity.ok(Map.of("status", "ok"));

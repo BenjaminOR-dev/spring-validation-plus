@@ -6,7 +6,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 /**
- * Validator para {@link Size}.
+ * Validator for {@link Size}.
  */
 public class SizeValidator implements ConstraintValidator<Size, Object> {
 

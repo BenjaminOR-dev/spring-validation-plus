@@ -49,6 +49,12 @@ class SimpleValidatorsTest {
 
         assertThat(validator.validateProperty(dto, "acceptedField")).isEmpty();
         assertThat(validator.validateProperty(dto, "declinedField")).isEmpty();
+
+        dto.acceptedField = "T";
+        dto.declinedField = "F";
+
+        assertThat(validator.validateProperty(dto, "acceptedField")).isEmpty();
+        assertThat(validator.validateProperty(dto, "declinedField")).isEmpty();
     }
 
     @Test

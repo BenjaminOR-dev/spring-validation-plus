@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Abstracción mínima de un archivo subido, independiente de Spring o Servlet.
+ * Minimal abstraction of an uploaded file, independent of Spring or Servlet.
  */
 public interface UploadHandle {
 

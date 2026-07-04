@@ -3,7 +3,7 @@ package dev.benjaminor.validationplus.support;
 import java.util.Collection;
 
 /**
- * Utilidades para validaciones de tipo.
+ * Utilities for validaciones de tipo.
  */
 public final class TypeUtils {
 
@@ -11,7 +11,7 @@ public final class TypeUtils {
     }
 
     /**
-     * Indica si el valor es una cadena de texto de Java.
+     * Returns whether the value is a Java string.
      */
     public static boolean isStringType(Object value) {
         if (value == null) {
@@ -21,7 +21,7 @@ public final class TypeUtils {
     }
 
     /**
-     * Indica si el valor es un booleano real de Java.
+     * Returns whether the value is a native Java boolean.
      */
     public static boolean isBooleanType(Object value) {
         if (value == null) {
@@ -31,7 +31,7 @@ public final class TypeUtils {
     }
 
     /**
-     * Indica si el valor es un arreglo o una colección.
+     * Returns whether the value is an array or collection.
      */
     public static boolean isArrayType(Object value) {
         if (value == null) {

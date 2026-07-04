@@ -10,7 +10,7 @@ import jakarta.validation.ConstraintValidatorContext;
 import java.util.Objects;
 
 /**
- * Validator para {@link Confirmed}.
+ * Validator for {@link Confirmed}.
  */
 public class ConfirmedValidator implements ConstraintValidator<Confirmed, Object> {
 

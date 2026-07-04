@@ -9,7 +9,7 @@ import dev.benjaminor.validationplus.constraints.StringType;
 import dev.benjaminor.validationplus.constraints.Unique;
 
 /**
- * Patrón: POST body + {@code @Unique} en create.
+ * Pattern: POST body + {@code @Unique} on create.
  */
 @Unique(entity = User.class, field = "email", column = "email")
 public class UserCreateRequest {

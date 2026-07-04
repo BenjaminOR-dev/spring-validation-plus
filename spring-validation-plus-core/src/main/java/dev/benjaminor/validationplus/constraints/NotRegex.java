@@ -10,8 +10,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Valida que el valor no coincida con la expresión regular especificada.
+ * Validates that the value does not match the specified regular expression.
  */
 @Documented
 @Constraint(validatedBy = NotRegexValidator.class)
@@ -26,12 +27,12 @@ public @interface NotRegex {
     Class<? extends Payload>[] payload() default {};
 
     /**
-     * Patrón de la expresión regular.
+     * Regular expression pattern.
      */
     String pattern();
 
     /**
-     * Banderas de compilación de la expresión regular.
+     * Regular expression compilation flags.
      */
     int flags() default 0;
 }

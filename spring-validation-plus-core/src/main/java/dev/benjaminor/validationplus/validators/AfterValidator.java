@@ -9,7 +9,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 /**
- * Validator para {@link After}.
+ * Validator for {@link After}.
  */
 public class AfterValidator implements ConstraintValidator<After, Object> {
 

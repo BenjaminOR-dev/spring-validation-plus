@@ -10,7 +10,7 @@ import jakarta.validation.ConstraintValidatorContext;
 import java.util.Objects;
 
 /**
- * Validator para {@link RequiredIf}.
+ * Validator for {@link RequiredIf}.
  */
 public class RequiredIfValidator implements ConstraintValidator<RequiredIf, Object> {
 

@@ -11,8 +11,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Valida que un campo sea obligatorio cuando otro campo tiene un valor específico.
+ * Validates that a field is required when another field has a specific value.
  */
 @Documented
 @Repeatable(RequiredIf.List.class)
@@ -28,17 +29,17 @@ public @interface RequiredIf {
     Class<? extends Payload>[] payload() default {};
 
     /**
-     * Campo observado.
+     * Observed field.
      */
     String field();
 
     /**
-     * Valor que activa la obligatoriedad.
+     * Value that triggers the requirement.
      */
     String value();
 
     /**
-     * Campo que se vuelve obligatorio.
+     * Field that becomes required.
      */
     String required();
 

@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * Resuelve valores desde path variables y query params de la petición HTTP actual.
+ * Resolves values from the current HTTP request path variables and query parameters.
  */
 public class RequestContextValueProvider implements ContextValueProvider {
 

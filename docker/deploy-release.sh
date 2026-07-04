@@ -61,4 +61,6 @@ printf '%s' "$GPG_PASSPHRASE" | gpg --batch --yes --pinentry-mode loopback \
   --passphrase-fd 0 \
   --import .local/gpg-signing-private.asc
 
-exec mvn clean deploy -Prelease "$@"
+exec mvn clean deploy -Prelease \
+  -pl spring-validation-plus-core,spring-validation-plus-spring-boot-starter \
+  -am "$@"

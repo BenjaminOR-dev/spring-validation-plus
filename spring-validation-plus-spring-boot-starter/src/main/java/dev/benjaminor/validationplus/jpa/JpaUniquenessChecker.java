@@ -6,7 +6,7 @@ import jakarta.persistence.EntityManager;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Implementación JPA de {@link UniquenessChecker}.
+ * JPA implementation of {@link UniquenessChecker}.
  */
 @Transactional(readOnly = true)
 public class JpaUniquenessChecker implements UniquenessChecker {

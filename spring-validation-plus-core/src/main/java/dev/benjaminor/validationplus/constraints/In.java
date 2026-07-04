@@ -10,8 +10,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Valida que el valor esté incluido en la lista de valores permitidos.
+ * Validates that the value is included in the allowed values list.
  */
 @Documented
 @Constraint(validatedBy = InValidator.class)

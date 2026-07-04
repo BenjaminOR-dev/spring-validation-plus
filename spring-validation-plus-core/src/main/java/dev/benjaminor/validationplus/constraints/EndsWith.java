@@ -10,8 +10,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Valida que la cadena termine con el sufijo especificado.
+ * Validates that the string ends with the specified suffix.
  */
 @Documented
 @Constraint(validatedBy = EndsWithValidator.class)

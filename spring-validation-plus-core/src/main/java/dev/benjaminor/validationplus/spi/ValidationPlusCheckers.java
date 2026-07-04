@@ -3,7 +3,7 @@ package dev.benjaminor.validationplus.spi;
 import java.util.Optional;
 
 /**
- * Registro global de implementaciones SPI usadas por {@code @Unique} y {@code @Exists}.
+ * Global registry of SPI implementations used by {@code @Unique} and {@code @Exists}.
  */
 public final class ValidationPlusCheckers {
 
@@ -39,7 +39,7 @@ public final class ValidationPlusCheckers {
     }
 
     /**
-     * Limpia los checkers registrados. Útil en tests.
+     * Clears registered checkers. Useful in tests.
      */
     public static void reset() {
         uniquenessChecker = null;

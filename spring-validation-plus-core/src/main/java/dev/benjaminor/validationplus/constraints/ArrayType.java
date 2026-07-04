@@ -10,8 +10,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Valida que el valor sea un arreglo o una colección.
+ * Validates that the value is an array or collection.
  */
 @Documented
 @Constraint(validatedBy = ArrayTypeValidator.class)

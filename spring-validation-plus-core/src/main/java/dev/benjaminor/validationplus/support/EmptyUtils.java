@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- * Utilidades para evaluar vacíos de forma consistente con las reglas tipo Laravel.
+ * Utilities for evaluating emptiness consistently with Laravel-style rules.
  */
 public final class EmptyUtils {
 
@@ -13,7 +13,7 @@ public final class EmptyUtils {
     }
 
     /**
-     * Determina si un valor debe considerarse vacío para {@code @Required}.
+     * Determines whether a value should be considered empty for {@code @Required}.
      */
     public static boolean isEmpty(Object value) {
         if (value == null) {
@@ -35,7 +35,7 @@ public final class EmptyUtils {
     }
 
     /**
-     * Determina si una cadena es nula o contiene solo espacios.
+     * Determines whether a string is null or contains only whitespace.
      */
     public static boolean isBlank(Object value) {
         if (value == null) {

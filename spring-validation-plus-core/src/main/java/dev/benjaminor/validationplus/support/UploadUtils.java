@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 import java.util.Optional;
 
 /**
- * Resuelve objetos de upload comunes ({@code MultipartFile}, {@code Part}, {@link UploadHandle}).
+ * Resolves common upload objects ({@code MultipartFile}, {@code Part}, {@link UploadHandle}).
  */
 public final class UploadUtils {
 

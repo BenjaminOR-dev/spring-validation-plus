@@ -6,7 +6,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 /**
- * Validator para {@link DecimalType}.
+ * Validator for {@link DecimalType}.
  */
 public class DecimalTypeValidator implements ConstraintValidator<DecimalType, Object> {
 

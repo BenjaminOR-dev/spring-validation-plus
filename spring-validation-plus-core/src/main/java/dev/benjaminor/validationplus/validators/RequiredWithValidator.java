@@ -6,7 +6,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 /**
- * Validator para {@link RequiredWith}.
+ * Validator for {@link RequiredWith}.
  */
 public class RequiredWithValidator implements ConstraintValidator<RequiredWith, Object> {
 

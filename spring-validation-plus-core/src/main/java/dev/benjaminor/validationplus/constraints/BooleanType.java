@@ -10,8 +10,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Valida que el valor sea un booleano real de Java.
+ * Validates that the value is a native Java boolean.
  */
 @Documented
 @Constraint(validatedBy = BooleanTypeValidator.class)

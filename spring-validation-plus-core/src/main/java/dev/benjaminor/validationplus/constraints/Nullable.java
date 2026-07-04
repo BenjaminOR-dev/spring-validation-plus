@@ -10,8 +10,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Documenta que el campo puede ser {@code null}. Nunca falla la validación.
+ * Documents that the field may be {@code null}. Never fails validation.
  */
 @Documented
 @Constraint(validatedBy = NullableValidator.class)

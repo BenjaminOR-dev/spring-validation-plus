@@ -10,8 +10,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Valida que el valor sea un entero real de Java.
+ * Validates that the value is a native Java integer.
  */
 @Documented
 @Constraint(validatedBy = IntegerTypeValidator.class)

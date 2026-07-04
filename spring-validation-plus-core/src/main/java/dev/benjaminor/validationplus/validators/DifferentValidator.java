@@ -9,7 +9,7 @@ import jakarta.validation.ConstraintValidatorContext;
 import java.util.Objects;
 
 /**
- * Validator para {@link Different}.
+ * Validator for {@link Different}.
  */
 public class DifferentValidator implements ConstraintValidator<Different, Object> {
 
