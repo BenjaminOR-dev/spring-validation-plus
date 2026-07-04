@@ -5,6 +5,7 @@
 [![Java](https://img.shields.io/badge/Java-17+-orange?logo=openjdk&logoColor=white)](https://openjdk.org/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x%20%7C%204.x-6DB33F?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
 [![Jakarta Validation](https://img.shields.io/badge/Jakarta%20Validation-3.x-blue)](https://jakarta.ee/specifications/bean-validation/)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.benjaminor-dev/spring-validation-plus-spring-boot-starter?label=Maven%20Central)](https://search.maven.org/artifact/io.github.benjaminor-dev/spring-validation-plus-spring-boot-starter)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 
 Validaciones inspiradas en **Laravel** para **Spring Boot** y **Jakarta Validation**.
@@ -62,20 +63,20 @@ Spring Validation Plus añade más de **85 constraints** personalizados que func
 <dependency>
     <groupId>io.github.benjaminor-dev</groupId>
     <artifactId>spring-validation-plus-spring-boot-starter</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.0</version>
 </dependency>
 ```
 
 **Gradle (Kotlin DSL)**
 
 ```kotlin
-implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.1.0-SNAPSHOT")
+implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.1.0")
 ```
 
 **Gradle (Groovy)**
 
 ```groovy
-implementation 'io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.1.0-SNAPSHOT'
+implementation 'io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.1.0'
 ```
 
 **Multi-módulo Maven** (mismo repositorio):
@@ -88,13 +89,7 @@ implementation 'io.github.benjaminor-dev:spring-validation-plus-spring-boot-star
 </dependency>
 ```
 
-> **Disponibilidad:** la versión `0.1.0-SNAPSHOT` requiere instalación local hasta publicar en Maven Central. Ver [PUBLISHING.es.md](PUBLISHING.es.md) (checklist para mantenedores).
->
-> ```bash
-> git clone https://github.com/BenjaminOR-dev/spring-validation-plus.git
-> cd spring-validation-plus
-> docker compose run --rm maven mvn clean install
-> ```
+> Disponible en [Maven Central](https://search.maven.org/artifact/io.github.benjaminor-dev/spring-validation-plus-spring-boot-starter) — no hace falta configurar repositorios extra.
 
 **Dependencias opcionales**
 
@@ -737,13 +732,14 @@ docker compose run --rm maven mvn -pl spring-validation-plus-core test
 # App de referencia (puerto 8080)
 docker compose up example
 
-# Instalar en .m2 local
+# Instalar en .m2 local (p. ej. para probar un SNAPSHOT de main)
 docker compose run --rm maven mvn clean install
 ```
 
+Para compilar versiones no publicadas desde el código fuente, clona el repo y ejecuta `mvn clean install` localmente. Los releases se publican en Maven Central — ver [PUBLISHING.es.md](PUBLISHING.es.md) (mantenedores).
+
 ## Roadmap
 
-- Publicación en Maven Central — ver [PUBLISHING.es.md](PUBLISHING.es.md) (GitHub Actions pendiente)
 - Soporte `TYPE_USE` en constraints (`List<@EmailAddress String>`)
 - Mejoras de multipart en `ValidationExceptionHandler`
 - Tests de integración JPA end-to-end en CI
