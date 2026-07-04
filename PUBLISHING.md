@@ -35,20 +35,25 @@ gpg --list-secret-keys --keyid-format long
 gpg --keyserver keys.openpgp.org --send-keys YOUR_KEY_ID
 ```
 
-### 4. Maven settings
+### 4. Local credentials (Docker deploy)
 
-Copy [docs/settings-central.xml.example](docs/settings-central.xml.example) into `~/.m2/settings.xml` (merge with existing settings):
+Copy [.env.example](.env.example) to `.env` (gitignored) and fill in:
 
-- **Server `central`:** username + password from Central Portal → **Generate User Token**
-- **Profile `release`:** property `gpg.keyname` = your GPG key id
+| Variable | Source |
+|----------|--------|
+| `CENTRAL_USERNAME` / `CENTRAL_PASSWORD` | [Central Portal → User Token](https://central.sonatype.com/usertoken) |
+| `GPG_KEY_ID` | `gpg --list-secret-keys --keyid-format long` |
+| `GPG_PASSPHRASE` | Your GPG key passphrase |
 
-> **Security — never commit to this repository:**
+GPG private key backup: `.local/gpg-signing-private.asc` (see [PUBLISHING.local.md](PUBLISHING.local.md) if present locally).
+
+For non-Docker workflows, you can still use [docs/settings-central.xml.example](docs/settings-central.xml.example) in `~/.m2/settings.xml`.
+
+> **Security — never commit:**
 >
-> - Central Portal tokens or passwords (keep them only in `~/.m2/settings.xml` on your machine)
-> - GPG private keys or the contents of `~/.gnupg/`
-> - A copy of `settings.xml` filled in with real credentials
->
-> The file [docs/settings-central.xml.example](docs/settings-central.xml.example) is a **template with placeholders** — safe to keep in the public repo.
+> - `.env` (real credentials)
+> - `.local/` (GPG key material)
+> - Central Portal tokens or GPG passphrases in the repository
 
 ## Release checklist
 
@@ -70,28 +75,19 @@ docker compose run --rm maven mvn clean verify
 
 ### 3. Deploy with the `release` profile
 
+Ensure `.env` exists (from `.env.example`) and GPG key is in `.local/`.
+
 ```bash
-docker compose run --rm \
-  -v "$HOME/.m2:/root/.m2" \
-  -v "$HOME/.gnupg:/root/.gnupg" \
-  maven mvn clean deploy -Prelease
+docker compose run --rm maven ./docker/deploy-release.sh
 ```
+
+The script reads credentials from `.env`, generates `/root/.m2/settings.xml` inside the container, imports the signing key from `.local/`, and runs `mvn deploy -Prelease`.
 
 Notes:
 
-- Mount `.m2` so Central credentials and GPG settings are available.
-- Mount `.gnupg` if GPG agent/keys live on the host (macOS/Linux).
-- The Docker image includes `gnupg` for signing during deploy.
-- Use **`-it`** when GPG asks for your passphrase interactively:
-
-```bash
-export GPG_TTY=$(tty)
-
-docker compose run --rm -it \
-  -v "$HOME/.m2:/root/.m2" \
-  -v "$HOME/.gnupg:/root/.gnupg" \
-  maven mvn clean deploy -Prelease
-```
+- Do **not** mount macOS `~/.gnupg` — `gpg-agent` fails in Docker.
+- The `release` profile uses GPG loopback mode (no agent).
+- Maven dependency cache uses the project `.m2/` volume from `docker-compose.yml`.
 
 Alternatively, run deploy **on the host** (outside Docker) if you have Maven and GPG installed locally:
 

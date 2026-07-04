@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copy to ~/.m2/settings.xml (merge with your existing settings).
-  Do NOT commit real tokens to git.
+  For Docker deploy, prefer .env (see .env.example in the repo root).
+  For host Maven, copy to ~/.m2/settings.xml (merge with existing settings).
 
-  Central Portal: https://central.sonatype.com → Generate User Token
+  Central Portal: https://central.sonatype.com/usertoken
 -->
 <settings xmlns="http://maven.apache.org/SETTINGS/1.2.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
