@@ -516,7 +516,6 @@ Mensagens incluídas no core:
 | Arquivo | Idioma |
 |---------|--------|
 | `ValidationMessages.properties` | Inglês (default) |
-| `ValidationMessages_en.properties` | Inglês |
 | `ValidationMessages_es.properties` | Espanhol |
 | `ValidationMessages_pt.properties` | Português (pt / pt-BR) |
 
@@ -528,7 +527,7 @@ Mensagens incluídas no core:
 **Sobrescrever mensagens** na sua app — crie `src/main/resources/ValidationMessages_pt.properties`:
 
 ```properties
-dev.benjaminor.validationplus.constraints.Required.message=El campo {field} es requerido.
+dev.benjaminor.validationplus.constraints.Required.message=O campo {field} é obrigatório.
 ```
 
 **Placeholders disponíveis:** `{field}`, `{min}`, `{max}`, `{value}`, `{other}`, `{validatedValue}`, `{integer}`, `{fraction}`
@@ -741,7 +740,7 @@ Para compilar versões não publicadas a partir do código-fonte, clone o reposi
 
 ## Roadmap
 
-- Workflow de release no GitHub Actions ao fazer push de tags (ver [PUBLISHING.md](PUBLISHING.md))
+- Validar release automatizado por tag (secrets no GitHub — ver [PUBLISHING.md](PUBLISHING.md))
 - Suporte `TYPE_USE` em constraints (`List<@EmailAddress String>`)
 - Melhorias de multipart no `ValidationExceptionHandler`
 - `autoPublish=true` no Central Portal quando a automação de releases estiver estável

@@ -516,7 +516,6 @@ Mensajes incluidos en el core:
 | Archivo | Idioma |
 |---------|--------|
 | `ValidationMessages.properties` | Inglés (default) |
-| `ValidationMessages_en.properties` | Inglés |
 | `ValidationMessages_es.properties` | Español |
 | `ValidationMessages_pt.properties` | Portugués |
 
@@ -741,7 +740,7 @@ Para compilar versiones no publicadas desde el código fuente, clona el repo y e
 
 ## Roadmap
 
-- Workflow de release en GitHub Actions al pushear tags (ver [PUBLISHING.md](PUBLISHING.md))
+- Validar release automatizado por tag (secrets en GitHub — ver [PUBLISHING.md](PUBLISHING.md))
 - Soporte `TYPE_USE` en constraints (`List<@EmailAddress String>`)
 - Mejoras de multipart en `ValidationExceptionHandler`
 - `autoPublish=true` en Central Portal cuando la automatización de releases esté estable

@@ -10,6 +10,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ValidationMessagesI18nTest {
 
     @Test
+    void shouldResolveEnglishMessagesFromDefaultBundle() {
+        String message = ValidationMessageUtils.resolve(
+                "dev.benjaminor.validationplus.constraints.Required.message",
+                Locale.forLanguageTag("en"),
+                Map.of("field", "email"));
+
+        assertThat(message).isEqualTo("The email field is required.");
+    }
+
+    @Test
     void shouldResolvePortugueseMessages() {
         String message = ValidationMessageUtils.resolve(
                 "dev.benjaminor.validationplus.constraints.Required.message",
