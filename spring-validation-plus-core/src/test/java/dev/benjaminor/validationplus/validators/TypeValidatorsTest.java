@@ -109,7 +109,7 @@ class TypeValidatorsTest {
         Set<ConstraintViolation<TypeDto>> violations = validator.validateProperty(dto, "numericField");
 
         assertThat(violations).hasSize(1);
-        assertThat(violations.iterator().next().getMessage()).isEqualTo("El campo numericField debe ser al menos 1.0.");
+        assertThat(violations.iterator().next().getMessage()).isEqualTo("El campo numericField debe ser al menos 1.");
     }
 
     @Test
@@ -123,7 +123,7 @@ class TypeValidatorsTest {
         Set<ConstraintViolation<TypeDto>> violations = validator.validateProperty(dto, "limitedField");
 
         assertThat(violations).hasSize(1);
-        assertThat(violations.iterator().next().getMessage()).isEqualTo("El campo limitedField no debe exceder 100.0.");
+        assertThat(violations.iterator().next().getMessage()).isEqualTo("El campo limitedField no debe exceder 100.");
     }
 
     static class TypeDto {

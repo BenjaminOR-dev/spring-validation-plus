@@ -10,7 +10,7 @@
 
 **Laravel-inspired** validation for **Spring Boot** and **Jakarta Validation**.
 
-Spring Validation Plus adds more than **85 custom constraints** that work like native Jakarta Validation annotations: you annotate your DTOs and they run with `@Valid` or `@Validated`. It includes i18n messages (en/es), unified JSON error handling, and optional database rules (`@Unique`, `@Exists`).
+Spring Validation Plus adds more than **85 custom constraints** that work like native Jakarta Validation annotations: you annotate your DTOs and they run with `@Valid` or `@Validated`. It includes i18n messages (en/es/pt), unified JSON error handling, and optional database rules (`@Unique`, `@Exists`).
 
 **Includes:**
 
@@ -63,20 +63,20 @@ Spring Validation Plus adds more than **85 custom constraints** that work like n
 <dependency>
     <groupId>io.github.benjaminor-dev</groupId>
     <artifactId>spring-validation-plus-spring-boot-starter</artifactId>
-    <version>0.2.0</version>
+    <version>0.2.1</version>
 </dependency>
 ```
 
 **Gradle (Kotlin DSL)**
 
 ```kotlin
-implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.2.0")
+implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.2.1")
 ```
 
 **Gradle (Groovy)**
 
 ```groovy
-implementation 'io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.2.0'
+implementation 'io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.2.1'
 ```
 
 **Multi-module Maven** (same repository):
@@ -349,8 +349,8 @@ Nested errors in the response (English, `Accept-Language: en`):
 ```json
 {
   "errors": {
-    "items[0].quantity": ["The quantity field must be at least 1.0."],
-    "items": ["The items field must have between 1.0 and 50.0 elements."]
+    "items[0].quantity": ["The quantity field must be at least 1."],
+    "items": ["The items field must have between 1 and 50 elements."]
   }
 }
 ```
@@ -759,7 +759,6 @@ To build unreleased versions from source, clone the repo and run `mvn clean inst
 
 ## Roadmap
 
-- Validate automated tag-based release (GitHub secrets — see [PUBLISHING.md](PUBLISHING.md))
 - `TYPE_USE` support in constraints (`List<@EmailAddress String>`)
 - Multipart file handling improvements in `ValidationExceptionHandler`
 - `autoPublish=true` in Central Portal after release automation is stable

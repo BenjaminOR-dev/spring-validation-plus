@@ -57,13 +57,61 @@ Para flujos sin Docker, puedes usar [docs/settings-central.xml.example](docs/set
 
 ### 1. Versión de release (sin SNAPSHOT)
 
-En el `pom.xml` raíz y módulos:
+**Todo en un solo commit**, antes de crear el tag. Si falta alguno, el tag quedará desalineado (como pasó en `0.2.0` con los README).
+
+#### POMs (4 archivos)
+
+| Archivo | Qué cambiar |
+|---------|-------------|
+| `pom.xml` (raíz) | `<version>` y `<scm><tag>vX.Y.Z</tag></scm>` |
+| `spring-validation-plus-core/pom.xml` | `<version>` del parent |
+| `spring-validation-plus-spring-boot-starter/pom.xml` | `<version>` del parent |
+| `spring-validation-plus-example/pom.xml` | `<version>` del parent |
 
 ```xml
-<version>0.2.0</version>
+<version>0.2.1</version>
 ```
 
-Actualiza también la versión de instalación en **README.md**, **README.es.md** y **README.pt.md** (sección inicio rápido) **en el mismo commit, antes de crear el tag**.
+```xml
+<scm>
+    ...
+    <tag>v0.2.1</tag>
+</scm>
+```
+
+#### README (3 archivos — sección **Inicio rápido → Dependency**)
+
+En cada uno actualiza **Maven**, **Gradle Kotlin** y **Gradle Groovy**:
+
+| Archivo | Líneas típicas |
+|---------|----------------|
+| `README.md` | `<version>…</version>` + `implementation(...)` × 2 |
+| `README.es.md` | igual |
+| `README.pt.md` | igual |
+
+Ejemplo:
+
+```xml
+<version>0.2.1</version>
+```
+
+```kotlin
+implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.2.1")
+```
+
+#### Opcional (recomendado)
+
+| Dónde | Qué |
+|-------|-----|
+| `PUBLISHING.md` → *Dependencia para consumidores* | Ejemplos Maven/Gradle con la nueva versión |
+| `demo-springboot/pom.xml` (repo externo) | Dependencia del starter en Central |
+
+#### Verificación rápida
+
+```bash
+grep -r "0.2.0-SNAPSHOT\|0.3.0-SNAPSHOT" pom.xml */pom.xml   # no debe quedar SNAPSHOT
+grep "spring-validation-plus-spring-boot-starter:0\." README*.md  # misma versión en los 3
+```
 
 Maven Central no acepta `-SNAPSHOT` en el repositorio de releases.
 
@@ -134,18 +182,24 @@ En unos minutos debería aparecer en [search.maven.org](https://search.maven.org
 
 ### 6. Tag en Git
 
+El tag debe apuntar al **commit del paso 1** (POMs + README + `<scm><tag>` ya incluidos):
+
 ```bash
-git tag -a v0.2.0 -m "Release 0.2.0"
-git push origin v0.2.0
+git tag -a v0.2.1 -m "Release 0.2.1"
+git push origin v0.2.1
 ```
 
-Actualiza `<scm><tag>v0.2.0</tag></scm>` en el `pom.xml` en el commit del release.
+> Si el workflow Release está activo, el push del tag dispara el deploy. Desactiva el workflow primero si solo mueves el tag sin republicar (ver nota en conversación de releases).
 
 ### 7. Subir versión de desarrollo
+
+En los **4 POMs** (mismo listado del paso 1), commit separado en `main`:
 
 ```xml
 <version>0.3.0-SNAPSHOT</version>
 ```
+
+Los README **no** cambian aquí — siguen mostrando la última versión publicada en Central.
 
 ## Dependencia para consumidores (tras publicar)
 
@@ -155,14 +209,14 @@ Actualiza `<scm><tag>v0.2.0</tag></scm>` en el `pom.xml` en el commit del releas
 <dependency>
     <groupId>io.github.benjaminor-dev</groupId>
     <artifactId>spring-validation-plus-spring-boot-starter</artifactId>
-    <version>0.2.0</version>
+    <version>0.2.1</version>
 </dependency>
 ```
 
 **Gradle**
 
 ```kotlin
-implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.2.0")
+implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.2.1")
 ```
 
 Sin repositorios extra.

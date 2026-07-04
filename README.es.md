@@ -10,7 +10,7 @@
 
 Validaciones inspiradas en **Laravel** para **Spring Boot** y **Jakarta Validation**.
 
-Spring Validation Plus añade más de **85 constraints** personalizados que funcionan como los nativos de Jakarta Validation: los anotas en tus DTOs y se ejecutan con `@Valid` o `@Validated`. Incluye mensajes i18n (es/en), manejo unificado de errores JSON y soporte opcional para reglas de base de datos (`@Unique`, `@Exists`).
+Spring Validation Plus añade más de **85 constraints** personalizados que funcionan como los nativos de Jakarta Validation: los anotas en tus DTOs y se ejecutan con `@Valid` o `@Validated`. Incluye mensajes i18n (es/en/pt), manejo unificado de errores JSON y soporte opcional para reglas de base de datos (`@Unique`, `@Exists`).
 
 **Incluye:**
 
@@ -63,20 +63,20 @@ Spring Validation Plus añade más de **85 constraints** personalizados que func
 <dependency>
     <groupId>io.github.benjaminor-dev</groupId>
     <artifactId>spring-validation-plus-spring-boot-starter</artifactId>
-    <version>0.2.0</version>
+    <version>0.2.1</version>
 </dependency>
 ```
 
 **Gradle (Kotlin DSL)**
 
 ```kotlin
-implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.2.0")
+implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.2.1")
 ```
 
 **Gradle (Groovy)**
 
 ```groovy
-implementation 'io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.2.0'
+implementation 'io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.2.1'
 ```
 
 **Multi-módulo Maven** (mismo repositorio):
@@ -347,8 +347,8 @@ Errores anidados en la respuesta:
 ```json
 {
   "errors": {
-    "items[0].quantity": ["El campo quantity debe ser al menos 1.0."],
-    "items": ["El campo items debe tener entre 1.0 y 50.0 elementos."]
+    "items[0].quantity": ["El campo quantity debe ser al menos 1."],
+    "items": ["El campo items debe tener entre 1 y 50 elementos."]
   }
 }
 ```
@@ -753,7 +753,6 @@ Para compilar versiones no publicadas desde el código fuente, clona el repo y e
 
 ## Roadmap
 
-- Validar release automatizado por tag (secrets en GitHub — ver [PUBLISHING.md](PUBLISHING.md))
 - Soporte `TYPE_USE` en constraints (`List<@EmailAddress String>`)
 - Mejoras de multipart en `ValidationExceptionHandler`
 - `autoPublish=true` en Central Portal cuando la automatización de releases esté estable

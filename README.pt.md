@@ -63,20 +63,20 @@ O Spring Validation Plus adiciona mais de **85 constraints** personalizados que 
 <dependency>
     <groupId>io.github.benjaminor-dev</groupId>
     <artifactId>spring-validation-plus-spring-boot-starter</artifactId>
-    <version>0.2.0</version>
+    <version>0.2.1</version>
 </dependency>
 ```
 
 **Gradle (Kotlin DSL)**
 
 ```kotlin
-implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.2.0")
+implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.2.1")
 ```
 
 **Gradle (Groovy)**
 
 ```groovy
-implementation 'io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.2.0'
+implementation 'io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.2.1'
 ```
 
 **Multi-módulo Maven** (mesmo repositório):
@@ -347,8 +347,8 @@ Erros aninhados na resposta:
 ```json
 {
   "errors": {
-    "items[0].quantity": ["El campo quantity debe ser al menos 1.0."],
-    "items": ["El campo items debe tener entre 1.0 y 50.0 elementos."]
+    "items[0].quantity": ["O campo quantity deve ser pelo menos 1."],
+    "items": ["O campo items deve ter entre 1 e 50 elementos."]
   }
 }
 ```
@@ -753,7 +753,6 @@ Para compilar versões não publicadas a partir do código-fonte, clone o reposi
 
 ## Roadmap
 
-- Validar release automatizado por tag (secrets no GitHub — ver [PUBLISHING.md](PUBLISHING.md))
 - Suporte `TYPE_USE` em constraints (`List<@EmailAddress String>`)
 - Melhorias de multipart no `ValidationExceptionHandler`
 - `autoPublish=true` no Central Portal quando a automação de releases estiver estável

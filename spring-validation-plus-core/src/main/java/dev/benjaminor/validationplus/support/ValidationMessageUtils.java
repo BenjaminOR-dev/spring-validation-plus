@@ -2,6 +2,7 @@ package dev.benjaminor.validationplus.support;
 
 import jakarta.validation.MessageInterpolator;
 
+import java.math.BigDecimal;
 import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
@@ -58,10 +59,35 @@ public final class ValidationMessageUtils {
             String name = matcher.group(1);
             Object replacement = parameters.get(name);
             matcher.appendReplacement(buffer, Matcher.quoteReplacement(
-                    replacement != null ? String.valueOf(replacement) : matcher.group(0)));
+                    replacement != null ? formatParameterValue(replacement) : matcher.group(0)));
         }
         matcher.appendTail(buffer);
         return buffer.toString();
+    }
+
+    /**
+     * Formats constraint parameter values for user-facing messages.
+     * Whole numbers such as {@code 1.0} are rendered as {@code 1}.
+     */
+    public static String formatParameterValue(Object value) {
+        if (value == null) {
+            return "";
+        }
+        if (value instanceof BigDecimal decimal) {
+            BigDecimal normalized = decimal.stripTrailingZeros();
+            if (normalized.scale() <= 0) {
+                return normalized.toBigInteger().toString();
+            }
+            return normalized.toPlainString();
+        }
+        if (value instanceof Number number) {
+            double asDouble = number.doubleValue();
+            if (Double.isFinite(asDouble) && asDouble == Math.rint(asDouble)) {
+                return String.valueOf((long) asDouble);
+            }
+            return number.toString();
+        }
+        return String.valueOf(value);
     }
 
     /**
