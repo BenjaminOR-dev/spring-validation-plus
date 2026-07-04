@@ -29,7 +29,7 @@ Spring Validation Plus añade más de **85 constraints** personalizados que func
   - [Patrón recomendado por campo](#patrón-recomendado-por-campo)
   - [Campos opcionales (`@Nullable`)](#campos-opcionales-nullable)
   - [Body JSON (`@RequestBody`)](#body-json-requestbody)
-  - [Query params (`@ModelAttribute`)](#query-params-modelattribute)
+  - [Query params y formularios (`@ModelAttribute`)](#query-params-y-formularios-modelattribute)
   - [Path variables (`@Validated`)](#path-variables-validated)
   - [Arrays y listas](#arrays-y-listas)
   - [Validación anidada con DTOs](#validación-anidada-con-dtos)
@@ -159,7 +159,7 @@ spring.web.locale-resolver=accept_header
 
 | Propiedad | Default | Descripción |
 |-----------|---------|-------------|
-| `spring.validation-plus.enabled` | `true` | Auto-configuración del validador e integración Spring |
+| `spring.validation-plus.enabled` | `true` | Validador, integración Spring y checkers JPA (`@Unique` / `@Exists`) |
 | `spring.validation-plus.exception-handler.enabled` | `true` | `ValidationExceptionHandler` para errores 400 en JSON |
 
 Si tu app ya tiene un `@RestControllerAdvice` propio para validación, desactiva el handler de la librería y delega solo los errores de negocio (404, 401, etc.) a tu advice local.
@@ -237,13 +237,16 @@ public ResponseEntity<?> create(@Valid @RequestBody UserCreateRequest request) {
 
 Si el JSON trae un tipo incorrecto (`"size": "abc"`), el `ValidationExceptionHandler` traduce el error de Jackson a un mensaje i18n amigable.
 
-### Query params (`@ModelAttribute`)
+### Query params y formularios (`@ModelAttribute`)
 
-Para GET con filtros o paginación:
+Para GET con filtros, paginación o **POST** con `application/x-www-form-urlencoded`:
 
 ```java
 @GetMapping
 public ResponseEntity<List<User>> search(@Valid @ModelAttribute UserSearchRequest request) { ... }
+
+@PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+public ResponseEntity<?> createForm(@Valid @ModelAttribute UserCreateRequest request) { ... }
 ```
 
 ```java
@@ -286,11 +289,11 @@ Para validar parámetros de ruta o de método (no DTOs), anota el controller con
 public class UserController {
 
     @GetMapping("/{id}")
-    public User find(@PathVariable @IntegerType @MinValue(1) Long id) { ... }
+    public User find(@PathVariable @MinValue(1) Long id) { ... }
 }
 ```
 
-Los errores de este tipo los maneja `ConstraintViolationException` en el `ValidationExceptionHandler`.
+Los errores se devuelven como `{ "errors": { "id": ["..."] } }` con mensajes i18n (mismo formato que en el body).
 
 ### Arrays y listas
 
@@ -386,7 +389,20 @@ Validaciones que consultan persistencia en runtime. Requieren un **checker** reg
 3. Constraint `@Unique` o `@Exists` a **nivel clase** del DTO, apuntando al campo del DTO y al atributo JPA.
 4. En **updates**, usar `excludeParameter` o `excludeField` para no comparar contra el propio registro.
 
-El starter registra automáticamente `JpaUniquenessChecker` y `JpaExistenceChecker` cuando detecta un `EntityManagerFactory` (después de la auto-config de Hibernate).
+El starter registra automáticamente `JpaUniquenessChecker` y `JpaExistenceChecker` cuando detecta un `EntityManagerFactory` (después de la auto-config de Hibernate). Las consultas de base de datos se ejecutan en transacción de solo lectura, también con `spring.jpa.open-in-view=false`.
+
+#### Checkers custom (Spring Boot)
+
+Declara un bean en lugar de los defaults JPA — el starter lo registra automáticamente:
+
+```java
+@Bean
+UniquenessChecker uniquenessChecker(UserRepository repository) {
+    return request -> repository.countByEmail((String) request.value()) == 0;
+}
+```
+
+Si existe un bean `UniquenessChecker` o `ExistenceChecker`, no se crea la implementación JPA.
 
 #### Parámetros de `@Unique`
 
@@ -453,9 +469,9 @@ public class AssignRoleRequest {
 }
 ```
 
-#### Backend sin JPA (SPI custom)
+#### Backend sin JPA (SPI manual)
 
-Implementa las interfaces y regístralas al arrancar tu app:
+Fuera de Spring Boot, o si prefieres registro explícito, usa el registro SPI al arrancar:
 
 ```java
 ValidationPlusCheckers.registerUniquenessChecker(request -> {
@@ -466,7 +482,7 @@ ValidationPlusCheckers.registerExistenceChecker(request -> {
 });
 ```
 
-Para valores de contexto HTTP (path variables) sin JPA, puedes registrar también un `ContextValueProvider` custom; el starter incluye `RequestContextValueProvider` para apps web.
+Para valores de contexto HTTP (path variables), registra un `ContextValueProvider`. En apps web Spring Boot se incluye `RequestContextValueProvider` por defecto; puedes reemplazarlo con tu propio `@Bean ContextValueProvider`.
 
 #### Errores frecuentes de `@Unique`
 
@@ -491,12 +507,12 @@ Formato JSON estilo Laravel, devuelto por `ValidationExceptionHandler`:
 
 El handler cubre:
 
-- `MethodArgumentNotValidException` / `BindException` — validación de DTOs y query params
-- `MethodArgumentTypeMismatchException` — path variables con tipo incorrecto
-- `HttpMessageNotReadableException` — JSON malformado o tipos incorrectos en body
-- `ConstraintViolationException` — validación en parámetros de método con `@Validated`
+- `MethodArgumentNotValidException` / `BindException` — body JSON, query params y campos de formulario
+- `MethodArgumentTypeMismatchException` — path o query params con tipos incompatibles
+- `HttpMessageNotReadableException` — JSON malformado o tipos incorrectos en el body
+- `HandlerMethodValidationException` / `ConstraintViolationException` — `@Validated` en métodos del controller (path variables, parámetros de método)
 
-Los errores de conversión de tipo (`typeMismatch`) se traducen automáticamente a mensajes i18n (`dev.benjaminor.validationplus.type.integer`, etc.).
+Los errores de conversión (`typeMismatch`) se traducen a i18n con `FieldErrorMessageResolver` y `TypeMismatchMessageUtils` (`dev.benjaminor.validationplus.type.integer`, etc.).
 
 ## Internacionalización (i18n)
 
@@ -729,8 +745,8 @@ docker compose run --rm maven mvn clean install
 
 - Publicación en Maven Central — ver [PUBLISHING.es.md](PUBLISHING.es.md) (GitHub Actions pendiente)
 - Soporte `TYPE_USE` en constraints (`List<@EmailAddress String>`)
-- Mejoras al manejo de multipart y path variables en el `ControllerAdvice`
-- Tests de integración JPA para `@Unique` / `@Exists`
+- Mejoras de multipart en `ValidationExceptionHandler`
+- Tests de integración JPA end-to-end en CI
 
 ## Licencia
 

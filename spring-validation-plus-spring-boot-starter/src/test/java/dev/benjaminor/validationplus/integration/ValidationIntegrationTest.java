@@ -149,6 +149,6 @@ class ValidationIntegrationTest {
         mockMvc.perform(get("/api/users/0")
                         .header("Accept-Language", "es"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errors.id[0]").exists());
+                .andExpect(jsonPath("$.errors.id[0]").value("El campo id debe ser al menos 1.0."));
     }
 }

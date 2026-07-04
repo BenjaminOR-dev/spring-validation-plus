@@ -29,7 +29,7 @@ Spring Validation Plus adds more than **85 custom constraints** that work like n
   - [Recommended field pattern](#recommended-field-pattern)
   - [Optional fields (`@Nullable`)](#optional-fields-nullable)
   - [JSON body (`@RequestBody`)](#json-body-requestbody)
-  - [Query params (`@ModelAttribute`)](#query-params-modelattribute)
+  - [Query params and forms (`@ModelAttribute`)](#query-params-and-forms-modelattribute)
   - [Path variables (`@Validated`)](#path-variables-validated)
   - [Arrays and lists](#arrays-and-lists)
   - [Nested validation with DTOs](#nested-validation-with-dtos)
@@ -159,7 +159,7 @@ spring.web.locale-resolver=accept_header
 
 | Property | Default | Description |
 |----------|---------|-------------|
-| `spring.validation-plus.enabled` | `true` | Auto-configuration of the validator and Spring integration |
+| `spring.validation-plus.enabled` | `true` | Validator, Spring integration, and JPA checkers (`@Unique` / `@Exists`) |
 | `spring.validation-plus.exception-handler.enabled` | `true` | `ValidationExceptionHandler` for 400 errors in JSON |
 
 If your app already has its own `@RestControllerAdvice` for validation, disable the library handler and delegate only business errors (404, 401, etc.) to your local advice.
@@ -237,13 +237,16 @@ public ResponseEntity<?> create(@Valid @RequestBody UserCreateRequest request) {
 
 If the JSON has an incorrect type (`"size": "abc"`), the `ValidationExceptionHandler` translates the Jackson error into a friendly i18n message.
 
-### Query params (`@ModelAttribute`)
+### Query params and forms (`@ModelAttribute`)
 
-For GET with filters or pagination:
+For GET with filters, pagination, or **POST** with `application/x-www-form-urlencoded`:
 
 ```java
 @GetMapping
 public ResponseEntity<List<User>> search(@Valid @ModelAttribute UserSearchRequest request) { ... }
+
+@PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+public ResponseEntity<?> createForm(@Valid @ModelAttribute UserCreateRequest request) { ... }
 ```
 
 ```java
@@ -288,11 +291,11 @@ To validate route or method parameters (not DTOs), annotate the controller with 
 public class UserController {
 
     @GetMapping("/{id}")
-    public User find(@PathVariable @IntegerType @MinValue(1) Long id) { ... }
+    public User find(@PathVariable @MinValue(1) Long id) { ... }
 }
 ```
 
-Errors of this type are handled by `ConstraintViolationException` in the `ValidationExceptionHandler`.
+Validation errors are returned as `{ "errors": { "id": ["..."] } }` with i18n messages (same format as body validation).
 
 ### Arrays and lists
 
@@ -388,7 +391,20 @@ Validations that query persistence at runtime. They require a **checker** regist
 3. `@Unique` or `@Exists` constraint at **class level** on the DTO, pointing to the DTO field and the JPA attribute.
 4. On **updates**, use `excludeParameter` or `excludeField` so the current record is not compared against itself.
 
-The starter automatically registers `JpaUniquenessChecker` and `JpaExistenceChecker` when it detects an `EntityManagerFactory` (after Hibernate auto-config).
+The starter automatically registers `JpaUniquenessChecker` and `JpaExistenceChecker` when it detects an `EntityManagerFactory` (after Hibernate auto-config). Database checks run in a read-only transaction, including when `spring.jpa.open-in-view=false`.
+
+#### Custom checkers (Spring Boot)
+
+Declare a bean instead of JPA defaults — the starter registers it automatically:
+
+```java
+@Bean
+UniquenessChecker uniquenessChecker(UserRepository repository) {
+    return request -> repository.countByEmail((String) request.value()) == 0;
+}
+```
+
+If a `UniquenessChecker` or `ExistenceChecker` bean exists, the JPA implementation is not created.
 
 #### `@Unique` parameters
 
@@ -455,9 +471,9 @@ public class AssignRoleRequest {
 }
 ```
 
-#### Non-JPA backend (custom SPI)
+#### Non-JPA backend (manual SPI)
 
-Implement the interfaces and register them at application startup:
+Outside Spring Boot, or when you prefer explicit registration, use the SPI registry at startup:
 
 ```java
 ValidationPlusCheckers.registerUniquenessChecker(request -> {
@@ -468,7 +484,7 @@ ValidationPlusCheckers.registerExistenceChecker(request -> {
 });
 ```
 
-For HTTP context values (path variables) without JPA, you can also register a custom `ContextValueProvider`; the starter includes `RequestContextValueProvider` for web apps.
+For HTTP context values (path variables), register a `ContextValueProvider`. In Spring Boot web apps, `RequestContextValueProvider` is included by default; you can replace it with your own `@Bean ContextValueProvider`.
 
 #### Common `@Unique` errors
 
@@ -495,12 +511,12 @@ Laravel-style JSON format, returned by `ValidationExceptionHandler`:
 
 The handler covers:
 
-- `MethodArgumentNotValidException` / `BindException` — DTO and query param validation
-- `MethodArgumentTypeMismatchException` — path variables with wrong type
+- `MethodArgumentNotValidException` / `BindException` — JSON body, query params, and form fields
+- `MethodArgumentTypeMismatchException` — path or query parameters with incompatible types
 - `HttpMessageNotReadableException` — malformed JSON or wrong types in body
-- `ConstraintViolationException` — validation on method parameters with `@Validated`
+- `HandlerMethodValidationException` / `ConstraintViolationException` — `@Validated` on controller methods (path variables, method parameters)
 
-Type conversion errors (`typeMismatch`) are automatically translated to i18n messages (`dev.benjaminor.validationplus.type.integer`, etc.).
+Type conversion errors (`typeMismatch`) are translated to i18n via `FieldErrorMessageResolver` and `TypeMismatchMessageUtils` (`dev.benjaminor.validationplus.type.integer`, etc.).
 
 ## Internationalization (i18n)
 
@@ -735,8 +751,8 @@ docker compose run --rm maven mvn clean install
 
 - Publication to Maven Central — see [PUBLISHING.md](PUBLISHING.md) (GitHub Actions workflow pending)
 - `TYPE_USE` support in constraints (`List<@EmailAddress String>`)
-- Improved multipart and path variable handling in `ControllerAdvice`
-- JPA integration tests for `@Unique` / `@Exists`
+- Multipart file handling improvements in `ValidationExceptionHandler`
+- JPA end-to-end integration tests in CI
 
 ## License
 

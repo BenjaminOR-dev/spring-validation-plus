@@ -3,6 +3,7 @@ package dev.benjaminor.validationplus.jpa;
 import jakarta.persistence.Entity;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 /**
  * Utilidades JPA para validaciones de unicidad y existencia.
@@ -35,21 +36,36 @@ public final class JpaEntityUtils {
     }
 
     public static Object convertId(Class<?> entityClass, String idColumn, Object rawId) {
-        try {
-            Field field = entityClass.getDeclaredField(idColumn);
-            Class<?> targetType = field.getType();
-            if (targetType.isInstance(rawId)) {
-                return rawId;
-            }
-            if (targetType.equals(Long.class) || targetType.equals(long.class)) {
-                return Long.valueOf(String.valueOf(rawId));
-            }
-            if (targetType.equals(Integer.class) || targetType.equals(int.class)) {
-                return Integer.valueOf(String.valueOf(rawId));
-            }
-            return rawId;
-        } catch (NoSuchFieldException exception) {
+        Field field = findField(entityClass, idColumn);
+        if (field == null) {
             return rawId;
         }
+        Class<?> targetType = field.getType();
+        if (targetType.isInstance(rawId)) {
+            return rawId;
+        }
+        if (targetType.equals(Long.class) || targetType.equals(long.class)) {
+            return Long.valueOf(String.valueOf(rawId));
+        }
+        if (targetType.equals(Integer.class) || targetType.equals(int.class)) {
+            return Integer.valueOf(String.valueOf(rawId));
+        }
+        return rawId;
+    }
+
+    private static Field findField(Class<?> type, String fieldName) {
+        Class<?> current = type;
+        while (current != null && current != Object.class) {
+            try {
+                Field field = current.getDeclaredField(fieldName);
+                if (!Modifier.isStatic(field.getModifiers())) {
+                    return field;
+                }
+            } catch (NoSuchFieldException ignored) {
+                // Continue searching in superclass.
+            }
+            current = current.getSuperclass();
+        }
+        return null;
     }
 }

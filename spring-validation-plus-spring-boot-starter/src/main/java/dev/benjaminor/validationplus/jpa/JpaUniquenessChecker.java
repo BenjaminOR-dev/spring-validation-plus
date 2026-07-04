@@ -2,7 +2,6 @@ package dev.benjaminor.validationplus.jpa;
 
 import dev.benjaminor.validationplus.spi.UniqueCheckRequest;
 import dev.benjaminor.validationplus.spi.UniquenessChecker;
-import dev.benjaminor.validationplus.spi.ValidationPlusCheckers;
 import jakarta.persistence.EntityManager;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +15,6 @@ public class JpaUniquenessChecker implements UniquenessChecker {
 
     public JpaUniquenessChecker(EntityManager entityManager) {
         this.entityManager = entityManager;
-        ValidationPlusCheckers.registerUniquenessChecker(this);
     }
 
     @Override

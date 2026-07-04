@@ -137,8 +137,18 @@ public final class NumberUtils {
         if (value == null) {
             return 0;
         }
-        String digits = String.valueOf(value).replaceAll("[^0-9]", "");
+        String digits = toDigitSource(value).replaceAll("[^0-9]", "");
         return digits.length();
+    }
+
+    private static String toDigitSource(Object value) {
+        if (value instanceof BigDecimal bigDecimal) {
+            return bigDecimal.toPlainString();
+        }
+        if (value instanceof Number number) {
+            return toBigDecimal(number).toPlainString();
+        }
+        return String.valueOf(value);
     }
 
     public static boolean hasMinDigits(Object value, int minDigits) {

@@ -131,6 +131,33 @@ class ExtendedValidatorsTest {
         assertThat(validator.validate(dto)).isEmpty();
     }
 
+    @Test
+    void minMaxAndDigitsBetweenShouldValidateDigitCounts() {
+        DigitsDto dto = new DigitsDto();
+        dto.minDigitsField = new java.math.BigDecimal("12345");
+        dto.maxDigitsField = new java.math.BigDecimal("999");
+        dto.digitsBetweenField = new java.math.BigDecimal("1234");
+
+        assertThat(validator.validate(dto)).isEmpty();
+
+        dto.minDigitsField = new java.math.BigDecimal("123");
+        dto.maxDigitsField = new java.math.BigDecimal("10000");
+        dto.digitsBetweenField = new java.math.BigDecimal("12");
+        assertThat(validator.validateProperty(dto, "minDigitsField")).isNotEmpty();
+        assertThat(validator.validateProperty(dto, "maxDigitsField")).isNotEmpty();
+        assertThat(validator.validateProperty(dto, "digitsBetweenField")).isNotEmpty();
+    }
+
+    @Test
+    void minMaxAndDigitsBetweenShouldHandleScientificNotation() {
+        DigitsDto dto = new DigitsDto();
+        dto.minDigitsField = new java.math.BigDecimal("1E+3");
+        dto.maxDigitsField = new java.math.BigDecimal("1E+3");
+        dto.digitsBetweenField = new java.math.BigDecimal("1E+3");
+
+        assertThat(validator.validate(dto)).isEmpty();
+    }
+
     enum Role {
         ADMIN, USER
     }
@@ -199,5 +226,16 @@ class ExtendedValidatorsTest {
     static class MissingIfDto {
         private String type;
         private String email;
+    }
+
+    static class DigitsDto {
+        @MinDigits(4)
+        private java.math.BigDecimal minDigitsField;
+
+        @MaxDigits(4)
+        private java.math.BigDecimal maxDigitsField;
+
+        @DigitsBetween(min = 3, max = 5)
+        private java.math.BigDecimal digitsBetweenField;
     }
 }

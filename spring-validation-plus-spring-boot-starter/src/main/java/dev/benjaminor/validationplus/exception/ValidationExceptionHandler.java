@@ -63,7 +63,7 @@ public class ValidationExceptionHandler {
         for (ParameterValidationResult result : exception.getAllValidationResults()) {
             String field = resolveParameterName(result);
             for (var resolvableError : result.getResolvableErrors()) {
-                String message = resolvableError.getDefaultMessage();
+                String message = resolveResolvableErrorMessage(resolvableError, locale, field);
                 if (message != null && !message.isBlank()) {
                     addError(errors, field, message);
                 }
@@ -134,6 +134,21 @@ public class ValidationExceptionHandler {
     private String resolveParameterName(ParameterValidationResult result) {
         String name = result.getMethodParameter().getParameterName();
         return name != null ? name : "parameter";
+    }
+
+    private String resolveResolvableErrorMessage(
+            org.springframework.context.MessageSourceResolvable resolvableError,
+            Locale locale,
+            String field) {
+        if (resolvableError instanceof FieldError fieldError) {
+            return FieldErrorMessageResolver.resolve(fieldError, locale);
+        }
+        String message = resolvableError.getDefaultMessage();
+        if (message != null && !message.isBlank()) {
+            return message;
+        }
+        return ValidationMessageUtils.resolve(
+                TypeMismatchMessageUtils.GENERIC, locale, Map.of("field", field));
     }
 
     private String normalizePropertyPath(String propertyPath) {

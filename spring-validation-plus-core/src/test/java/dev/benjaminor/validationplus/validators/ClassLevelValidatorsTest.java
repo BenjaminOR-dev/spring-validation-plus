@@ -2,10 +2,13 @@ package dev.benjaminor.validationplus.validators;
 
 import dev.benjaminor.validationplus.constraints.Confirmed;
 import dev.benjaminor.validationplus.constraints.Different;
+import dev.benjaminor.validationplus.constraints.ProhibitedIf;
 import dev.benjaminor.validationplus.constraints.RequiredIf;
 import dev.benjaminor.validationplus.constraints.RequiredIfAccepted;
 import dev.benjaminor.validationplus.constraints.RequiredIfDeclined;
 import dev.benjaminor.validationplus.constraints.RequiredUnless;
+import dev.benjaminor.validationplus.constraints.Missing;
+import dev.benjaminor.validationplus.constraints.RequiredWithoutAll;
 import dev.benjaminor.validationplus.constraints.RequiredWith;
 import dev.benjaminor.validationplus.constraints.RequiredWithout;
 import dev.benjaminor.validationplus.constraints.Same;
@@ -172,6 +175,63 @@ class ClassLevelValidatorsTest {
         assertThat(validator.validate(dto)).isEmpty();
     }
 
+    @Test
+    void prohibitedIfShouldFailWhenProhibitedFieldIsPresent() {
+        ProhibitedIfDto dto = new ProhibitedIfDto();
+        dto.role = "ADMIN";
+        dto.nickname = "admin-nick";
+
+        Set<ConstraintViolation<ProhibitedIfDto>> violations = validator.validate(dto);
+
+        assertThat(violations).hasSize(1);
+        assertThat(violations.iterator().next().getPropertyPath().toString()).isEqualTo("nickname");
+    }
+
+    @Test
+    void prohibitedIfShouldPassWhenConditionDoesNotMatch() {
+        ProhibitedIfDto dto = new ProhibitedIfDto();
+        dto.role = "USER";
+        dto.nickname = "nick";
+
+        assertThat(validator.validate(dto)).isEmpty();
+    }
+
+    @Test
+    void missingShouldFailWhenFieldIsPresent() {
+        MissingDto dto = new MissingDto();
+        dto.phone = "555-0100";
+
+        Set<ConstraintViolation<MissingDto>> violations = validator.validate(dto);
+
+        assertThat(violations).hasSize(1);
+        assertThat(violations.iterator().next().getPropertyPath().toString()).isEqualTo("phone");
+    }
+
+    @Test
+    void missingShouldPassWhenFieldIsAbsent() {
+        MissingDto dto = new MissingDto();
+
+        assertThat(validator.validate(dto)).isEmpty();
+    }
+
+    @Test
+    void requiredWithoutAllShouldRequireFieldWhenAllCompanionsAreAbsent() {
+        RequiredWithoutAllDto dto = new RequiredWithoutAllDto();
+
+        Set<ConstraintViolation<RequiredWithoutAllDto>> violations = validator.validate(dto);
+
+        assertThat(violations).hasSize(1);
+        assertThat(violations.iterator().next().getPropertyPath().toString()).isEqualTo("name");
+    }
+
+    @Test
+    void requiredWithoutAllShouldSkipWhenAnyCompanionIsPresent() {
+        RequiredWithoutAllDto dto = new RequiredWithoutAllDto();
+        dto.email = "user@example.com";
+
+        assertThat(validator.validate(dto)).isEmpty();
+    }
+
     @RequiredUnless(field = "role", value = "guest", required = "email")
     static class RequiredUnlessDto {
         private String role;
@@ -224,5 +284,23 @@ class ClassLevelValidatorsTest {
     static class RequiredIfDeclinedDto {
         private String newsletter;
         private String reason;
+    }
+
+    @ProhibitedIf(field = "role", value = "ADMIN", prohibited = "nickname")
+    static class ProhibitedIfDto {
+        private String role;
+        private String nickname;
+    }
+
+    @Missing(field = "phone")
+    static class MissingDto {
+        private String phone;
+    }
+
+    @RequiredWithoutAll(fields = {"email", "phone"}, required = "name")
+    static class RequiredWithoutAllDto {
+        private String email;
+        private String phone;
+        private String name;
     }
 }

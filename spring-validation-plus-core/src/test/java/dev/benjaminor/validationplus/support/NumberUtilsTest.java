@@ -3,6 +3,7 @@ package dev.benjaminor.validationplus.support;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -34,5 +35,13 @@ class NumberUtilsTest {
         assertThat(NumberUtils.isMaxValue(100, 100)).isTrue();
         assertThat(NumberUtils.isMaxValue(101, 100)).isFalse();
         assertThat(NumberUtils.isMaxValue(null, 100)).isTrue();
+    }
+
+    @Test
+    void countDigitsShouldHandlePlainAndScientificNotation() {
+        assertThat(NumberUtils.countDigits(new BigDecimal("123.45"))).isEqualTo(5);
+        assertThat(NumberUtils.countDigits(new BigDecimal("1E+10"))).isEqualTo(11);
+        assertThat(NumberUtils.countDigits(1_000_000_000_0d)).isEqualTo(11);
+        assertThat(NumberUtils.countDigits(new BigInteger("99999"))).isEqualTo(5);
     }
 }
