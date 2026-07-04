@@ -5,6 +5,7 @@ import dev.benjaminor.validationplus.properties.SpringValidationPlusProperties;
 import dev.benjaminor.validationplus.spi.ContextValueProvider;
 import dev.benjaminor.validationplus.spi.ValidationPlusCheckers;
 import dev.benjaminor.validationplus.web.RequestContextValueProvider;
+import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -29,9 +30,13 @@ public class SpringValidationPlusAutoConfiguration {
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
     @ConditionalOnMissingBean(ContextValueProvider.class)
     public ContextValueProvider validationPlusContextValueProvider() {
-        ContextValueProvider provider = new RequestContextValueProvider();
-        ValidationPlusCheckers.registerContextValueProvider(provider);
-        return provider;
+        return new RequestContextValueProvider();
+    }
+
+    @Bean
+    @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+    SmartInitializingSingleton validationPlusContextValueProviderRegistration(ContextValueProvider provider) {
+        return () -> ValidationPlusCheckers.registerContextValueProvider(provider);
     }
 
     @Bean

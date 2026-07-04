@@ -4,10 +4,12 @@ import dev.benjaminor.validationplus.spi.ExistenceCheckRequest;
 import dev.benjaminor.validationplus.spi.ExistenceChecker;
 import dev.benjaminor.validationplus.spi.ValidationPlusCheckers;
 import jakarta.persistence.EntityManager;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementación JPA de {@link ExistenceChecker}.
  */
+@Transactional(readOnly = true)
 public class JpaExistenceChecker implements ExistenceChecker {
 
     private final EntityManager entityManager;

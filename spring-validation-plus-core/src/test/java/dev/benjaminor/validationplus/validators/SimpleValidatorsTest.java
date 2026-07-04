@@ -61,6 +61,14 @@ class SimpleValidatorsTest {
     }
 
     @Test
+    void acceptedAndDeclinedShouldRejectNullValues() {
+        SimpleDto dto = new SimpleDto();
+
+        assertThat(validator.validateProperty(dto, "acceptedField")).isNotEmpty();
+        assertThat(validator.validateProperty(dto, "declinedField")).isNotEmpty();
+    }
+
+    @Test
     void inAndNotInShouldValidateAllowedValues() {
         SimpleDto dto = new SimpleDto();
         dto.inField = "admin";
@@ -111,6 +119,8 @@ class SimpleValidatorsTest {
     @Test
     void dateBeforeAndAfterShouldValidateDates() {
         SimpleDto dto = new SimpleDto();
+        dto.acceptedField = "yes";
+        dto.declinedField = "no";
         dto.dateField = LocalDate.of(2024, 6, 1);
         dto.beforeField = LocalDate.of(2024, 1, 1);
         dto.afterField = LocalDate.of(2025, 1, 1);

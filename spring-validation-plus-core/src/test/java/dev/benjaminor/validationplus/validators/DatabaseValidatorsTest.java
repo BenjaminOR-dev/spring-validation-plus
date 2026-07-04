@@ -107,6 +107,17 @@ class DatabaseValidatorsTest {
     }
 
     @Test
+    void existsShouldFailWhenCheckerIsMissing() {
+        ExistsDto dto = new ExistsDto();
+        dto.roleId = 1L;
+
+        Set<ConstraintViolation<ExistsDto>> violations = validator.validate(dto);
+
+        assertThat(violations).hasSize(1);
+        assertThat(violations.iterator().next().getMessage()).contains("verificador de existencia");
+    }
+
+    @Test
     void existsShouldFailWhenCheckerDoesNotFindValue() {
         registerExistenceChecker(false);
 

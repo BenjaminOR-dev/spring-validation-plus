@@ -1,6 +1,7 @@
 package dev.benjaminor.validationplus.validators;
 
 import dev.benjaminor.validationplus.constraints.EmailAddress;
+import dev.benjaminor.validationplus.constraints.Filled;
 import dev.benjaminor.validationplus.constraints.IntegerType;
 import dev.benjaminor.validationplus.constraints.MaxLength;
 import dev.benjaminor.validationplus.constraints.MinLength;
@@ -102,6 +103,23 @@ class FieldValidatorsTest {
     }
 
     @Test
+    void filledShouldAllowNullButRejectEmptyString() {
+        FilledDto dto = new FilledDto();
+        dto.nickname = null;
+
+        assertThat(validator.validateProperty(dto, "nickname")).isEmpty();
+
+        dto.nickname = "";
+        assertThat(validator.validateProperty(dto, "nickname")).isNotEmpty();
+
+        dto.nickname = "   ";
+        assertThat(validator.validateProperty(dto, "nickname")).isNotEmpty();
+
+        dto.nickname = "Ben";
+        assertThat(validator.validateProperty(dto, "nickname")).isEmpty();
+    }
+
+    @Test
     void messagesShouldBeLocalizedInSpanish() {
         SampleDto dto = validDto();
         dto.email = null;
@@ -151,5 +169,11 @@ class FieldValidatorsTest {
         private String role;
 
         private String adminCode;
+    }
+
+    static class FilledDto {
+
+        @Filled
+        private String nickname;
     }
 }

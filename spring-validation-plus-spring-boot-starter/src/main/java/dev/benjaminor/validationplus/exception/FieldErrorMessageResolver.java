@@ -17,7 +17,7 @@ public final class FieldErrorMessageResolver {
     public static String resolve(FieldError error, Locale locale) {
         if (isTypeMismatch(error)) {
             return ValidationMessageUtils.resolve(
-                    resolveTypeMismatchKey(error.getCodes()),
+                    TypeMismatchMessageUtils.resolveMessageKeyFromErrorCodes(error.getCode(), error.getCodes()),
                     locale,
                     Map.of("field", error.getField()));
         }
@@ -38,27 +38,5 @@ public final class FieldErrorMessageResolver {
         }
         String message = error.getDefaultMessage();
         return message != null && message.startsWith("Failed to convert property value");
-    }
-
-    private static String resolveTypeMismatchKey(String[] codes) {
-        if (codes != null) {
-            for (String code : codes) {
-                if (code == null) {
-                    continue;
-                }
-                if (code.contains("Integer") || code.contains("Long")
-                        || code.contains("Short") || code.contains("Byte")) {
-                    return "dev.benjaminor.validationplus.type.integer";
-                }
-                if (code.contains("Double") || code.contains("Float")
-                        || code.contains("BigDecimal")) {
-                    return "dev.benjaminor.validationplus.type.decimal";
-                }
-                if (code.contains("Boolean")) {
-                    return "dev.benjaminor.validationplus.type.boolean";
-                }
-            }
-        }
-        return "dev.benjaminor.validationplus.type.generic";
     }
 }

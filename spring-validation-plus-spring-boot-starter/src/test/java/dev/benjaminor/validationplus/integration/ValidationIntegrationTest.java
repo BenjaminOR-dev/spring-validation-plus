@@ -131,4 +131,24 @@ class ValidationIntegrationTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errors.passwordConfirmation[0]").value(containsString("confirmación")));
     }
+
+    @Test
+    void shouldReturnFriendlyIntegerConversionErrorForModelAttribute() throws Exception {
+        mockMvc.perform(post("/api/users/form")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("name", "Benjamin")
+                        .param("email", "user@example.com")
+                        .param("size", "abc")
+                        .header("Accept-Language", "es"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors.size[0]").value("El campo size debe ser un entero."));
+    }
+
+    @Test
+    void shouldReturnValidationErrorForInvalidPathVariable() throws Exception {
+        mockMvc.perform(get("/api/users/0")
+                        .header("Accept-Language", "es"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors.id[0]").exists());
+    }
 }

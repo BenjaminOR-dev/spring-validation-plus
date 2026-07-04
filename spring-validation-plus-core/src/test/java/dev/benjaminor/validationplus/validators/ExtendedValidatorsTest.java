@@ -90,6 +90,47 @@ class ExtendedValidatorsTest {
         assertThat(validator.validate(prohibited)).isNotEmpty();
     }
 
+    @Test
+    void beforeOrEqualAndAfterOrEqualShouldValidateInclusiveDates() {
+        InclusiveDateDto dto = new InclusiveDateDto();
+        dto.eventDate = java.time.LocalDate.of(2024, 6, 15);
+        dto.beforeLimit = java.time.LocalDate.of(2024, 6, 15);
+        dto.afterLimit = java.time.LocalDate.of(2024, 6, 15);
+
+        assertThat(validator.validate(dto)).isEmpty();
+
+        dto.beforeLimit = java.time.LocalDate.of(2024, 6, 16);
+        assertThat(validator.validateProperty(dto, "beforeLimit")).isNotEmpty();
+
+        dto.beforeLimit = java.time.LocalDate.of(2024, 6, 15);
+        dto.afterLimit = java.time.LocalDate.of(2024, 6, 14);
+        assertThat(validator.validateProperty(dto, "afterLimit")).isNotEmpty();
+    }
+
+    @Test
+    void inArrayShouldValidateValueAgainstCompanionArray() {
+        InArrayDto dto = new InArrayDto();
+        dto.allowed = List.of("admin", "editor");
+        dto.role = "admin";
+
+        assertThat(validator.validate(dto)).isEmpty();
+
+        dto.role = "guest";
+        assertThat(validator.validate(dto)).isNotEmpty();
+    }
+
+    @Test
+    void missingIfShouldRequireFieldToBeAbsentWhenConditionMatches() {
+        MissingIfDto dto = new MissingIfDto();
+        dto.type = "guest";
+        dto.email = "user@example.com";
+
+        assertThat(validator.validate(dto)).isNotEmpty();
+
+        dto.email = null;
+        assertThat(validator.validate(dto)).isEmpty();
+    }
+
     enum Role {
         ADMIN, USER
     }
@@ -136,5 +177,27 @@ class ExtendedValidatorsTest {
     @Prohibited(field = "nickname")
     static class ProhibitedDto {
         private String nickname;
+    }
+
+    static class InclusiveDateDto {
+        private java.time.LocalDate eventDate = java.time.LocalDate.of(2024, 6, 15);
+
+        @BeforeOrEqual(value = "2024-06-15")
+        private java.time.LocalDate beforeLimit;
+
+        @AfterOrEqual(value = "2024-06-15")
+        private java.time.LocalDate afterLimit;
+    }
+
+    @InArray(field = "role", arrayField = "allowed")
+    static class InArrayDto {
+        private List<String> allowed;
+        private String role;
+    }
+
+    @MissingIf(field = "type", value = "guest", missing = "email")
+    static class MissingIfDto {
+        private String type;
+        private String email;
     }
 }

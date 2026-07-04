@@ -16,7 +16,7 @@ public final class AcceptedValidationUtils {
 
     public static boolean isAccepted(Object value) {
         if (value == null) {
-            return true;
+            return false;
         }
         if (value instanceof Boolean booleanValue) {
             return booleanValue;
@@ -26,7 +26,7 @@ public final class AcceptedValidationUtils {
 
     public static boolean isDeclined(Object value) {
         if (value == null) {
-            return true;
+            return false;
         }
         if (value instanceof Boolean booleanValue) {
             return !booleanValue;

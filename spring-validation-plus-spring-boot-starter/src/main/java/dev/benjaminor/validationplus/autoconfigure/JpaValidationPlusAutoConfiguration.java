@@ -2,6 +2,8 @@ package dev.benjaminor.validationplus.autoconfigure;
 
 import dev.benjaminor.validationplus.jpa.JpaExistenceChecker;
 import dev.benjaminor.validationplus.jpa.JpaUniquenessChecker;
+import dev.benjaminor.validationplus.spi.ExistenceChecker;
+import dev.benjaminor.validationplus.spi.UniquenessChecker;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -20,13 +22,13 @@ import org.springframework.context.annotation.Bean;
 public class JpaValidationPlusAutoConfiguration {
 
     @Bean
-    @ConditionalOnMissingBean
+    @ConditionalOnMissingBean(UniquenessChecker.class)
     public JpaUniquenessChecker jpaUniquenessChecker(EntityManager entityManager) {
         return new JpaUniquenessChecker(entityManager);
     }
 
     @Bean
-    @ConditionalOnMissingBean
+    @ConditionalOnMissingBean(ExistenceChecker.class)
     public JpaExistenceChecker jpaExistenceChecker(EntityManager entityManager) {
         return new JpaExistenceChecker(entityManager);
     }

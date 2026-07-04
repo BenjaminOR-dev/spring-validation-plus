@@ -13,14 +13,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.method.ParameterValidationResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -55,11 +56,32 @@ public class ValidationExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    public ValidationErrorResponse handleHandlerMethodValidation(HandlerMethodValidationException exception) {
+        Map<String, List<String>> errors = new LinkedHashMap<>();
+        Locale locale = LocaleContextHolder.getLocale();
+        for (ParameterValidationResult result : exception.getAllValidationResults()) {
+            String field = resolveParameterName(result);
+            for (var resolvableError : result.getResolvableErrors()) {
+                String message = resolvableError.getDefaultMessage();
+                if (message != null && !message.isBlank()) {
+                    addError(errors, field, message);
+                }
+            }
+        }
+        if (errors.isEmpty()) {
+            addError(errors, "request", ValidationMessageUtils.resolve(
+                    "dev.benjaminor.validationplus.type.generic", locale, Map.of("field", "request")));
+        }
+        return new ValidationErrorResponse(errors);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
     public ValidationErrorResponse handleConstraintViolation(ConstraintViolationException exception) {
         Map<String, List<String>> errors = new LinkedHashMap<>();
         for (ConstraintViolation<?> violation : exception.getConstraintViolations()) {
-            addError(errors, violation.getPropertyPath().toString(), violation.getMessage());
+            addError(errors, normalizePropertyPath(violation.getPropertyPath().toString()), violation.getMessage());
         }
         return new ValidationErrorResponse(errors);
     }
@@ -109,9 +131,25 @@ public class ValidationExceptionHandler {
         return new ValidationErrorResponse(errors);
     }
 
+    private String resolveParameterName(ParameterValidationResult result) {
+        String name = result.getMethodParameter().getParameterName();
+        return name != null ? name : "parameter";
+    }
+
+    private String normalizePropertyPath(String propertyPath) {
+        if (propertyPath == null || propertyPath.isBlank()) {
+            return "request";
+        }
+        int lastDot = propertyPath.lastIndexOf('.');
+        if (lastDot >= 0 && lastDot < propertyPath.length() - 1) {
+            return propertyPath.substring(lastDot + 1);
+        }
+        return propertyPath;
+    }
+
     private String resolveTypeMismatchMessage(String field, Class<?> targetType) {
         Locale locale = LocaleContextHolder.getLocale();
-        String messageKey = resolveMessageKey(targetType);
+        String messageKey = TypeMismatchMessageUtils.resolveMessageKey(targetType);
         return ValidationMessageUtils.resolve(messageKey, locale, Map.of("field", field));
     }
 
@@ -120,37 +158,10 @@ public class ValidationExceptionHandler {
         return ValidationMessageUtils.resolve("dev.benjaminor.validationplus.type.malformed", locale, Map.of());
     }
 
-    private String resolveMessageKey(Class<?> targetType) {
-        if (targetType == null) {
-            return "dev.benjaminor.validationplus.type.generic";
-        }
-        if (Integer.class.equals(targetType) || int.class.equals(targetType)
-                || Long.class.equals(targetType) || long.class.equals(targetType)
-                || Short.class.equals(targetType) || short.class.equals(targetType)
-                || Byte.class.equals(targetType) || byte.class.equals(targetType)) {
-            return "dev.benjaminor.validationplus.type.integer";
-        }
-        if (Float.class.equals(targetType) || float.class.equals(targetType)
-                || Double.class.equals(targetType) || double.class.equals(targetType)
-                || java.math.BigDecimal.class.equals(targetType)) {
-            return "dev.benjaminor.validationplus.type.decimal";
-        }
-        if (Boolean.class.equals(targetType) || boolean.class.equals(targetType)) {
-            return "dev.benjaminor.validationplus.type.boolean";
-        }
-        if (CharSequence.class.isAssignableFrom(targetType) || String.class.equals(targetType)) {
-            return "dev.benjaminor.validationplus.type.string";
-        }
-        if (targetType.isArray() || Collection.class.isAssignableFrom(targetType)) {
-            return "dev.benjaminor.validationplus.type.array";
-        }
-        return "dev.benjaminor.validationplus.type.generic";
-    }
-
     private String extractFieldName(Exception exception) {
-        if (exception instanceof ConversionFailedException conversionFailedException
-                && conversionFailedException.getSourceType() != null) {
-            return "value";
+        if (exception instanceof org.springframework.beans.TypeMismatchException typeMismatchException) {
+            String propertyName = typeMismatchException.getPropertyName();
+            return propertyName != null ? propertyName : "value";
         }
         return "value";
     }

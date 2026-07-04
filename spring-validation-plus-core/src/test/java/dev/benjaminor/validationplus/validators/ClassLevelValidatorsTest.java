@@ -3,6 +3,8 @@ package dev.benjaminor.validationplus.validators;
 import dev.benjaminor.validationplus.constraints.Confirmed;
 import dev.benjaminor.validationplus.constraints.Different;
 import dev.benjaminor.validationplus.constraints.RequiredIf;
+import dev.benjaminor.validationplus.constraints.RequiredIfAccepted;
+import dev.benjaminor.validationplus.constraints.RequiredIfDeclined;
 import dev.benjaminor.validationplus.constraints.RequiredUnless;
 import dev.benjaminor.validationplus.constraints.RequiredWith;
 import dev.benjaminor.validationplus.constraints.RequiredWithout;
@@ -116,6 +118,60 @@ class ClassLevelValidatorsTest {
         assertThat(violations.iterator().next().getPropertyPath().toString()).isEqualTo("adminCode");
     }
 
+    @Test
+    void requiredIfAcceptedShouldSkipWhenTriggerFieldIsNull() {
+        RequiredIfAcceptedDto dto = new RequiredIfAcceptedDto();
+
+        assertThat(validator.validate(dto)).isEmpty();
+    }
+
+    @Test
+    void requiredIfAcceptedShouldRequireFieldWhenTriggerIsAccepted() {
+        RequiredIfAcceptedDto dto = new RequiredIfAcceptedDto();
+        dto.termsAccepted = "yes";
+
+        Set<ConstraintViolation<RequiredIfAcceptedDto>> violations = validator.validate(dto);
+
+        assertThat(violations).hasSize(1);
+        assertThat(violations.iterator().next().getPropertyPath().toString()).isEqualTo("fullName");
+    }
+
+    @Test
+    void requiredIfAcceptedShouldPassWhenRequiredFieldIsPresent() {
+        RequiredIfAcceptedDto dto = new RequiredIfAcceptedDto();
+        dto.termsAccepted = "yes";
+        dto.fullName = "Benjamin";
+
+        assertThat(validator.validate(dto)).isEmpty();
+    }
+
+    @Test
+    void requiredIfDeclinedShouldSkipWhenTriggerFieldIsNull() {
+        RequiredIfDeclinedDto dto = new RequiredIfDeclinedDto();
+
+        assertThat(validator.validate(dto)).isEmpty();
+    }
+
+    @Test
+    void requiredIfDeclinedShouldRequireFieldWhenTriggerIsDeclined() {
+        RequiredIfDeclinedDto dto = new RequiredIfDeclinedDto();
+        dto.newsletter = "no";
+
+        Set<ConstraintViolation<RequiredIfDeclinedDto>> violations = validator.validate(dto);
+
+        assertThat(violations).hasSize(1);
+        assertThat(violations.iterator().next().getPropertyPath().toString()).isEqualTo("reason");
+    }
+
+    @Test
+    void requiredIfDeclinedShouldPassWhenRequiredFieldIsPresent() {
+        RequiredIfDeclinedDto dto = new RequiredIfDeclinedDto();
+        dto.newsletter = "no";
+        dto.reason = "Not interested";
+
+        assertThat(validator.validate(dto)).isEmpty();
+    }
+
     @RequiredUnless(field = "role", value = "guest", required = "email")
     static class RequiredUnlessDto {
         private String role;
@@ -156,5 +212,17 @@ class ClassLevelValidatorsTest {
     static class RequiredIfDto {
         private String role;
         private String adminCode;
+    }
+
+    @RequiredIfAccepted(field = "termsAccepted", required = "fullName")
+    static class RequiredIfAcceptedDto {
+        private String termsAccepted;
+        private String fullName;
+    }
+
+    @RequiredIfDeclined(field = "newsletter", required = "reason")
+    static class RequiredIfDeclinedDto {
+        private String newsletter;
+        private String reason;
     }
 }
