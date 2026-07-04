@@ -1,101 +1,99 @@
-# Publishing to Maven Central
+# Publicar en Maven Central
 
-[🇪🇸 Versión en español](PUBLISHING.es.md)
+Guía para publicar `spring-validation-plus-core` y `spring-validation-plus-spring-boot-starter` en [Maven Central](https://central.sonatype.com/).
 
-This guide covers publication of `spring-validation-plus-core` and `spring-validation-plus-spring-boot-starter` to [Maven Central](https://central.sonatype.com/).
+Opciones de deploy: **Docker** (`.env` local) o **GitHub Actions** (tags `v*` — ver [.github/workflows/release.yml](.github/workflows/release.yml)).
 
-Deploy options: **Docker** (local `.env`) or **GitHub Actions** (on `v*` tags — see [.github/workflows/release.yml](.github/workflows/release.yml)).
+## Qué se publica
 
-## What gets published
+| Artefacto | ¿Se publica? |
+|-----------|--------------|
+| `spring-validation-plus-core` | Sí |
+| `spring-validation-plus-spring-boot-starter` | Sí |
+| `spring-validation-plus` (POM padre) | Sí |
+| `spring-validation-plus-example` | **No** (excluido con `-pl core,starter -am` en el deploy) |
 
-| Artifact | Published |
-|----------|-----------|
-| `spring-validation-plus-core` | Yes |
-| `spring-validation-plus-spring-boot-starter` | Yes |
-| `spring-validation-plus` (parent POM) | Yes |
-| `spring-validation-plus-example` | **No** (excluded via `-pl core,starter -am` on deploy) |
+## Requisitos (una sola vez)
 
-## Prerequisites (one-time)
+### 1. Repositorio en GitHub
 
-### 1. GitHub repository
+Repo público: `https://github.com/BenjaminOR-dev/spring-validation-plus`
 
-Public repo: `https://github.com/BenjaminOR-dev/spring-validation-plus`
+Namespace Maven verificado: **`io.github.benjaminor-dev`** (Central Portal → pestaña Namespace).
 
-Verified Maven namespace: **`io.github.benjaminor-dev`** (Central Portal → Namespace tab).
+### 2. Namespace en Central Portal
 
-### 2. Central Portal namespace
+Ya verificado vía GitHub como **`io.github.benjaminor-dev`**. El `groupId` del proyecto debe coincidir — no hace falta registrar `dev.benjaminor` salvo que tengas ese dominio y lo verifiques aparte.
 
-Already verified via GitHub as **`io.github.benjaminor-dev`**. The project `groupId` must match this namespace — do not register a separate `dev.benjaminor` unless you own that domain and verify it separately.
-
-### 3. GPG key
+### 3. Clave GPG
 
 ```bash
 gpg --full-generate-key
 gpg --list-secret-keys --keyid-format long
-gpg --keyserver keys.openpgp.org --send-keys YOUR_KEY_ID
+gpg --keyserver keys.openpgp.org --send-keys TU_KEY_ID
 ```
 
-### 4. Local credentials (Docker deploy)
+### 4. Credenciales locales (deploy con Docker)
 
-Copy [.env.example](.env.example) to `.env` (gitignored) and fill in:
+Copia [.env.example](.env.example) a `.env` (gitignored) y rellena:
 
-| Variable | Source |
+| Variable | Origen |
 |----------|--------|
 | `CENTRAL_USERNAME` / `CENTRAL_PASSWORD` | [Central Portal → User Token](https://central.sonatype.com/usertoken) |
 | `GPG_KEY_ID` | `gpg --list-secret-keys --keyid-format long` |
-| `GPG_PASSPHRASE` | Your GPG key passphrase |
+| `GPG_PASSPHRASE` | Passphrase de tu clave GPG |
 
-GPG private key backup: `.local/gpg-signing-private.asc` (see [PUBLISHING.local.md](PUBLISHING.local.md) if present locally).
+Backup de clave privada GPG: `.local/gpg-signing-private.asc` (ver [PUBLISHING.local.md](PUBLISHING.local.md) si lo tienes en local).
 
-For non-Docker workflows, you can still use [docs/settings-central.xml.example](docs/settings-central.xml.example) in `~/.m2/settings.xml`.
+Para flujos sin Docker, puedes usar [docs/settings-central.xml.example](docs/settings-central.xml.example) en `~/.m2/settings.xml`.
 
-> **Security — never commit:**
+> **Seguridad — nunca commitees:**
 >
-> - `.env` (real credentials)
-> - `.local/` (GPG key material)
-> - Central Portal tokens or GPG passphrases in the repository
+> - `.env` (credenciales reales)
+> - `.local/` (material de claves GPG)
+> - Tokens de Central Portal o passphrases GPG en el repositorio
 
-## Release checklist
+## Checklist de release
 
-### 1. Set release version (no SNAPSHOT)
+### 1. Versión de release (sin SNAPSHOT)
 
-In the root `pom.xml` and all modules:
+En el `pom.xml` raíz y módulos:
 
 ```xml
 <version>0.1.0</version>
 ```
 
-Maven Central does not accept `-SNAPSHOT` for release repositories.
+Maven Central no acepta `-SNAPSHOT` en el repositorio de releases.
 
-### 2. Run tests
+### 2. Ejecutar tests
 
 ```bash
 docker compose run --rm maven mvn clean verify
 ```
 
-### 3. Deploy with the `release` profile
+### 3. Deploy con perfil `release`
 
-Ensure `.env` exists (from `.env.example`) and GPG key is in `.local/`.
+Asegúrate de tener `.env` (desde `.env.example`) y la clave GPG en `.local/`.
 
 ```bash
 docker compose run --rm maven ./docker/deploy-release.sh
 ```
 
-The script reads `.env`, generates `settings.xml` inside the container, imports the signing key from `.local/`, and runs:
+El script lee `.env`, genera `settings.xml` en el contenedor, importa la clave desde `.local/` y ejecuta:
 
 ```bash
 mvn clean deploy -Prelease -pl spring-validation-plus-core,spring-validation-plus-spring-boot-starter -am
 ```
 
-The `-pl … -am` flags deploy only **core**, **starter**, and the parent POM. The **example** module is built locally for development but is **not** uploaded to Maven Central.
+Los flags `-pl … -am` publican solo **core**, **starter** y el POM padre. El módulo **example** se compila en local pero **no** se sube a Maven Central.
 
-Notes:
+Notas:
 
-- Do **not** mount macOS `~/.gnupg` — `gpg-agent` fails in Docker.
-- The `release` profile uses GPG loopback mode (no agent).
-- Maven dependency cache uses the project `.m2/` volume from `docker-compose.yml`.
+- No montes `~/.gnupg` de macOS — `gpg-agent` falla en Docker.
+- El perfil `release` usa GPG en modo loopback (sin agent).
+- La caché Maven usa el volumen `.m2/` del proyecto en `docker-compose.yml`.
 
-Alternatively, run deploy **on the host** (outside Docker) if you have Maven and GPG installed locally:
+Alternativa: ejecutar el deploy **en el host** (fuera de Docker) si tienes Maven y GPG locales:
 
 ```bash
 export GPG_TTY=$(tty)
@@ -104,50 +102,50 @@ mvn clean deploy -Prelease \
   -am
 ```
 
-### 4. GitHub Actions release (optional)
+### 4. Release con GitHub Actions (opcional)
 
-Push a version tag (`v0.2.0`, etc.) after the POM version is a **release** (no `-SNAPSHOT`). Workflow: [.github/workflows/release.yml](.github/workflows/release.yml).
+Push de un tag de versión (`v0.2.0`, etc.) cuando el POM ya esté en versión **release** (sin `-SNAPSHOT`). Workflow: [.github/workflows/release.yml](.github/workflows/release.yml).
 
-Configure these [repository secrets](https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions):
+Configura estos [secrets del repositorio](https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions):
 
-| Secret | Value |
+| Secret | Valor |
 |--------|-------|
-| `CENTRAL_USERNAME` | Central Portal user token username |
-| `CENTRAL_PASSWORD` | Central Portal user token password |
-| `GPG_KEY_ID` | GPG key id (long format) |
-| `GPG_PASSPHRASE` | GPG key passphrase |
-| `GPG_PRIVATE_KEY` | Armored private key (contents of `.local/gpg-signing-private.asc`) |
+| `CENTRAL_USERNAME` | Username del user token de Central Portal |
+| `CENTRAL_PASSWORD` | Password del user token de Central Portal |
+| `GPG_KEY_ID` | Id de clave GPG (formato long) |
+| `GPG_PASSPHRASE` | Passphrase de la clave GPG |
+| `GPG_PRIVATE_KEY` | Clave privada armored (contenido de `.local/gpg-signing-private.asc`) |
 
-The workflow verifies the POM is not a SNAPSHOT, imports GPG, and deploys only **core**, **starter**, and the parent POM — same as `deploy-release.sh`.
+El workflow verifica que el POM no sea SNAPSHOT, importa GPG y publica solo **core**, **starter** y el POM padre — igual que `deploy-release.sh`.
 
-> **Note:** `0.1.0` on Maven Central accidentally included `spring-validation-plus-example`. Releases **`0.2.0+`** exclude it.
+> **Nota:** `0.1.0` en Maven Central incluyó por error `spring-validation-plus-example`. Releases **`0.2.0+`** lo excluyen.
 
-### 5. Publish in Central Portal
+### 5. Publicar en Central Portal
 
-With `autoPublish=false` (current default), after upload:
+Con `autoPublish=false` (config actual), tras el upload:
 
-1. Open [central.sonatype.com](https://central.sonatype.com/) → your deployment.
-2. Review validation results.
-3. Click **Publish**.
+1. Abre [central.sonatype.com](https://central.sonatype.com/) → tu deployment.
+2. Revisa la validación.
+3. Pulsa **Publish**.
 
-Wait a few minutes until the artifact appears on [search.maven.org](https://search.maven.org/).
+En unos minutos debería aparecer en [search.maven.org](https://search.maven.org/).
 
-### 6. Git tag
+### 6. Tag en Git
 
 ```bash
 git tag -a v0.1.0 -m "Release 0.1.0"
 git push origin v0.1.0
 ```
 
-Update `<scm><tag>v0.1.0</tag></scm>` in `pom.xml` for the next release commit.
+Actualiza `<scm><tag>v0.1.0</tag></scm>` en el `pom.xml` en el commit del release.
 
-### 7. Bump to next development version
+### 7. Subir versión de desarrollo
 
 ```xml
 <version>0.2.0-SNAPSHOT</version>
 ```
 
-## Consumer dependency (after publish)
+## Dependencia para consumidores (tras publicar)
 
 **Maven**
 
@@ -165,19 +163,19 @@ Update `<scm><tag>v0.1.0</tag></scm>` in `pom.xml` for the next release commit.
 implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.1.0")
 ```
 
-No extra repository configuration required.
+Sin repositorios extra.
 
-## Troubleshooting
+## Problemas frecuentes
 
-| Problem | Solution |
-|---------|----------|
-| `401 Unauthorized` on deploy | Check Central Portal token in `~/.m2/settings.xml`, server id must be `central` |
-| GPG signing fails | Verify `gpg.keyname`, mount `~/.gnupg`, or run `export GPG_TTY=$(tty)` |
-| Namespace not allowed | Confirm `groupId` is `io.github.benjaminor-dev` and namespace shows **Verified** in Central Portal |
-| Javadoc errors | `failOnError=false` is set in the release profile; fix docs over time |
-| Example module uploaded | Deploy uses `-pl core,starter -am`; example is excluded from Central |
+| Problema | Solución |
+|----------|----------|
+| `401 Unauthorized` en deploy | Revisa token en `~/.m2/settings.xml`, server id = `central` |
+| Falla firma GPG | Verifica `gpg.keyname`, monta `~/.gnupg`, o `export GPG_TTY=$(tty)` |
+| Namespace no permitido | Confirma `groupId` = `io.github.benjaminor-dev` y namespace **Verified** en Central Portal |
+| Errores de Javadoc | `failOnError=false` en el perfil release; mejora docs después |
+| Se subió el example | El deploy usa `-pl core,starter -am`; example queda excluido de Central |
 
-## Pending
+## Pendiente
 
-- [ ] Configure GitHub Actions secrets and validate a tag-based release
-- [ ] `autoPublish=true` once automated releases are stable
+- [ ] Configurar secrets de GitHub Actions y validar un release por tag
+- [ ] `autoPublish=true` cuando los releases automatizados estén estables

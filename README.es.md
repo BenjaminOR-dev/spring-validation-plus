@@ -737,11 +737,11 @@ docker compose up example
 docker compose run --rm maven mvn clean install
 ```
 
-Para compilar versiones no publicadas desde el código fuente, clona el repo y ejecuta `mvn clean install` localmente. Los releases se publican en Maven Central — ver [PUBLISHING.es.md](PUBLISHING.es.md) (mantenedores).
+Para compilar versiones no publicadas desde el código fuente, clona el repo y ejecuta `mvn clean install` localmente. Los releases se publican en Maven Central — ver [PUBLISHING.md](PUBLISHING.md) (mantenedores).
 
 ## Roadmap
 
-- Workflow de release en GitHub Actions al pushear tags (ver [PUBLISHING.es.md](PUBLISHING.es.md))
+- Workflow de release en GitHub Actions al pushear tags (ver [PUBLISHING.md](PUBLISHING.md))
 - Soporte `TYPE_USE` en constraints (`List<@EmailAddress String>`)
 - Mejoras de multipart en `ValidationExceptionHandler`
 - `autoPublish=true` en Central Portal cuando la automatización de releases esté estable
