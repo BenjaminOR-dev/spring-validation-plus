@@ -1,0 +1,29 @@
+services:
+  maven:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    volumes:
+      - ./:/app
+      - ./.m2:/root/.m2
+    working_dir: /app
+    entrypoint: ["./docker/entrypoint.sh"]
+    command: ["mvn", "clean", "verify"]
+
+  example:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    volumes:
+      - ./:/app
+      - ./.m2:/root/.m2
+    working_dir: /app
+    entrypoint: ["./docker/entrypoint.sh"]
+    command:
+      - mvn
+      - -pl
+      - spring-validation-plus-example
+      - spring-boot:run
+      - -Dspring-boot.run.jvmArguments=-Dserver.port=8080
+    ports:
+      - "8080:8080"

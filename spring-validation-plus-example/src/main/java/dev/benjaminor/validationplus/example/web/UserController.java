@@ -1,0 +1,34 @@
+package dev.benjaminor.validationplus.example.web;
+
+import dev.benjaminor.validationplus.example.dto.PasswordRequest;
+import dev.benjaminor.validationplus.example.dto.UserRequest;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/users")
+public class UserController {
+
+    @PostMapping
+    public ResponseEntity<Map<String, String>> create(@Valid @RequestBody UserRequest request) {
+        return ResponseEntity.ok(Map.of("status", "ok"));
+    }
+
+    @PostMapping("/password")
+    public ResponseEntity<Map<String, String>> changePassword(@Valid @RequestBody PasswordRequest request) {
+        return ResponseEntity.ok(Map.of("status", "ok"));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Map<String, String>> search(@RequestParam("size") Integer size) {
+        return ResponseEntity.ok(Map.of("size", String.valueOf(size)));
+    }
+}

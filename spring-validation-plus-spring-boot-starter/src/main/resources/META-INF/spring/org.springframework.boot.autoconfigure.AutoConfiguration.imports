@@ -1,0 +1,2 @@
+dev.benjaminor.validationplus.autoconfigure.SpringValidationPlusAutoConfiguration
+dev.benjaminor.validationplus.autoconfigure.JpaValidationPlusAutoConfiguration
