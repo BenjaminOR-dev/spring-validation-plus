@@ -4,6 +4,9 @@ import dev.benjaminor.validationplus.constraints.Confirmed;
 import dev.benjaminor.validationplus.constraints.Required;
 import dev.benjaminor.validationplus.constraints.StringType;
 
+/**
+ * Patrón: {@code @Confirmed} — el campo debe coincidir con {@code passwordConfirmation}.
+ */
 @Confirmed(field = "password")
 public class PasswordRequest {
 

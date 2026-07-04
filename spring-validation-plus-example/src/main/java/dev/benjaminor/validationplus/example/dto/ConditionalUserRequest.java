@@ -12,8 +12,11 @@ import dev.benjaminor.validationplus.constraints.Required;
 import dev.benjaminor.validationplus.constraints.RequiredIf;
 import dev.benjaminor.validationplus.constraints.StringType;
 
+/**
+ * Patrón: tipos Java + regla condicional {@code @RequiredIf} a nivel clase.
+ */
 @RequiredIf(field = "role", value = "ADMIN", required = "adminCode")
-public class UserRequest {
+public class ConditionalUserRequest {
 
     @Required
     @StringType
