@@ -19,14 +19,13 @@ Guía para publicar **manualmente** `spring-validation-plus-core` y `spring-vali
 
 ### 1. Repositorio en GitHub
 
-Repo público: `https://github.com/benjaminor/spring-validation-plus`
+Repo público: `https://github.com/BenjaminOR-dev/spring-validation-plus`
+
+Namespace Maven verificado: **`io.github.benjaminor-dev`** (Central Portal → pestaña Namespace).
 
 ### 2. Namespace en Central Portal
 
-1. Entra en [central.sonatype.com](https://central.sonatype.com/) con GitHub.
-2. **Register namespace** → `dev.benjaminor`.
-3. Verifica la propiedad (enlaza el repositorio de GitHub).
-4. Espera la aprobación.
+Ya verificado vía GitHub como **`io.github.benjaminor-dev`**. El `groupId` del proyecto debe coincidir — no hace falta registrar `dev.benjaminor` salvo que tengas ese dominio y lo verifiques aparte.
 
 ### 3. Clave GPG
 
@@ -115,7 +114,7 @@ Actualiza `<scm><tag>v0.1.0</tag></scm>` en el `pom.xml` en el commit del releas
 
 ```xml
 <dependency>
-    <groupId>dev.benjaminor</groupId>
+    <groupId>io.github.benjaminor-dev</groupId>
     <artifactId>spring-validation-plus-spring-boot-starter</artifactId>
     <version>0.1.0</version>
 </dependency>
@@ -124,7 +123,7 @@ Actualiza `<scm><tag>v0.1.0</tag></scm>` en el `pom.xml` en el commit del releas
 **Gradle**
 
 ```kotlin
-implementation("dev.benjaminor:spring-validation-plus-spring-boot-starter:0.1.0")
+implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.1.0")
 ```
 
 Sin repositorios extra.
@@ -135,7 +134,7 @@ Sin repositorios extra.
 |----------|----------|
 | `401 Unauthorized` en deploy | Revisa token en `~/.m2/settings.xml`, server id = `central` |
 | Falla firma GPG | Verifica `gpg.keyname`, monta `~/.gnupg`, o `export GPG_TTY=$(tty)` |
-| Namespace no permitido | Completa verificación de `dev.benjaminor` en Central Portal |
+| Namespace no permitido | Confirma `groupId` = `io.github.benjaminor-dev` y namespace **Verified** en Central Portal |
 | Errores de Javadoc | `failOnError=false` en el perfil release; mejora docs después |
 | Se subió el example | Confirma `maven.deploy.skip=true` en el pom del example |
 

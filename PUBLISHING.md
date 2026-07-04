@@ -19,14 +19,13 @@ This guide covers **manual** publication of `spring-validation-plus-core` and `s
 
 ### 1. GitHub repository
 
-Public repo: `https://github.com/benjaminor/spring-validation-plus`
+Public repo: `https://github.com/BenjaminOR-dev/spring-validation-plus`
+
+Verified Maven namespace: **`io.github.benjaminor-dev`** (Central Portal → Namespace tab).
 
 ### 2. Central Portal namespace
 
-1. Sign in at [central.sonatype.com](https://central.sonatype.com/) with GitHub.
-2. **Register namespace** → `dev.benjaminor`.
-3. Verify ownership (link the GitHub repository).
-4. Wait for approval.
+Already verified via GitHub as **`io.github.benjaminor-dev`**. The project `groupId` must match this namespace — do not register a separate `dev.benjaminor` unless you own that domain and verify it separately.
 
 ### 3. GPG key
 
@@ -115,7 +114,7 @@ Update `<scm><tag>v0.1.0</tag></scm>` in `pom.xml` for the next release commit.
 
 ```xml
 <dependency>
-    <groupId>dev.benjaminor</groupId>
+    <groupId>io.github.benjaminor-dev</groupId>
     <artifactId>spring-validation-plus-spring-boot-starter</artifactId>
     <version>0.1.0</version>
 </dependency>
@@ -124,7 +123,7 @@ Update `<scm><tag>v0.1.0</tag></scm>` in `pom.xml` for the next release commit.
 **Gradle**
 
 ```kotlin
-implementation("dev.benjaminor:spring-validation-plus-spring-boot-starter:0.1.0")
+implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.1.0")
 ```
 
 No extra repository configuration required.
@@ -135,7 +134,7 @@ No extra repository configuration required.
 |---------|----------|
 | `401 Unauthorized` on deploy | Check Central Portal token in `~/.m2/settings.xml`, server id must be `central` |
 | GPG signing fails | Verify `gpg.keyname`, mount `~/.gnupg`, or run `export GPG_TTY=$(tty)` |
-| Namespace not allowed | Complete `dev.benjaminor` verification on Central Portal |
+| Namespace not allowed | Confirm `groupId` is `io.github.benjaminor-dev` and namespace shows **Verified** in Central Portal |
 | Javadoc errors | `failOnError=false` is set in the release profile; fix docs over time |
 | Example module uploaded | Confirm `maven.deploy.skip=true` in example `pom.xml` |
 

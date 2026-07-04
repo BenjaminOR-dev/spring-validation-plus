@@ -60,7 +60,7 @@ Spring Validation Plus adds more than **85 custom constraints** that work like n
 
 ```xml
 <dependency>
-    <groupId>dev.benjaminor</groupId>
+    <groupId>io.github.benjaminor-dev</groupId>
     <artifactId>spring-validation-plus-spring-boot-starter</artifactId>
     <version>0.1.0-SNAPSHOT</version>
 </dependency>
@@ -69,20 +69,20 @@ Spring Validation Plus adds more than **85 custom constraints** that work like n
 **Gradle (Kotlin DSL)**
 
 ```kotlin
-implementation("dev.benjaminor:spring-validation-plus-spring-boot-starter:0.1.0-SNAPSHOT")
+implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.1.0-SNAPSHOT")
 ```
 
 **Gradle (Groovy)**
 
 ```groovy
-implementation 'dev.benjaminor:spring-validation-plus-spring-boot-starter:0.1.0-SNAPSHOT'
+implementation 'io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.1.0-SNAPSHOT'
 ```
 
 **Multi-module Maven** (same repository):
 
 ```xml
 <dependency>
-    <groupId>dev.benjaminor</groupId>
+    <groupId>io.github.benjaminor-dev</groupId>
     <artifactId>spring-validation-plus-spring-boot-starter</artifactId>
     <version>${project.version}</version>
 </dependency>
@@ -91,7 +91,7 @@ implementation 'dev.benjaminor:spring-validation-plus-spring-boot-starter:0.1.0-
 > **Availability:** version `0.1.0-SNAPSHOT` requires a local install until publication to Maven Central. See [PUBLISHING.md](PUBLISHING.md) for the release checklist (maintainers).
 >
 > ```bash
-> git clone https://github.com/benjaminor/spring-validation-plus.git
+> git clone https://github.com/BenjaminOR-dev/spring-validation-plus.git
 > cd spring-validation-plus
 > docker compose run --rm maven mvn clean install
 > ```

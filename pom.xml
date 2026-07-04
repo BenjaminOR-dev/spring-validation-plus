@@ -4,14 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>dev.benjaminor</groupId>
+    <groupId>io.github.benjaminor-dev</groupId>
     <artifactId>spring-validation-plus</artifactId>
     <version>0.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Spring Validation Plus</name>
     <description>Validaciones inspiradas en Laravel para Spring Boot y Jakarta Validation</description>
-    <url>https://github.com/benjaminor/spring-validation-plus</url>
+    <url>https://github.com/BenjaminOR-dev/spring-validation-plus</url>
 
     <licenses>
         <license>
@@ -25,14 +25,14 @@
         <developer>
             <id>benjaminor</id>
             <name>Benjamín Olvera R.</name>
-            <url>https://github.com/benjaminor</url>
+            <url>https://github.com/BenjaminOR-dev</url>
         </developer>
     </developers>
 
     <scm>
-        <connection>scm:git:git://github.com/benjaminor/spring-validation-plus.git</connection>
-        <developerConnection>scm:git:ssh://github.com/benjaminor/spring-validation-plus.git</developerConnection>
-        <url>https://github.com/benjaminor/spring-validation-plus</url>
+        <connection>scm:git:git://github.com/BenjaminOR-dev/spring-validation-plus.git</connection>
+        <developerConnection>scm:git:ssh://github.com/BenjaminOR-dev/spring-validation-plus.git</developerConnection>
+        <url>https://github.com/BenjaminOR-dev/spring-validation-plus</url>
         <tag>HEAD</tag>
     </scm>
 
@@ -76,12 +76,12 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>dev.benjaminor</groupId>
+                <groupId>io.github.benjaminor-dev</groupId>
                 <artifactId>spring-validation-plus-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>dev.benjaminor</groupId>
+                <groupId>io.github.benjaminor-dev</groupId>
                 <artifactId>spring-validation-plus-spring-boot-starter</artifactId>
                 <version>${project.version}</version>
             </dependency>
