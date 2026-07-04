@@ -59,3 +59,8 @@ Desktop.ini
 
 # Notas internas de desarrollo (no publicar)
 CONTINUAR.md
+PUBLISHING.local.md
+.local/
+
+# Maven settings locales (credenciales Central)
+settings.xml

@@ -81,7 +81,24 @@ Notas:
 
 - Monta `.m2` para credenciales de Central y settings GPG.
 - Monta `.gnupg` si las claves están en el host.
-- El perfil `release` genera **sources**, **javadoc**, **firmas GPG** y sube con `central-publishing-maven-plugin`.
+- La imagen Docker incluye `gnupg` para firmar durante el deploy.
+- Usa **`-it`** si GPG pide la passphrase de forma interactiva:
+
+```bash
+export GPG_TTY=$(tty)
+
+docker compose run --rm -it \
+  -v "$HOME/.m2:/root/.m2" \
+  -v "$HOME/.gnupg:/root/.gnupg" \
+  maven mvn clean deploy -Prelease
+```
+
+Alternativa: ejecutar el deploy **en el host** (fuera de Docker) si tienes Maven y GPG locales:
+
+```bash
+export GPG_TTY=$(tty)
+mvn clean deploy -Prelease
+```
 
 ### 4. Publicar en Central Portal
 
