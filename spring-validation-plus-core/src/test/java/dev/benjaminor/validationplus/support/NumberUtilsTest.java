@@ -44,4 +44,10 @@ class NumberUtilsTest {
         assertThat(NumberUtils.countDigits(1_000_000_000_0d)).isEqualTo(11);
         assertThat(NumberUtils.countDigits(new BigInteger("99999"))).isEqualTo(5);
     }
+
+    @Test
+    void countDigitsShouldStripTrailingZerosLikeDigitsConstraint() {
+        assertThat(NumberUtils.countDigits(new BigDecimal("10.00"))).isEqualTo(2);
+        assertThat(NumberUtils.countDigits(new BigDecimal("100.000"))).isEqualTo(3);
+    }
 }

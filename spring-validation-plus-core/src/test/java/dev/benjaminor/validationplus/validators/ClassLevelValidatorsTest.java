@@ -8,6 +8,11 @@ import dev.benjaminor.validationplus.constraints.RequiredIfAccepted;
 import dev.benjaminor.validationplus.constraints.RequiredIfDeclined;
 import dev.benjaminor.validationplus.constraints.RequiredUnless;
 import dev.benjaminor.validationplus.constraints.Missing;
+import dev.benjaminor.validationplus.constraints.MissingUnless;
+import dev.benjaminor.validationplus.constraints.MissingWith;
+import dev.benjaminor.validationplus.constraints.MissingWithAll;
+import dev.benjaminor.validationplus.constraints.Prohibited;
+import dev.benjaminor.validationplus.constraints.ProhibitedUnless;
 import dev.benjaminor.validationplus.constraints.RequiredWithoutAll;
 import dev.benjaminor.validationplus.constraints.RequiredWith;
 import dev.benjaminor.validationplus.constraints.RequiredWithout;
@@ -215,6 +220,86 @@ class ClassLevelValidatorsTest {
     }
 
     @Test
+    void missingShouldFailWhenFieldIsBlankButProvided() {
+        MissingDto dto = new MissingDto();
+        dto.phone = "   ";
+
+        assertThat(validator.validate(dto)).isNotEmpty();
+    }
+
+    @Test
+    void prohibitedShouldFailWhenFieldIsBlankButProvided() {
+        ProhibitedDto dto = new ProhibitedDto();
+        dto.nickname = "   ";
+
+        assertThat(validator.validate(dto)).isNotEmpty();
+    }
+
+    @Test
+    void missingUnlessShouldRequireFieldAbsentWhenConditionDoesNotMatch() {
+        MissingUnlessDto dto = new MissingUnlessDto();
+        dto.role = "admin";
+        dto.nickname = "nick";
+
+        assertThat(validator.validate(dto)).isNotEmpty();
+
+        dto.nickname = null;
+        assertThat(validator.validate(dto)).isEmpty();
+    }
+
+    @Test
+    void missingUnlessShouldAllowFieldWhenUnlessConditionMatches() {
+        MissingUnlessDto dto = new MissingUnlessDto();
+        dto.role = "guest";
+        dto.nickname = "nick";
+
+        assertThat(validator.validate(dto)).isEmpty();
+    }
+
+    @Test
+    void prohibitedUnlessShouldFailWhenFieldPresentAndConditionDoesNotMatch() {
+        ProhibitedUnlessDto dto = new ProhibitedUnlessDto();
+        dto.role = "admin";
+        dto.nickname = "nick";
+
+        assertThat(validator.validate(dto)).isNotEmpty();
+    }
+
+    @Test
+    void prohibitedUnlessShouldAllowFieldWhenUnlessConditionMatches() {
+        ProhibitedUnlessDto dto = new ProhibitedUnlessDto();
+        dto.role = "guest";
+        dto.nickname = "nick";
+
+        assertThat(validator.validate(dto)).isEmpty();
+    }
+
+    @Test
+    void missingWithShouldRequireFieldAbsentWhenCompanionIsPresent() {
+        MissingWithDto dto = new MissingWithDto();
+        dto.email = "user@example.com";
+        dto.phone = "555-0100";
+
+        assertThat(validator.validate(dto)).isNotEmpty();
+
+        dto.phone = null;
+        assertThat(validator.validate(dto)).isEmpty();
+    }
+
+    @Test
+    void missingWithAllShouldRequireFieldAbsentWhenAllCompanionsArePresent() {
+        MissingWithAllDto dto = new MissingWithAllDto();
+        dto.email = "user@example.com";
+        dto.phone = "555-0100";
+        dto.nickname = "nick";
+
+        assertThat(validator.validate(dto)).isNotEmpty();
+
+        dto.nickname = null;
+        assertThat(validator.validate(dto)).isEmpty();
+    }
+
+    @Test
     void requiredWithoutAllShouldRequireFieldWhenAllCompanionsAreAbsent() {
         RequiredWithoutAllDto dto = new RequiredWithoutAllDto();
 
@@ -295,6 +380,36 @@ class ClassLevelValidatorsTest {
     @Missing(field = "phone")
     static class MissingDto {
         private String phone;
+    }
+
+    @Prohibited(field = "nickname")
+    static class ProhibitedDto {
+        private String nickname;
+    }
+
+    @MissingUnless(field = "role", value = "guest", missing = "nickname")
+    static class MissingUnlessDto {
+        private String role;
+        private String nickname;
+    }
+
+    @ProhibitedUnless(field = "role", value = "guest", prohibited = "nickname")
+    static class ProhibitedUnlessDto {
+        private String role;
+        private String nickname;
+    }
+
+    @MissingWith(fields = {"email"}, missing = "phone")
+    static class MissingWithDto {
+        private String email;
+        private String phone;
+    }
+
+    @MissingWithAll(fields = {"email", "phone"}, missing = "nickname")
+    static class MissingWithAllDto {
+        private String email;
+        private String phone;
+        private String nickname;
     }
 
     @RequiredWithoutAll(fields = {"email", "phone"}, required = "name")

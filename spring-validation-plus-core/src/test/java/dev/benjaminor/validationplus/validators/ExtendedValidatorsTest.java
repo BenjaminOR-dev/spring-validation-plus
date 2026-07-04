@@ -40,6 +40,67 @@ class ExtendedValidatorsTest {
     }
 
     @Test
+    void ipValidatorsShouldRejectHostnames() {
+        ExtendedDto dto = new ExtendedDto();
+        dto.ipv4 = "localhost";
+        dto.ipv6 = "example.com";
+        dto.ip = "spring.io";
+
+        assertThat(validator.validateProperty(dto, "ipv4")).isNotEmpty();
+        assertThat(validator.validateProperty(dto, "ipv6")).isNotEmpty();
+        assertThat(validator.validateProperty(dto, "ip")).isNotEmpty();
+
+        dto.ipv4 = "192.168.0.1";
+        dto.ipv6 = "2001:db8::1";
+        dto.ip = "192.168.0.1";
+
+        assertThat(validator.validateProperty(dto, "ipv4")).isEmpty();
+        assertThat(validator.validateProperty(dto, "ipv6")).isEmpty();
+        assertThat(validator.validateProperty(dto, "ip")).isEmpty();
+    }
+
+    @Test
+    void ltAndGteShouldValidateExclusiveAndInclusiveBounds() {
+        ExtendedDto dto = new ExtendedDto();
+        dto.ltField = 4;
+        dto.gteField = 5;
+
+        assertThat(validator.validateProperty(dto, "ltField")).isEmpty();
+        assertThat(validator.validateProperty(dto, "gteField")).isEmpty();
+
+        dto.ltField = 5;
+        dto.gteField = 4;
+        assertThat(validator.validateProperty(dto, "ltField")).isNotEmpty();
+        assertThat(validator.validateProperty(dto, "gteField")).isNotEmpty();
+    }
+
+    @Test
+    void notStartsWithAndNotEndsWithShouldValidatePrefixesAndSuffixes() {
+        ExtendedDto dto = new ExtendedDto();
+        dto.notStartsWithField = "world";
+        dto.notEndsWithField = "file.txt";
+
+        assertThat(validator.validateProperty(dto, "notStartsWithField")).isEmpty();
+        assertThat(validator.validateProperty(dto, "notEndsWithField")).isEmpty();
+
+        dto.notStartsWithField = "temp-file";
+        dto.notEndsWithField = "archive.tmp";
+        assertThat(validator.validateProperty(dto, "notStartsWithField")).isNotEmpty();
+        assertThat(validator.validateProperty(dto, "notEndsWithField")).isNotEmpty();
+    }
+
+    @Test
+    void dateFormatShouldValidatePattern() {
+        ExtendedDto dto = new ExtendedDto();
+        dto.formattedDate = "2024-06-15";
+
+        assertThat(validator.validateProperty(dto, "formattedDate")).isEmpty();
+
+        dto.formattedDate = "15/06/2024";
+        assertThat(validator.validateProperty(dto, "formattedDate")).isNotEmpty();
+    }
+
+    @Test
     void numericComparisonsShouldValidateValues() {
         ExtendedDto dto = new ExtendedDto();
         dto.gtField = 10;
@@ -158,6 +219,16 @@ class ExtendedValidatorsTest {
         assertThat(validator.validate(dto)).isEmpty();
     }
 
+    @Test
+    void minMaxAndDigitsBetweenShouldAlignWithDigitsOnTrailingZeros() {
+        DigitsDto dto = new DigitsDto();
+        dto.minDigitsField = new java.math.BigDecimal("1234.00");
+        dto.maxDigitsField = new java.math.BigDecimal("1234.00");
+        dto.digitsBetweenField = new java.math.BigDecimal("1234.00");
+
+        assertThat(validator.validate(dto)).isEmpty();
+    }
+
     enum Role {
         ADMIN, USER
     }
@@ -168,6 +239,12 @@ class ExtendedValidatorsTest {
 
         @Ipv4
         private String ipv4;
+
+        @Ipv6
+        private String ipv6;
+
+        @Ip
+        private String ip;
 
         @HexColor
         private String hexColor;
@@ -181,6 +258,12 @@ class ExtendedValidatorsTest {
         @Lte(5)
         private Integer lteField;
 
+        @Lt(5)
+        private Integer ltField;
+
+        @Gte(5)
+        private Integer gteField;
+
         @MultipleOf(3)
         private Integer multipleField;
 
@@ -192,6 +275,15 @@ class ExtendedValidatorsTest {
 
         @Distinct
         private List<String> tags;
+
+        @NotStartsWith("temp-")
+        private String notStartsWithField;
+
+        @NotEndsWith(".tmp")
+        private String notEndsWithField;
+
+        @DateFormat(format = "yyyy-MM-dd")
+        private String formattedDate;
     }
 
     @RequiredWithAll(fields = {"email", "phone"}, required = "name")

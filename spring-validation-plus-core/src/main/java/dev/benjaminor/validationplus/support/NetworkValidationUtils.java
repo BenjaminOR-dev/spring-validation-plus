@@ -1,6 +1,5 @@
 package dev.benjaminor.validationplus.support;
 
-import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.URI;
@@ -15,23 +14,13 @@ public final class NetworkValidationUtils {
 
     private static final Pattern MAC_ADDRESS = Pattern.compile(
             "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$");
+    private static final Pattern IPV6_LITERAL = Pattern.compile("^[0-9a-fA-F:.]+$");
 
     private NetworkValidationUtils() {
     }
 
     public static boolean isIp(Object value) {
-        if (EmptyUtils.isBlank(value)) {
-            return true;
-        }
-        if (!(value instanceof CharSequence charSequence)) {
-            return false;
-        }
-        try {
-            InetAddress.getByName(charSequence.toString().trim());
-            return true;
-        } catch (Exception exception) {
-            return false;
-        }
+        return isIpv4(value) || isIpv6(value);
     }
 
     public static boolean isIpv4(Object value) {
@@ -41,11 +30,7 @@ public final class NetworkValidationUtils {
         if (!(value instanceof CharSequence charSequence)) {
             return false;
         }
-        try {
-            return InetAddress.getByName(charSequence.toString().trim()) instanceof Inet4Address;
-        } catch (Exception exception) {
-            return false;
-        }
+        return isIpv4Literal(charSequence.toString().trim());
     }
 
     public static boolean isIpv6(Object value) {
@@ -55,8 +40,12 @@ public final class NetworkValidationUtils {
         if (!(value instanceof CharSequence charSequence)) {
             return false;
         }
+        String candidate = charSequence.toString().trim();
+        if (!candidate.contains(":") || !IPV6_LITERAL.matcher(candidate).matches()) {
+            return false;
+        }
         try {
-            return InetAddress.getByName(charSequence.toString().trim()) instanceof Inet6Address;
+            return InetAddress.getByName(candidate) instanceof Inet6Address;
         } catch (Exception exception) {
             return false;
         }
@@ -88,5 +77,29 @@ public final class NetworkValidationUtils {
         } catch (URISyntaxException exception) {
             return false;
         }
+    }
+
+    private static boolean isIpv4Literal(String candidate) {
+        String[] octets = candidate.split("\\.");
+        if (octets.length != 4) {
+            return false;
+        }
+        for (String octet : octets) {
+            if (octet.isEmpty() || octet.length() > 3) {
+                return false;
+            }
+            if (octet.length() > 1 && octet.startsWith("0")) {
+                return false;
+            }
+            try {
+                int value = Integer.parseInt(octet);
+                if (value < 0 || value > 255) {
+                    return false;
+                }
+            } catch (NumberFormatException exception) {
+                return false;
+            }
+        }
+        return true;
     }
 }

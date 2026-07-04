@@ -143,10 +143,10 @@ public final class NumberUtils {
 
     private static String toDigitSource(Object value) {
         if (value instanceof BigDecimal bigDecimal) {
-            return bigDecimal.toPlainString();
+            return bigDecimal.stripTrailingZeros().toPlainString();
         }
         if (value instanceof Number number) {
-            return toBigDecimal(number).toPlainString();
+            return toBigDecimal(number).stripTrailingZeros().toPlainString();
         }
         return String.valueOf(value);
     }

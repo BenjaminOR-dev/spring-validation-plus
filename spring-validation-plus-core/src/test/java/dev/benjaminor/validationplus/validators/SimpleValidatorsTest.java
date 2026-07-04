@@ -10,6 +10,7 @@ import dev.benjaminor.validationplus.constraints.Digits;
 import dev.benjaminor.validationplus.constraints.EndsWith;
 import dev.benjaminor.validationplus.constraints.In;
 import dev.benjaminor.validationplus.constraints.Json;
+import dev.benjaminor.validationplus.constraints.MinDigits;
 import dev.benjaminor.validationplus.constraints.NotIn;
 import dev.benjaminor.validationplus.constraints.NotRegex;
 import dev.benjaminor.validationplus.constraints.Regex;
@@ -150,6 +151,24 @@ class SimpleValidatorsTest {
         assertThat(validator.validateProperty(dto, "betweenField")).isNotEmpty();
         assertThat(validator.validateProperty(dto, "sizeField")).isNotEmpty();
         assertThat(validator.validateProperty(dto, "digitsField")).isNotEmpty();
+    }
+
+    @Test
+    void digitsAndMinDigitsShouldAgreeOnTrailingZeros() {
+        SimpleDto dto = new SimpleDto();
+        dto.digitsField = new BigDecimal("10.00");
+
+        assertThat(validator.validateProperty(dto, "digitsField")).isEmpty();
+
+        DigitsAlignmentDto alignmentDto = new DigitsAlignmentDto();
+        alignmentDto.value = new BigDecimal("10.00");
+
+        assertThat(validator.validate(alignmentDto)).isEmpty();
+    }
+
+    static class DigitsAlignmentDto {
+        @MinDigits(2)
+        private java.math.BigDecimal value;
     }
 
     @Test
