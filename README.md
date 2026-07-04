@@ -1,6 +1,6 @@
 # Spring Validation Plus
 
-[🇪🇸 Versión en español](README.es.md)
+[🇪🇸 Versión en español](README.es.md) | [🇧🇷 Versão em português](README.pt.md)
 
 [![Java](https://img.shields.io/badge/Java-17+-orange?logo=openjdk&logoColor=white)](https://openjdk.org/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x%20%7C%204.x-6DB33F?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
@@ -522,10 +522,11 @@ Messages bundled in the core:
 | `ValidationMessages.properties` | English (default) |
 | `ValidationMessages_en.properties` | English |
 | `ValidationMessages_es.properties` | Spanish |
+| `ValidationMessages_pt.properties` | Portuguese |
 
 **Language selection:**
 
-1. Header `Accept-Language: es` or `Accept-Language: en`
+1. Header `Accept-Language: es`, `Accept-Language: pt`, or `Accept-Language: en`
 2. Fallback: `spring.web.locale=en` (Spring Boot)
 
 **Override messages** in your app — create `src/main/resources/ValidationMessages_en.properties`:
