@@ -63,20 +63,20 @@ Spring Validation Plus adds more than **85 custom constraints** that work like n
 <dependency>
     <groupId>io.github.benjaminor-dev</groupId>
     <artifactId>spring-validation-plus-spring-boot-starter</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
 </dependency>
 ```
 
 **Gradle (Kotlin DSL)**
 
 ```kotlin
-implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.1.0")
+implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.2.0")
 ```
 
 **Gradle (Groovy)**
 
 ```groovy
-implementation 'io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.1.0'
+implementation 'io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.2.0'
 ```
 
 **Multi-module Maven** (same repository):

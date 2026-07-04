@@ -60,8 +60,10 @@ Para flujos sin Docker, puedes usar [docs/settings-central.xml.example](docs/set
 En el `pom.xml` raíz y módulos:
 
 ```xml
-<version>0.1.0</version>
+<version>0.2.0</version>
 ```
+
+Actualiza también la versión de instalación en **README.md**, **README.es.md** y **README.pt.md** (sección inicio rápido) **en el mismo commit, antes de crear el tag**.
 
 Maven Central no acepta `-SNAPSHOT` en el repositorio de releases.
 
@@ -133,16 +135,16 @@ En unos minutos debería aparecer en [search.maven.org](https://search.maven.org
 ### 6. Tag en Git
 
 ```bash
-git tag -a v0.1.0 -m "Release 0.1.0"
-git push origin v0.1.0
+git tag -a v0.2.0 -m "Release 0.2.0"
+git push origin v0.2.0
 ```
 
-Actualiza `<scm><tag>v0.1.0</tag></scm>` en el `pom.xml` en el commit del release.
+Actualiza `<scm><tag>v0.2.0</tag></scm>` en el `pom.xml` en el commit del release.
 
 ### 7. Subir versión de desarrollo
 
 ```xml
-<version>0.2.0-SNAPSHOT</version>
+<version>0.3.0-SNAPSHOT</version>
 ```
 
 ## Dependencia para consumidores (tras publicar)
@@ -153,14 +155,14 @@ Actualiza `<scm><tag>v0.1.0</tag></scm>` en el `pom.xml` en el commit del releas
 <dependency>
     <groupId>io.github.benjaminor-dev</groupId>
     <artifactId>spring-validation-plus-spring-boot-starter</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
 </dependency>
 ```
 
 **Gradle**
 
 ```kotlin
-implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.1.0")
+implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.2.0")
 ```
 
 Sin repositorios extra.
@@ -177,5 +179,5 @@ Sin repositorios extra.
 
 ## Pendiente
 
-- [ ] Configurar secrets de GitHub Actions y validar un release por tag
+- [x] Configurar secrets de GitHub Actions y validar un release por tag (`v0.2.0`)
 - [ ] `autoPublish=true` cuando los releases automatizados estén estables
