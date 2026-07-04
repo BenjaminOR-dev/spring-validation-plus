@@ -524,11 +524,24 @@ Mensajes incluidos en el core:
 1. Header `Accept-Language: es`, `Accept-Language: pt` o `Accept-Language: en`
 2. Fallback: `spring.web.locale=es` (Spring Boot)
 
-**Sobrescribir mensajes** en tu app — crea `src/main/resources/ValidationMessages_es.properties`:
+**Sobrescribir mensajes** en tu app — crea `src/main/resources/ValidationMessages_es.properties` (o el locale que uses). Solo define las claves que quieras cambiar; el resto hace fallback al bundle de la librería.
 
 ```properties
 dev.benjaminor.validationplus.constraints.Required.message=El campo {field} es requerido.
 ```
+
+Para un solo campo, usa `message` en la anotación:
+
+```java
+@Required(message = "El nombre es obligatorio")
+private String name;
+```
+
+**Plantillas de mensajes** (copia claves desde los archivos incluidos):
+
+- [ValidationMessages.properties](spring-validation-plus-core/src/main/resources/ValidationMessages.properties) — inglés
+- [ValidationMessages_es.properties](spring-validation-plus-core/src/main/resources/ValidationMessages_es.properties) — español
+- [ValidationMessages_pt.properties](spring-validation-plus-core/src/main/resources/ValidationMessages_pt.properties) — portugués
 
 **Placeholders disponibles:** `{field}`, `{min}`, `{max}`, `{value}`, `{other}`, `{validatedValue}`, `{integer}`, `{fraction}`
 

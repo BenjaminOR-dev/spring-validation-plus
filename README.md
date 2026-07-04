@@ -528,11 +528,24 @@ Messages bundled in the core:
 1. Header `Accept-Language: es`, `Accept-Language: pt`, or `Accept-Language: en`
 2. Fallback: `spring.web.locale=en` (Spring Boot)
 
-**Override messages** in your app — create `src/main/resources/ValidationMessages.properties` (English) or a locale-specific file such as `ValidationMessages_es.properties`:
+**Override messages** in your app — add `src/main/resources/ValidationMessages.properties` (English) or a locale file such as `ValidationMessages_es.properties`. You only need the keys you want to change; missing keys fall back to the library bundle.
 
 ```properties
 dev.benjaminor.validationplus.constraints.Required.message=The {field} field is required.
 ```
+
+For a single field, use `message` on the annotation instead:
+
+```java
+@Required(message = "Name is required")
+private String name;
+```
+
+**Message templates** (copy keys from the bundled files):
+
+- [ValidationMessages.properties](spring-validation-plus-core/src/main/resources/ValidationMessages.properties) — English
+- [ValidationMessages_es.properties](spring-validation-plus-core/src/main/resources/ValidationMessages_es.properties) — Spanish
+- [ValidationMessages_pt.properties](spring-validation-plus-core/src/main/resources/ValidationMessages_pt.properties) — Portuguese
 
 **Available placeholders:** `{field}`, `{min}`, `{max}`, `{value}`, `{other}`, `{validatedValue}`, `{integer}`, `{fraction}`
 
