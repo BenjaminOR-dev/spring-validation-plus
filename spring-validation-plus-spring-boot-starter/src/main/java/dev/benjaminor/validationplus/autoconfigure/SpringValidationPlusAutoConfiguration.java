@@ -42,7 +42,7 @@ public class SpringValidationPlusAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public LocalValidatorFactoryBean validationPlusValidatorFactoryBean() {
-        LocalValidatorFactoryBean factoryBean = new LocalValidatorFactoryBean();
+        ValidationPlusLocalValidatorFactoryBean factoryBean = new ValidationPlusLocalValidatorFactoryBean();
         factoryBean.setMessageInterpolator(new SpringLocaleValidationPlusMessageInterpolator());
         return factoryBean;
     }

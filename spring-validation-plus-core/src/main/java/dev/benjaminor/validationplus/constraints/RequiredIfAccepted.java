@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
 @Documented
 @Repeatable(RequiredIfAccepted.List.class)
 @Constraint(validatedBy = RequiredIfAcceptedValidator.class)
-@Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
+@Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RequiredIfAccepted {
 
@@ -27,17 +27,22 @@ public @interface RequiredIfAccepted {
     Class<? extends Payload>[] payload() default {};
 
     /**
-     * Observed field.
+     * Observed field. Shorthand when the annotation is placed on the required field.
      */
-    String field();
+    String value() default "";
 
     /**
-     * Field that becomes required.
+     * Observed field.
      */
-    String required();
+    String field() default "";
+
+    /**
+     * Field that becomes required. Inferred from the annotated property at field level.
+     */
+    String required() default "";
 
     @Documented
-    @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
+    @Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
     @Retention(RetentionPolicy.RUNTIME)
     @interface List {
         RequiredIfAccepted[] value();

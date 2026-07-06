@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
 @Documented
 @Repeatable(Confirmed.List.class)
 @Constraint(validatedBy = ConfirmedValidator.class)
-@Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
+@Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Confirmed {
 
@@ -29,17 +29,22 @@ public @interface Confirmed {
     Class<? extends Payload>[] payload() default {};
 
     /**
-     * Field that must be confirmed.
+     * Reference field. Shorthand when the annotation is placed on the confirmation field.
      */
-    String field();
+    String value() default "";
 
     /**
-     * Confirmation field. Defaults to {@code {field}Confirmation}.
+     * Field that must be confirmed.
+     */
+    String field() default "";
+
+    /**
+     * Confirmation field. Defaults to {@code {field}Confirmation}. Used at class level.
      */
     String confirmation() default "";
 
     @Documented
-    @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
+    @Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
     @Retention(RetentionPolicy.RUNTIME)
     @interface List {
         Confirmed[] value();

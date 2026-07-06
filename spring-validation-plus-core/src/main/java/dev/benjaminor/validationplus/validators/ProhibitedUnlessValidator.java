@@ -1,25 +1,50 @@
 package dev.benjaminor.validationplus.validators;
 
+import dev.benjaminor.validationplus.constraints.ConditionalOperator;
 import dev.benjaminor.validationplus.constraints.ProhibitedUnless;
+import dev.benjaminor.validationplus.support.ConditionalComparisonUtils;
+import dev.benjaminor.validationplus.support.CrossFieldConstraintSupport;
 import dev.benjaminor.validationplus.support.CrossFieldValidationUtils;
 import dev.benjaminor.validationplus.support.ReflectionUtils;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 public class ProhibitedUnlessValidator implements ConstraintValidator<ProhibitedUnless, Object> {
+
     private String field;
     private String expectedValue;
     private String prohibitedField;
+    private ConditionalOperator operator;
+
     @Override
-    public void initialize(ProhibitedUnless a) {
-        this.field = a.field(); this.expectedValue = a.value(); this.prohibitedField = a.prohibited();
+    public void initialize(ProhibitedUnless constraintAnnotation) {
+        this.field = constraintAnnotation.field();
+        this.expectedValue = constraintAnnotation.value();
+        this.prohibitedField = constraintAnnotation.prohibited();
+        this.operator = constraintAnnotation.operator();
     }
+
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext context) {
-        if (value == null) return true;
-        Object fv = ReflectionUtils.getFieldValue(value, field);
-        if (java.util.Objects.equals(String.valueOf(fv), expectedValue)) return true;
-        if (CrossFieldValidationUtils.isMissing(value, prohibitedField)) return true;
-        return CrossFieldValidationUtils.failOnField(context, prohibitedField);
+        Object target = CrossFieldConstraintSupport.resolveRoot(value, context);
+        if (target == null) {
+            return true;
+        }
+
+        String currentField = CrossFieldConstraintSupport.resolveCurrentField(context, prohibitedField);
+        if (currentField.isBlank()) {
+            return true;
+        }
+
+        Object fieldValue = ReflectionUtils.getFieldValue(target, field);
+        if (ConditionalComparisonUtils.matches(fieldValue, expectedValue, operator)) {
+            return true;
+        }
+
+        if (CrossFieldValidationUtils.isMissing(target, currentField)) {
+            return true;
+        }
+
+        return CrossFieldConstraintSupport.reportViolation(context, value, currentField);
     }
 }

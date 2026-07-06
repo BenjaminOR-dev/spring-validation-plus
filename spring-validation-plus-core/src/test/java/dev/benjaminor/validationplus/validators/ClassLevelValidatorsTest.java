@@ -65,6 +65,8 @@ class ClassLevelValidatorsTest {
 
         assertThat(violations).hasSize(1);
         assertThat(violations.iterator().next().getPropertyPath().toString()).isEqualTo("passwordConfirmation");
+        assertThat(violations.iterator().next().getMessage()).contains("password");
+        assertThat(violations.iterator().next().getMessage()).doesNotContain("{other}");
     }
 
     @Test
@@ -116,6 +118,16 @@ class ClassLevelValidatorsTest {
     }
 
     @Test
+    void confirmedShouldIgnoreMissingConfirmation() {
+        ConfirmedDto dto = new ConfirmedDto();
+        dto.password = "secret";
+
+        Set<ConstraintViolation<ConfirmedDto>> violations = validator.validate(dto);
+
+        assertThat(violations).isEmpty();
+    }
+
+    @Test
     void requiredIfShouldStillWorkAlongsideNewConstraints() {
         RequiredIfDto dto = new RequiredIfDto();
         dto.role = "ADMIN";
@@ -124,6 +136,8 @@ class ClassLevelValidatorsTest {
 
         assertThat(violations).hasSize(1);
         assertThat(violations.iterator().next().getPropertyPath().toString()).isEqualTo("adminCode");
+        assertThat(violations.iterator().next().getMessage()).contains("role");
+        assertThat(violations.iterator().next().getMessage()).doesNotContain("{other}");
     }
 
     @Test

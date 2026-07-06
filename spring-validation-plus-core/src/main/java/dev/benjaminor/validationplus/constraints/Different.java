@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
 @Documented
 @Repeatable(Different.List.class)
 @Constraint(validatedBy = DifferentValidator.class)
-@Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
+@Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Different {
 
@@ -29,17 +29,22 @@ public @interface Different {
     Class<? extends Payload>[] payload() default {};
 
     /**
-     * Reference field.
+     * Reference field. Shorthand when the annotation is placed on the compared field.
      */
-    String field();
+    String value() default "";
 
     /**
-     * Field that must differ from {@link #field()}.
+     * Reference field.
      */
-    String other();
+    String field() default "";
+
+    /**
+     * Field that must differ from {@link #field()}. Used at class level.
+     */
+    String other() default "";
 
     @Documented
-    @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
+    @Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
     @Retention(RetentionPolicy.RUNTIME)
     @interface List {
         Different[] value();

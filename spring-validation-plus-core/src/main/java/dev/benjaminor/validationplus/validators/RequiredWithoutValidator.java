@@ -1,6 +1,7 @@
 package dev.benjaminor.validationplus.validators;
 
 import dev.benjaminor.validationplus.constraints.RequiredWithout;
+import dev.benjaminor.validationplus.support.CrossFieldConstraintSupport;
 import dev.benjaminor.validationplus.support.CrossFieldValidationUtils;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -15,24 +16,32 @@ public class RequiredWithoutValidator implements ConstraintValidator<RequiredWit
 
     @Override
     public void initialize(RequiredWithout constraintAnnotation) {
-        this.fields = constraintAnnotation.fields();
+        this.fields = CrossFieldConstraintSupport.mergeObservedFields(
+                constraintAnnotation.value(),
+                constraintAnnotation.fields());
         this.requiredField = constraintAnnotation.required();
     }
 
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext context) {
-        if (value == null) {
+        Object target = CrossFieldConstraintSupport.resolveRoot(value, context);
+        if (target == null) {
             return true;
         }
 
-        if (!CrossFieldValidationUtils.isAnyAbsent(value, fields)) {
+        String currentField = CrossFieldConstraintSupport.resolveCurrentField(context, requiredField);
+        if (currentField.isBlank()) {
             return true;
         }
 
-        if (CrossFieldValidationUtils.isPresent(value, requiredField)) {
+        if (!CrossFieldValidationUtils.isAnyAbsent(target, fields)) {
             return true;
         }
 
-        return CrossFieldValidationUtils.failOnField(context, requiredField);
+        if (CrossFieldValidationUtils.isPresent(target, currentField)) {
+            return true;
+        }
+
+        return CrossFieldConstraintSupport.reportViolation(context, value, currentField);
     }
 }

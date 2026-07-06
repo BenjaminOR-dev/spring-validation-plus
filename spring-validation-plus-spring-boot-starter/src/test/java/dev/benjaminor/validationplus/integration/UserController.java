@@ -42,6 +42,12 @@ public class UserController {
         return ResponseEntity.ok(Map.of("status", "ok"));
     }
 
+    @PostMapping("/password-change")
+    public ResponseEntity<Map<String, String>> changePasswordWithConfirmation(
+            @Valid @RequestBody PasswordChangeRequest request) {
+        return ResponseEntity.ok(Map.of("status", "ok"));
+    }
+
     @GetMapping("/search")
     public ResponseEntity<Map<String, String>> search(@RequestParam("size") Integer size) {
         return ResponseEntity.ok(Map.of("size", String.valueOf(size)));

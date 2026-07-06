@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
 @Documented
 @Repeatable(RequiredWithoutAll.List.class)
 @Constraint(validatedBy = RequiredWithoutAllValidator.class)
-@Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
+@Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RequiredWithoutAll {
 
@@ -27,17 +27,22 @@ public @interface RequiredWithoutAll {
     Class<? extends Payload>[] payload() default {};
 
     /**
-     * Observed fields.
+     * Observed fields. Shorthand when the annotation is placed on the required field.
      */
-    String[] fields();
+    String[] value() default {};
 
     /**
-     * Field that becomes required.
+     * Observed fields.
      */
-    String required();
+    String[] fields() default {};
+
+    /**
+     * Field that becomes required. Inferred from the annotated property at field level.
+     */
+    String required() default "";
 
     @Documented
-    @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
+    @Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
     @Retention(RetentionPolicy.RUNTIME)
     @interface List {
         RequiredWithoutAll[] value();

@@ -135,6 +135,38 @@ class ValidationIntegrationTest {
     }
 
     @Test
+    void shouldReturnRequiredWithBeforeConfirmedWhenConfirmationIsMissing() throws Exception {
+        mockMvc.perform(post("/api/users/password-change")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Accept-Language", "es")
+                        .content("""
+                                {
+                                  "password": "secret123"
+                                }
+                                """))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors.passwordConfirmation.length()").value(1))
+                .andExpect(jsonPath("$.errors.passwordConfirmation[0]")
+                        .value("El campo passwordConfirmation es obligatorio cuando password está presente."));
+    }
+
+    @Test
+    void shouldOrderMultipleConstraintMessagesByDeclarationOrder() throws Exception {
+        mockMvc.perform(post("/api/users/password-change")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Accept-Language", "es")
+                        .content("""
+                                {
+                                  "password": "secret123",
+                                  "passwordConfirmation": "abc"
+                                }
+                                """))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors.passwordConfirmation[0]").value(containsString("confirmación")))
+                .andExpect(jsonPath("$.errors.passwordConfirmation[1]").value(containsString("al menos 5 caracteres")));
+    }
+
+    @Test
     void shouldReturnFriendlyIntegerConversionErrorForModelAttribute() throws Exception {
         mockMvc.perform(post("/api/users/form")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)

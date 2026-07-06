@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
 @Documented
 @Repeatable(ProhibitedIf.List.class)
 @Constraint(validatedBy = ProhibitedIfValidator.class)
-@Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
+@Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ProhibitedIf {
 
@@ -37,12 +37,17 @@ public @interface ProhibitedIf {
     String value();
 
     /**
-     * Field that must be absent.
+     * How {@link #field()} is compared to {@link #value()}. Defaults to {@link ConditionalOperator#EQUALS}.
      */
-    String prohibited();
+    ConditionalOperator operator() default ConditionalOperator.EQUALS;
+
+    /**
+     * Field that must be absent. Inferred from the annotated property at field level.
+     */
+    String prohibited() default "";
 
     @Documented
-    @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
+    @Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
     @Retention(RetentionPolicy.RUNTIME)
     @interface List {
         ProhibitedIf[] value();

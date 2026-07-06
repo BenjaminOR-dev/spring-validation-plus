@@ -19,11 +19,12 @@ public final class ValidatorTestSupport {
     }
 
     public static Validator createValidator(Locale locale) {
-        return Validation.byProvider(HibernateValidator.class)
+        Validator validator = Validation.byProvider(HibernateValidator.class)
                 .configure()
                 .defaultLocale(locale)
                 .messageInterpolator(new ValidationPlusMessageInterpolator(locale))
                 .buildValidatorFactory()
                 .getValidator();
+        return CrossFieldValidationRuntimeValidator.wrap(validator);
     }
 }

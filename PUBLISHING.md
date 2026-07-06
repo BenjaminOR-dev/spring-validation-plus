@@ -69,13 +69,13 @@ Para flujos sin Docker, puedes usar [docs/settings-central.xml.example](docs/set
 | `spring-validation-plus-example/pom.xml` | `<version>` del parent |
 
 ```xml
-<version>0.2.1</version>
+<version>0.3.0</version>
 ```
 
 ```xml
 <scm>
     ...
-    <tag>v0.2.1</tag>
+    <tag>v0.3.0</tag>
 </scm>
 ```
 
@@ -92,11 +92,11 @@ En cada uno actualiza **Maven**, **Gradle Kotlin** y **Gradle Groovy**:
 Ejemplo:
 
 ```xml
-<version>0.2.1</version>
+<version>0.3.0</version>
 ```
 
 ```kotlin
-implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.2.1")
+implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.0")
 ```
 
 #### Opcional (recomendado)
@@ -109,7 +109,7 @@ implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-star
 #### Verificación rápida
 
 ```bash
-grep -r "0.2.0-SNAPSHOT\|0.3.0-SNAPSHOT" pom.xml */pom.xml   # no debe quedar SNAPSHOT
+grep -r "0.3.0-SNAPSHOT\|0.4.0-SNAPSHOT" pom.xml */pom.xml   # no debe quedar SNAPSHOT
 grep "spring-validation-plus-spring-boot-starter:0\." README*.md  # misma versión en los 3
 ```
 
@@ -185,8 +185,8 @@ En unos minutos debería aparecer en [search.maven.org](https://search.maven.org
 El tag debe apuntar al **commit del paso 1** (POMs + README + `<scm><tag>` ya incluidos):
 
 ```bash
-git tag -a v0.2.1 -m "Release 0.2.1"
-git push origin v0.2.1
+git tag -a v0.3.0 -m "Release 0.3.0"
+git push origin v0.3.0
 ```
 
 > Si el workflow Release está activo, el push del tag dispara el deploy. Desactiva el workflow primero si solo mueves el tag sin republicar (ver nota en conversación de releases).
@@ -196,7 +196,7 @@ git push origin v0.2.1
 En los **4 POMs** (mismo listado del paso 1), commit separado en `main`:
 
 ```xml
-<version>0.3.0-SNAPSHOT</version>
+<version>0.4.0-SNAPSHOT</version>
 ```
 
 Los README **no** cambian aquí — siguen mostrando la última versión publicada en Central.
@@ -209,14 +209,14 @@ Los README **no** cambian aquí — siguen mostrando la última versión publica
 <dependency>
     <groupId>io.github.benjaminor-dev</groupId>
     <artifactId>spring-validation-plus-spring-boot-starter</artifactId>
-    <version>0.2.1</version>
+    <version>0.3.0</version>
 </dependency>
 ```
 
 **Gradle**
 
 ```kotlin
-implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.2.1")
+implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.0")
 ```
 
 Sin repositorios extra.

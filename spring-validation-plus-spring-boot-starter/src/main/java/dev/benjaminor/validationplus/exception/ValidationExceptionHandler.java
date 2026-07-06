@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import dev.benjaminor.validationplus.support.ValidationMessageUtils;
-import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.convert.ConversionFailedException;
@@ -13,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.method.ParameterValidationResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -36,54 +34,32 @@ public class ValidationExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ValidationErrorResponse handleMethodArgumentNotValid(MethodArgumentNotValidException exception) {
-        Map<String, List<String>> errors = new LinkedHashMap<>();
-        Locale locale = LocaleContextHolder.getLocale();
-        for (FieldError fieldError : exception.getBindingResult().getFieldErrors()) {
-            addError(errors, fieldError.getField(), FieldErrorMessageResolver.resolve(fieldError, locale));
-        }
-        return new ValidationErrorResponse(errors);
+        return ValidationErrorResponseFactory.fromMethodArgumentNotValid(exception);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BindException.class)
     public ValidationErrorResponse handleBindException(BindException exception) {
-        Map<String, List<String>> errors = new LinkedHashMap<>();
-        Locale locale = LocaleContextHolder.getLocale();
-        for (FieldError fieldError : exception.getBindingResult().getFieldErrors()) {
-            addError(errors, fieldError.getField(), FieldErrorMessageResolver.resolve(fieldError, locale));
-        }
-        return new ValidationErrorResponse(errors);
+        return ValidationErrorResponseFactory.fromBindException(exception);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HandlerMethodValidationException.class)
     public ValidationErrorResponse handleHandlerMethodValidation(HandlerMethodValidationException exception) {
-        Map<String, List<String>> errors = new LinkedHashMap<>();
-        Locale locale = LocaleContextHolder.getLocale();
-        for (ParameterValidationResult result : exception.getAllValidationResults()) {
-            String field = resolveParameterName(result);
-            for (var resolvableError : result.getResolvableErrors()) {
-                String message = resolveResolvableErrorMessage(resolvableError, locale, field);
-                if (message != null && !message.isBlank()) {
-                    addError(errors, field, message);
-                }
-            }
-        }
-        if (errors.isEmpty()) {
-            addError(errors, "request", ValidationMessageUtils.resolve(
-                    "dev.benjaminor.validationplus.type.generic", locale, Map.of("field", "request")));
-        }
-        return new ValidationErrorResponse(errors);
+        return ValidationErrorResponseFactory.fromHandlerMethodValidation(
+                new ValidationErrorResponseFactory.HandlerMethodValidationExceptionData(
+                        exception.getAllValidationResults(),
+                        result -> {
+                            String name = result.getMethodParameter().getParameterName();
+                            return name != null ? name : "parameter";
+                        },
+                        this::resolveResolvableErrorMessage));
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
     public ValidationErrorResponse handleConstraintViolation(ConstraintViolationException exception) {
-        Map<String, List<String>> errors = new LinkedHashMap<>();
-        for (ConstraintViolation<?> violation : exception.getConstraintViolations()) {
-            addError(errors, normalizePropertyPath(violation.getPropertyPath().toString()), violation.getMessage());
-        }
-        return new ValidationErrorResponse(errors);
+        return ValidationErrorResponseFactory.fromConstraintViolations(exception);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -131,11 +107,6 @@ public class ValidationExceptionHandler {
         return new ValidationErrorResponse(errors);
     }
 
-    private String resolveParameterName(ParameterValidationResult result) {
-        String name = result.getMethodParameter().getParameterName();
-        return name != null ? name : "parameter";
-    }
-
     private String resolveResolvableErrorMessage(
             org.springframework.context.MessageSourceResolvable resolvableError,
             Locale locale,
@@ -149,17 +120,6 @@ public class ValidationExceptionHandler {
         }
         return ValidationMessageUtils.resolve(
                 TypeMismatchMessageUtils.GENERIC, locale, Map.of("field", field));
-    }
-
-    private String normalizePropertyPath(String propertyPath) {
-        if (propertyPath == null || propertyPath.isBlank()) {
-            return "request";
-        }
-        int lastDot = propertyPath.lastIndexOf('.');
-        if (lastDot >= 0 && lastDot < propertyPath.length() - 1) {
-            return propertyPath.substring(lastDot + 1);
-        }
-        return propertyPath;
     }
 
     private String resolveTypeMismatchMessage(String field, Class<?> targetType) {

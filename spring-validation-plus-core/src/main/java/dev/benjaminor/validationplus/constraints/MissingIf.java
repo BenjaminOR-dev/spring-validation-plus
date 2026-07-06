@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
 @Documented
 @Repeatable(MissingIf.List.class)
 @Constraint(validatedBy = MissingIfValidator.class)
-@Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
+@Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface MissingIf {
 
@@ -37,12 +37,17 @@ public @interface MissingIf {
     String value();
 
     /**
-     * Field that must be absent.
+     * How {@link #field()} is compared to {@link #value()}. Defaults to {@link ConditionalOperator#EQUALS}.
      */
-    String missing();
+    ConditionalOperator operator() default ConditionalOperator.EQUALS;
+
+    /**
+     * Field that must be absent. Inferred from the annotated property at field level.
+     */
+    String missing() default "";
 
     @Documented
-    @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
+    @Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
     @Retention(RetentionPolicy.RUNTIME)
     @interface List {
         MissingIf[] value();

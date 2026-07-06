@@ -14,11 +14,15 @@ import java.lang.annotation.Target;
 
 /**
  * Validates that a field is required when any of the specified fields is present.
+ * <p>
+ * Class level: {@code @RequiredWith(fields = {"password"}, required = "passwordConfirmation")}
+ * <p>
+ * Field level: {@code @RequiredWith("password") private String passwordConfirmation;}
  */
 @Documented
 @Repeatable(RequiredWith.List.class)
 @Constraint(validatedBy = RequiredWithValidator.class)
-@Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
+@Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RequiredWith {
 
@@ -29,17 +33,22 @@ public @interface RequiredWith {
     Class<? extends Payload>[] payload() default {};
 
     /**
-     * Observed fields.
+     * Observed fields. Shorthand when the annotation is placed on the required field.
      */
-    String[] fields();
+    String[] value() default {};
 
     /**
-     * Field that becomes required.
+     * Observed fields.
      */
-    String required();
+    String[] fields() default {};
+
+    /**
+     * Field that becomes required. Inferred from the annotated property at field level.
+     */
+    String required() default "";
 
     @Documented
-    @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
+    @Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
     @Retention(RetentionPolicy.RUNTIME)
     @interface List {
         RequiredWith[] value();

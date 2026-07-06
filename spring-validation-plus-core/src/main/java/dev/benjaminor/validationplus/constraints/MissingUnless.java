@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
 @Documented
 @Repeatable(MissingUnless.List.class)
 @Constraint(validatedBy = MissingUnlessValidator.class)
-@Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
+@Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface MissingUnless {
 
@@ -37,12 +37,17 @@ public @interface MissingUnless {
     String value();
 
     /**
-     * Field that must be absent except for the exemption.
+     * How {@link #field()} is compared to {@link #value()}. Defaults to {@link ConditionalOperator#EQUALS}.
      */
-    String missing();
+    ConditionalOperator operator() default ConditionalOperator.EQUALS;
+
+    /**
+     * Field that must be absent except for the exemption. Inferred from the annotated property at field level.
+     */
+    String missing() default "";
 
     @Documented
-    @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
+    @Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
     @Retention(RetentionPolicy.RUNTIME)
     @interface List {
         MissingUnless[] value();

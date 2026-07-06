@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
 @Documented
 @Repeatable(RequiredUnless.List.class)
 @Constraint(validatedBy = RequiredUnlessValidator.class)
-@Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
+@Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RequiredUnless {
 
@@ -39,12 +39,17 @@ public @interface RequiredUnless {
     String value();
 
     /**
-     * Field that must be present except for the exemption.
+     * How {@link #field()} is compared to {@link #value()}. Defaults to {@link ConditionalOperator#EQUALS}.
      */
-    String required();
+    ConditionalOperator operator() default ConditionalOperator.EQUALS;
+
+    /**
+     * Field that must be present except for the exemption. Inferred from the annotated property at field level.
+     */
+    String required() default "";
 
     @Documented
-    @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
+    @Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
     @Retention(RetentionPolicy.RUNTIME)
     @interface List {
         RequiredUnless[] value();

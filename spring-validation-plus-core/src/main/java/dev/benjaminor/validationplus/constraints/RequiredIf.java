@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
 @Documented
 @Repeatable(RequiredIf.List.class)
 @Constraint(validatedBy = RequiredIfValidator.class)
-@Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
+@Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RequiredIf {
 
@@ -39,12 +39,17 @@ public @interface RequiredIf {
     String value();
 
     /**
-     * Field that becomes required.
+     * How {@link #field()} is compared to {@link #value()}. Defaults to {@link ConditionalOperator#EQUALS}.
      */
-    String required();
+    ConditionalOperator operator() default ConditionalOperator.EQUALS;
+
+    /**
+     * Field that becomes required. Inferred from the annotated property at field level.
+     */
+    String required() default "";
 
     @Documented
-    @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
+    @Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
     @Retention(RetentionPolicy.RUNTIME)
     @interface List {
         RequiredIf[] value();

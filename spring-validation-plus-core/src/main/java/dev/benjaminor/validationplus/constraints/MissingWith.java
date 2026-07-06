@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
 @Documented
 @Repeatable(MissingWith.List.class)
 @Constraint(validatedBy = MissingWithValidator.class)
-@Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
+@Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface MissingWith {
 
@@ -27,17 +27,22 @@ public @interface MissingWith {
     Class<? extends Payload>[] payload() default {};
 
     /**
-     * Observed fields.
+     * Observed fields. Shorthand when the annotation is placed on the missing field.
      */
-    String[] fields();
+    String[] value() default {};
 
     /**
-     * Field that must be absent.
+     * Observed fields.
      */
-    String missing();
+    String[] fields() default {};
+
+    /**
+     * Field that must be absent. Inferred from the annotated property at field level.
+     */
+    String missing() default "";
 
     @Documented
-    @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
+    @Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
     @Retention(RetentionPolicy.RUNTIME)
     @interface List {
         MissingWith[] value();
