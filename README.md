@@ -85,7 +85,14 @@ It is still Jakarta Validation under the hood: you can mix `@NotNull` with `@Req
 ## Requirements
 
 - **Java 17+**
-- **Spring Boot 3.x or 4.x**
+- **Spring Boot 3.x or 4.x** (same starter JAR)
+
+| Spring Boot | Hibernate Validator (typical) | Validation Plus |
+|-------------|-------------------------------|-----------------|
+| 3.x | 8.x | Supported (default CI) |
+| 4.x | 9.x | Supported (`mvn test -Phv9`) |
+
+The same starter JAR works on both. Use **≥ 0.3.2**. Auto-config ordering (`beforeName` / `afterName`) and `{field}` interpolation are written for Boot 3 and Boot 4.
 
 ### Which dependencies do I install?
 
@@ -158,20 +165,20 @@ Add **only** the Validation Plus starter. Maven will resolve the rest (Jakarta V
 <dependency>
     <groupId>io.github.benjaminor-dev</groupId>
     <artifactId>spring-validation-plus-spring-boot-starter</artifactId>
-    <version>0.3.1</version>
+    <version>0.3.2</version>
 </dependency>
 ```
 
 **Gradle (Kotlin DSL)**
 
 ```kotlin
-implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.1")
+implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.2")
 ```
 
 **Gradle (Groovy)**
 
 ```groovy
-implementation 'io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.1'
+implementation 'io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.2'
 ```
 
 **Multi-module Maven** (same repository):
@@ -829,7 +836,7 @@ public class ExampleRequest {
 | `{format}` | `@DateFormat` pattern |
 | `{integer}` / `{fraction}` | `@Digits` counts |
 
-The `{field}` and `{other}` placeholders are resolved by the included interpolator (`ValidationPlusMessageInterpolator`). If you see `{field}` / `{other}` unreplaced in the response: (1) use starter ≥ **0.3.1** on Spring Boot 4.x (in 0.3.0 auto-config ordering did not apply and Boot’s default validator won); (2) verify you are not defining a custom `LocalValidatorFactoryBean` without that interpolator.
+The `{field}` and `{other}` placeholders are resolved by the included interpolator (`ValidationPlusMessageInterpolator`). If you see them unreplaced (or an empty field name), use starter **≥ 0.3.2** and verify you are not defining a custom `LocalValidatorFactoryBean` without that interpolator.
 
 ## Exception handler
 

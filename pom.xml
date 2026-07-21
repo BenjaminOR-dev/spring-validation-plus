@@ -6,7 +6,7 @@
 
     <groupId>io.github.benjaminor-dev</groupId>
     <artifactId>spring-validation-plus</artifactId>
-    <version>0.3.1</version>
+    <version>0.3.2</version>
     <packaging>pom</packaging>
 
     <name>Spring Validation Plus</name>
@@ -33,7 +33,7 @@
         <connection>scm:git:git://github.com/BenjaminOR-dev/spring-validation-plus.git</connection>
         <developerConnection>scm:git:ssh://github.com/BenjaminOR-dev/spring-validation-plus.git</developerConnection>
         <url>https://github.com/BenjaminOR-dev/spring-validation-plus</url>
-        <tag>v0.3.1</tag>
+        <tag>v0.3.2</tag>
     </scm>
 
     <distributionManagement>
@@ -223,6 +223,14 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+        <!-- Hibernate Validator 9.x as used by Spring Boot 4.x — run: mvn test -Phv9 -->
+        <profile>
+            <id>hv9</id>
+            <properties>
+                <hibernate-validator.version>9.1.0.Final</hibernate-validator.version>
+                <jakarta.validation.version>3.1.1</jakarta.validation.version>
+            </properties>
         </profile>
     </profiles>
 </project>

@@ -2,7 +2,7 @@
 
 Guía para publicar `spring-validation-plus-core` y `spring-validation-plus-spring-boot-starter` en [Maven Central](https://central.sonatype.com/).
 
-Opciones de deploy: **Docker** (`.env` local) o **GitHub Actions** (tags `v*` — ver [.github/workflows/release.yml](.github/workflows/release.yml)).
+Opciones de deploy: **Docker** (`.env` local) o **GitHub Actions** (tag `v*` → draft Release → Publish release → Maven; ver [.github/workflows/release.yml](.github/workflows/release.yml)).
 
 ## Qué se publica
 
@@ -69,13 +69,13 @@ Para flujos sin Docker, puedes usar [docs/settings-central.xml.example](docs/set
 | `spring-validation-plus-example/pom.xml` | `<version>` del parent |
 
 ```xml
-<version>0.3.1</version>
+<version>0.3.2</version>
 ```
 
 ```xml
 <scm>
     ...
-    <tag>v0.3.1</tag>
+    <tag>v0.3.2</tag>
 </scm>
 ```
 
@@ -92,11 +92,11 @@ En cada uno actualiza **Maven**, **Gradle Kotlin** y **Gradle Groovy**:
 Ejemplo:
 
 ```xml
-<version>0.3.1</version>
+<version>0.3.2</version>
 ```
 
 ```kotlin
-implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.1")
+implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.2")
 ```
 
 #### Opcional (recomendado)
@@ -152,9 +152,20 @@ mvn clean deploy -Prelease \
   -am
 ```
 
-### 4. Release con GitHub Actions (opcional)
+### 4. Release con GitHub Actions
 
-Push de un tag de versión (`v0.2.0`, etc.) cuando el POM ya esté en versión **release** (sin `-SNAPSHOT`). Workflow: [.github/workflows/release.yml](.github/workflows/release.yml).
+Flujo en dos pasos ([.github/workflows/release.yml](.github/workflows/release.yml)):
+
+```text
+git push origin vX.Y.Z  →  Action crea un GitHub Release en draft
+tú: Publish release     →  Action hace deploy a Maven Central
+Central Portal          →  Publish (si autoPublish=false)
+```
+
+1. Deja el POM en versión **release** (sin `-SNAPSHOT`), commit y tag.
+2. `git push origin vX.Y.Z` → aparece un **draft** en GitHub → Releases.
+3. Revisas notas / commit y pulsas **Publish release**.
+4. Eso dispara el deploy de **core**, **starter** y el POM padre (igual que `deploy-release.sh`).
 
 Configura estos [secrets del repositorio](https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions):
 
@@ -166,13 +177,11 @@ Configura estos [secrets del repositorio](https://docs.github.com/en/actions/sec
 | `GPG_PASSPHRASE` | Passphrase de la clave GPG |
 | `GPG_PRIVATE_KEY` | Clave privada armored (contenido de `.local/gpg-signing-private.asc`) |
 
-El workflow verifica que el POM no sea SNAPSHOT, importa GPG y publica solo **core**, **starter** y el POM padre — igual que `deploy-release.sh`.
-
 > **Nota:** `0.1.0` en Maven Central incluyó por error `spring-validation-plus-example`. Releases **`0.2.0+`** lo excluyen.
 
 ### 5. Publicar en Central Portal
 
-Con `autoPublish=false` (config actual), tras el upload:
+Con `autoPublish=false` (config actual), tras el upload del paso 4:
 
 1. Abre [central.sonatype.com](https://central.sonatype.com/) → tu deployment.
 2. Revisa la validación.
@@ -185,12 +194,11 @@ En unos minutos debería aparecer en [search.maven.org](https://search.maven.org
 El tag debe apuntar al **commit del paso 1** (POMs + README + `<scm><tag>` ya incluidos):
 
 ```bash
-git tag -a v0.3.1 -m "Release 0.3.1"
-git push origin v0.3.1
+git tag -a v0.3.2 -m "Release 0.3.2"
+git push origin v0.3.2
 ```
 
-> Si el workflow Release está activo, el push del tag dispara el deploy. Desactiva el workflow primero si solo mueves el tag sin republicar (ver nota en conversación de releases).
-
+Eso **solo** crea el draft en GitHub; el deploy a Maven ocurre cuando publiques el Release.
 ### 7. Subir versión de desarrollo
 
 En los **4 POMs** (mismo listado del paso 1), commit separado en `main`:
@@ -209,14 +217,14 @@ Los README **no** cambian aquí — siguen mostrando la última versión publica
 <dependency>
     <groupId>io.github.benjaminor-dev</groupId>
     <artifactId>spring-validation-plus-spring-boot-starter</artifactId>
-    <version>0.3.1</version>
+    <version>0.3.2</version>
 </dependency>
 ```
 
 **Gradle**
 
 ```kotlin
-implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.1")
+implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.2")
 ```
 
 Sin repositorios extra.
@@ -233,5 +241,5 @@ Sin repositorios extra.
 
 ## Pendiente
 
-- [x] Configurar secrets de GitHub Actions y validar un release por tag (`v0.2.0`)
+- [x] Configurar secrets de GitHub Actions y validar un release (tag → draft → Publish release)
 - [ ] `autoPublish=true` cuando los releases automatizados estén estables

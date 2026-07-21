@@ -16,5 +16,5 @@ docker compose run --rm \
   maven mvn clean install -DskipTests -Dgpg.skip=true
 
 echo ""
-echo "Listo. El demo puede usar io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.1"
+echo "Listo. El demo puede usar io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.2"
 echo "Reinicia el contenedor del demo si ya estaba corriendo: cd ../demo-springboot && docker compose restart api"

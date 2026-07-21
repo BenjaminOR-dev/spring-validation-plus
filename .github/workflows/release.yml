@@ -1,20 +1,52 @@
 name: Release
 
+# 1) Push tag v*     → creates a GitHub Release in draft
+# 2) Publish release → deploys core + starter to Maven Central
 on:
   push:
     tags:
       - "v*"
+  release:
+    types: [published]
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  publish:
+  draft-release:
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create draft GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          draft: true
+          generate_release_notes: true
+          body: |
+            Draft release for `${{ github.ref_name }}`.
+
+            **Next steps**
+            1. Review the notes and the tagged commit (POMs must be a non-SNAPSHOT version).
+            2. Click **Publish release** to deploy `spring-validation-plus-core` and
+               `spring-validation-plus-spring-boot-starter` to Maven Central.
+            3. With `autoPublish=false`, confirm **Publish** in
+               [Central Portal](https://central.sonatype.com/) if the deployment is waiting.
+
+  publish-maven:
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout release tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -76,7 +108,7 @@ jobs:
             echo "Refusing to deploy SNAPSHOT version: $VERSION" >&2
             exit 1
           fi
-          echo "Deploying version: $VERSION"
+          echo "Deploying version: $VERSION (tag ${{ github.event.release.tag_name }})"
 
       - name: Deploy to Maven Central
         run: |

@@ -1,6 +1,7 @@
 package dev.benjaminor.validationplus.support;
 
 import jakarta.validation.MessageInterpolator;
+import jakarta.validation.Path;
 
 import java.math.BigDecimal;
 import java.util.Locale;
@@ -128,6 +129,10 @@ public final class ValidationMessageUtils {
 
     /**
      * Extracts the field name from the interpolator context.
+     *
+     * <p>Uses the public {@link jakarta.validation.Path} iteration API. Hibernate Validator 9 stores the
+     * path as a package-private {@code MaterializedPath}; reflecting {@code getLeafNode()} on that class
+     * throws {@link IllegalAccessException} and must not be relied upon.
      */
     public static String extractFieldName(MessageInterpolator.Context context) {
         if (context == null) {
@@ -137,12 +142,36 @@ public final class ValidationMessageUtils {
         if (propertyPath == null) {
             return "";
         }
-        Object leafNode = invoke(propertyPath, "getLeafNode");
-        if (leafNode == null) {
+
+        String fromNodes = lastNamedNode(propertyPath);
+        if (!fromNodes.isBlank()) {
+            return fromNodes;
+        }
+
+        String asString = String.valueOf(propertyPath);
+        if (asString.isBlank() || "null".equals(asString)) {
             return "";
         }
-        Object name = invoke(leafNode, "getName");
-        return name != null ? String.valueOf(name) : "";
+        int separator = Math.max(asString.lastIndexOf('.'), asString.lastIndexOf('/'));
+        String leaf = separator >= 0 ? asString.substring(separator + 1) : asString;
+        int bracket = leaf.indexOf('[');
+        return bracket >= 0 ? leaf.substring(0, bracket) : leaf;
+    }
+
+    private static String lastNamedNode(Object propertyPath) {
+        if (!(propertyPath instanceof Iterable<?> nodes)) {
+            return "";
+        }
+        String lastName = "";
+        for (Object node : nodes) {
+            if (node instanceof Path.Node pathNode) {
+                String name = pathNode.getName();
+                if (name != null && !name.isBlank()) {
+                    lastName = name;
+                }
+            }
+        }
+        return lastName;
     }
 
     private static ResourceBundle getBundle(Locale locale) {
