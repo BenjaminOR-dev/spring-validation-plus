@@ -7,18 +7,31 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * JPA implementation of {@link ExistenceChecker}.
+ *
+ * <p>Supports multi-{@code EntityManagerFactory} apps via
+ * {@link PersistenceUnitEntityManagerResolver} and
+ * {@link ExistenceCheckRequest#persistenceUnit()}.
  */
 @Transactional(readOnly = true)
 public class JpaExistenceChecker implements ExistenceChecker {
 
-    private final EntityManager entityManager;
+    private final PersistenceUnitEntityManagerResolver entityManagerResolver;
 
+    public JpaExistenceChecker(PersistenceUnitEntityManagerResolver entityManagerResolver) {
+        this.entityManagerResolver = entityManagerResolver;
+    }
+
+    /**
+     * Single-EM constructor (backward compatible).
+     */
     public JpaExistenceChecker(EntityManager entityManager) {
-        this.entityManager = entityManager;
+        this(PersistenceUnitEntityManagerResolver.single(entityManager));
     }
 
     @Override
     public boolean exists(ExistenceCheckRequest request) {
+        EntityManager entityManager = entityManagerResolver.resolve(request.persistenceUnit());
+
         String entityName = JpaEntityUtils.resolveEntityName(request.entity());
         String whereClause = JpaEntityUtils.buildEqualityClause(
                 request.column(), "value", request.ignoreCase(), request.value());

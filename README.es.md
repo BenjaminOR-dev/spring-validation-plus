@@ -92,7 +92,7 @@ Sigue siendo Jakarta Validation por debajo: puedes mezclar `@NotNull` con `@Requ
 | 3.x | 8.x | Soportado (CI por defecto) |
 | 4.x | 9.x | Soportado (`mvn test -Phv9`) |
 
-El mismo JAR del starter sirve en ambos. Usa **≥ 0.3.2**. El orden de auto-config (`beforeName` / `afterName`) y la interpolación de `{field}` están pensados para Boot 3 y Boot 4.
+El mismo JAR del starter sirve en ambos. Usa **≥ 0.3.3**. El orden de auto-config (`beforeName` / `afterName`) y la interpolación de `{field}` están pensados para Boot 3 y Boot 4.
 
 ### ¿Qué dependencias instalo yo?
 
@@ -165,20 +165,20 @@ Añade **solo** el starter de Validation Plus. Maven resolverá el resto (Jakart
 <dependency>
     <groupId>io.github.benjaminor-dev</groupId>
     <artifactId>spring-validation-plus-spring-boot-starter</artifactId>
-    <version>0.3.2</version>
+    <version>0.3.3</version>
 </dependency>
 ```
 
 **Gradle (Kotlin DSL)**
 
 ```kotlin
-implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.2")
+implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.3")
 ```
 
 **Gradle (Groovy)**
 
 ```groovy
-implementation 'io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.2'
+implementation 'io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.3'
 ```
 
 **Multi-módulo Maven** (mismo repositorio):
@@ -737,6 +737,20 @@ public class AssignRoleRequest {
 }
 ```
 
+Con **varios** `EntityManagerFactory` (multi-datasource), indica el persistence unit
+(el mismo nombre que en `LocalContainerEntityManagerFactoryBean#setPersistenceUnitName`
+o el bean name). Vacío = EMF `@Primary` / único:
+
+```java
+@Exists(entity = Registro.class, field = "idRegistro", column = "idRegistro",
+        persistenceUnit = "nomina")
+@Exists(entity = Estatus.class, field = "idEstatus", column = "idEstatus",
+        persistenceUnit = "nomina")
+public class PersistenciaEstatusRequest { ... }
+```
+
+`@Unique` acepta el mismo atributo `persistenceUnit`.
+
 #### Backend sin JPA (SPI manual)
 
 Fuera de Spring Boot, o si prefieres registro explícito, usa el registro SPI al arrancar:
@@ -836,7 +850,7 @@ public class ExampleRequest {
 | `{format}` | Patrón de `@DateFormat` |
 | `{integer}` / `{fraction}` | Dígitos de `@Digits` |
 
-Los placeholders `{field}` y `{other}` los resuelve el interpolador incluido (`ValidationPlusMessageInterpolator`). Si los ves sin reemplazar (o el nombre del campo vacío), usa el starter **≥ 0.3.2** y verifica que no hayas definido un `LocalValidatorFactoryBean` custom sin ese interpolador.
+Los placeholders `{field}` y `{other}` los resuelve el interpolador incluido (`ValidationPlusMessageInterpolator`). Si los ves sin reemplazar (o el nombre del campo vacío), usa el starter **≥ 0.3.3** y verifica que no hayas definido un `LocalValidatorFactoryBean` custom sin ese interpolador.
 
 ## Handler de excepciones
 

@@ -2,6 +2,7 @@ package dev.benjaminor.validationplus.autoconfigure;
 
 import dev.benjaminor.validationplus.jpa.JpaExistenceChecker;
 import dev.benjaminor.validationplus.jpa.JpaUniquenessChecker;
+import dev.benjaminor.validationplus.jpa.PersistenceUnitEntityManagerResolver;
 import dev.benjaminor.validationplus.spi.ExistenceChecker;
 import dev.benjaminor.validationplus.spi.UniquenessChecker;
 import dev.benjaminor.validationplus.spi.ValidationPlusCheckers;
@@ -14,13 +15,20 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+
+import java.util.Map;
 
 /**
  * JPA auto-configuration for {@code @Unique} and {@code @Exists}.
  *
  * <p>Uses {@code afterName} for Spring Boot 3.x and 4.x Hibernate JPA auto-config class names
  * (package moved in Boot 4).
+ *
+ * <p>Supports multiple {@link EntityManagerFactory} beans: set
+ * {@code persistenceUnit} on {@code @Exists}/{@code @Unique} to select the unit
+ * (empty = {@code @Primary} / only factory).
  */
 @AutoConfiguration(afterName = {
         "org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration",
@@ -32,15 +40,24 @@ import org.springframework.context.annotation.Bean;
 public class JpaValidationPlusAutoConfiguration {
 
     @Bean
+    @ConditionalOnMissingBean(PersistenceUnitEntityManagerResolver.class)
+    public PersistenceUnitEntityManagerResolver persistenceUnitEntityManagerResolver(
+            ApplicationContext applicationContext) {
+        Map<String, EntityManagerFactory> factories =
+                applicationContext.getBeansOfType(EntityManagerFactory.class);
+        return PersistenceUnitEntityManagerResolver.from(applicationContext, factories);
+    }
+
+    @Bean
     @ConditionalOnMissingBean(UniquenessChecker.class)
-    public JpaUniquenessChecker jpaUniquenessChecker(EntityManager entityManager) {
-        return new JpaUniquenessChecker(entityManager);
+    public JpaUniquenessChecker jpaUniquenessChecker(PersistenceUnitEntityManagerResolver resolver) {
+        return new JpaUniquenessChecker(resolver);
     }
 
     @Bean
     @ConditionalOnMissingBean(ExistenceChecker.class)
-    public JpaExistenceChecker jpaExistenceChecker(EntityManager entityManager) {
-        return new JpaExistenceChecker(entityManager);
+    public JpaExistenceChecker jpaExistenceChecker(PersistenceUnitEntityManagerResolver resolver) {
+        return new JpaExistenceChecker(resolver);
     }
 
     @Bean

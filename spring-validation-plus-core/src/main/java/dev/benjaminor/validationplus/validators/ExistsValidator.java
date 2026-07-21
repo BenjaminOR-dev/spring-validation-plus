@@ -21,6 +21,7 @@ public class ExistsValidator implements ConstraintValidator<Exists, Object> {
     private String column;
     private String parameter;
     private boolean ignoreCase;
+    private String persistenceUnit;
 
     @Override
     public void initialize(Exists constraintAnnotation) {
@@ -29,6 +30,7 @@ public class ExistsValidator implements ConstraintValidator<Exists, Object> {
         this.column = constraintAnnotation.column();
         this.parameter = constraintAnnotation.parameter();
         this.ignoreCase = constraintAnnotation.ignoreCase();
+        this.persistenceUnit = constraintAnnotation.persistenceUnit();
     }
 
     @Override
@@ -51,7 +53,8 @@ public class ExistsValidator implements ConstraintValidator<Exists, Object> {
                     context, field, "dev.benjaminor.validationplus.constraints.Exists.checkerMissing");
         }
 
-        ExistenceCheckRequest request = new ExistenceCheckRequest(entity, column, fieldValue, ignoreCase);
+        ExistenceCheckRequest request = new ExistenceCheckRequest(
+                entity, column, fieldValue, ignoreCase, persistenceUnit);
 
         if (checker.exists(request)) {
             return true;

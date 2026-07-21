@@ -68,6 +68,12 @@ public @interface Unique {
      */
     boolean ignoreCase() default true;
 
+    /**
+     * JPA persistence unit name. Empty uses the primary / only
+     * {@code EntityManagerFactory} (backward compatible).
+     */
+    String persistenceUnit() default "";
+
     @Documented
     @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
     @Retention(RetentionPolicy.RUNTIME)

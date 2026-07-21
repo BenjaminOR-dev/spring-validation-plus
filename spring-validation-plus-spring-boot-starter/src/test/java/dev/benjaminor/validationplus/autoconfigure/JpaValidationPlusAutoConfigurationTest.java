@@ -2,10 +2,10 @@ package dev.benjaminor.validationplus.autoconfigure;
 
 import dev.benjaminor.validationplus.jpa.JpaExistenceChecker;
 import dev.benjaminor.validationplus.jpa.JpaUniquenessChecker;
+import dev.benjaminor.validationplus.jpa.PersistenceUnitEntityManagerResolver;
 import dev.benjaminor.validationplus.spi.ExistenceChecker;
 import dev.benjaminor.validationplus.spi.UniquenessChecker;
 import dev.benjaminor.validationplus.spi.ValidationPlusCheckers;
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -19,8 +19,7 @@ class JpaValidationPlusAutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
             .withConfiguration(AutoConfigurations.of(JpaValidationPlusAutoConfiguration.class))
-            .withBean(EntityManagerFactory.class, () -> mock(EntityManagerFactory.class))
-            .withBean(EntityManager.class, () -> mock(EntityManager.class));
+            .withBean(EntityManagerFactory.class, () -> mock(EntityManagerFactory.class));
 
     @AfterEach
     void tearDown() {
@@ -30,6 +29,7 @@ class JpaValidationPlusAutoConfigurationTest {
     @Test
     void shouldRegisterJpaCheckersWhenNoCustomBeansExist() {
         contextRunner.run(context -> {
+            assertThat(context).hasSingleBean(PersistenceUnitEntityManagerResolver.class);
             assertThat(context).hasSingleBean(JpaUniquenessChecker.class);
             assertThat(context).hasSingleBean(JpaExistenceChecker.class);
             assertThat(ValidationPlusCheckers.uniquenessChecker()).isPresent();
@@ -66,6 +66,25 @@ class JpaValidationPlusAutoConfigurationTest {
         contextRunner.withBean(UniquenessChecker.class, () -> customChecker)
                 .run(context -> {
                     assertThat(ValidationPlusCheckers.uniquenessChecker()).contains(customChecker);
+                });
+    }
+
+    @Test
+    void shouldPreferPrimaryEntityManagerFactoryAsDefaultUnit() {
+        EntityManagerFactory primary = mock(EntityManagerFactory.class);
+        EntityManagerFactory secondary = mock(EntityManagerFactory.class);
+
+        new ApplicationContextRunner()
+                .withConfiguration(AutoConfigurations.of(JpaValidationPlusAutoConfiguration.class))
+                .withBean("capaEmf", EntityManagerFactory.class, () -> secondary)
+                .withBean("nominaEmf", EntityManagerFactory.class, () -> primary,
+                        definition -> definition.setPrimary(true))
+                .run(context -> {
+                    assertThat(context).hasSingleBean(PersistenceUnitEntityManagerResolver.class);
+                    assertThat(context.getBeansOfType(EntityManagerFactory.class)).hasSize(2);
+                    EntityManagerFactory resolvedPrimary = PersistenceUnitEntityManagerResolver.resolvePrimary(
+                            context, context.getBeansOfType(EntityManagerFactory.class));
+                    assertThat(resolvedPrimary).isSameAs(primary);
                 });
     }
 }

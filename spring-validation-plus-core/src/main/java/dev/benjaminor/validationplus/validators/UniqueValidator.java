@@ -23,6 +23,7 @@ public class UniqueValidator implements ConstraintValidator<Unique, Object> {
     private String excludeParameter;
     private String excludeColumn;
     private boolean ignoreCase;
+    private String persistenceUnit;
 
     @Override
     public void initialize(Unique constraintAnnotation) {
@@ -33,6 +34,7 @@ public class UniqueValidator implements ConstraintValidator<Unique, Object> {
         this.excludeParameter = constraintAnnotation.excludeParameter();
         this.excludeColumn = constraintAnnotation.excludeColumn();
         this.ignoreCase = constraintAnnotation.ignoreCase();
+        this.persistenceUnit = constraintAnnotation.persistenceUnit();
     }
 
     @Override
@@ -54,7 +56,7 @@ public class UniqueValidator implements ConstraintValidator<Unique, Object> {
 
         Object excludeId = DatabaseValidationUtils.resolveExcludeId(dto, excludeField, excludeParameter);
         UniqueCheckRequest request = new UniqueCheckRequest(
-                entity, column, fieldValue, excludeId, excludeColumn, ignoreCase);
+                entity, column, fieldValue, excludeId, excludeColumn, ignoreCase, persistenceUnit);
 
         if (checker.isUnique(request)) {
             return true;
