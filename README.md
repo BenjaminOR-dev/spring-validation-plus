@@ -158,20 +158,20 @@ Add **only** the Validation Plus starter. Maven will resolve the rest (Jakarta V
 <dependency>
     <groupId>io.github.benjaminor-dev</groupId>
     <artifactId>spring-validation-plus-spring-boot-starter</artifactId>
-    <version>0.3.0</version>
+    <version>0.3.1</version>
 </dependency>
 ```
 
 **Gradle (Kotlin DSL)**
 
 ```kotlin
-implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.0")
+implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.1")
 ```
 
 **Gradle (Groovy)**
 
 ```groovy
-implementation 'io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.0'
+implementation 'io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.1'
 ```
 
 **Multi-module Maven** (same repository):
@@ -816,16 +816,20 @@ public class ExampleRequest {
 - [ValidationMessages_es.properties](spring-validation-plus-core/src/main/resources/ValidationMessages_es.properties) — Spanish
 - [ValidationMessages_pt.properties](spring-validation-plus-core/src/main/resources/ValidationMessages_pt.properties) — Portuguese
 
-**Available placeholders:** `{field}`, `{min}`, `{max}`, `{value}`, `{other}`, `{validatedValue}`, `{integer}`, `{fraction}`
+**Available placeholders:** `{field}`, `{other}`, `{value}`, `{values}`, `{min}`, `{max}`, `{condition}`, `{format}`, `{integer}`, `{fraction}`, `{validatedValue}`
 
 | Placeholder | Typical use |
 |---|---|
 | `{field}` | Field where the error is reported |
 | `{other}` | Observed field(s) in cross-field rules (e.g. the companion in `@RequiredWith`) |
-| `{value}` | Trigger value in conditional rules (`@RequiredIf`, `@ProhibitedIf`, …) |
+| `{value}` | Trigger value in conditional rules (`@RequiredIf`, `@ProhibitedIf`, …); CSV lists render as `A, B` |
+| `{values}` | Lists from `@In` / MIME types / extensions |
 | `{min}` / `{max}` | Numeric or size limits |
+| `{condition}` | Localized operator phrase (`is` / `is not` / `is one of`, …) |
+| `{format}` | `@DateFormat` pattern |
+| `{integer}` / `{fraction}` | `@Digits` counts |
 
-The `{field}` and `{other}` placeholders are resolved by the included interpolator (`ValidationPlusMessageInterpolator`). If you see `{other}` unreplaced in the response, verify you are using the Spring Validation Plus starter and not a custom `LocalValidatorFactoryBean` without that interpolator.
+The `{field}` and `{other}` placeholders are resolved by the included interpolator (`ValidationPlusMessageInterpolator`). If you see `{field}` / `{other}` unreplaced in the response: (1) use starter ≥ **0.3.1** on Spring Boot 4.x (in 0.3.0 auto-config ordering did not apply and Boot’s default validator won); (2) verify you are not defining a custom `LocalValidatorFactoryBean` without that interpolator.
 
 ## Exception handler
 

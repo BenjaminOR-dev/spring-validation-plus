@@ -15,6 +15,12 @@ class ValidationMessageUtilsTest {
         assertThat(ValidationMessageUtils.formatParameterValue(50.0)).isEqualTo("50");
         assertThat(ValidationMessageUtils.formatParameterValue(1.5)).isEqualTo("1.5");
         assertThat(ValidationMessageUtils.formatParameterValue(new BigDecimal("1234.00"))).isEqualTo("1234");
+        assertThat(ValidationMessageUtils.formatParameterValue(new String[]{"ADMIN", "MODERATOR"}))
+                .isEqualTo("ADMIN, MODERATOR");
+        assertThat(ValidationMessageUtils.formatCommaSeparatedList("ADMIN,MODERATOR"))
+                .isEqualTo("ADMIN, MODERATOR");
+        assertThat(ValidationMessageUtils.formatCommaSeparatedList("ADMIN, MODERATOR"))
+                .isEqualTo("ADMIN, MODERATOR");
     }
 
     @Test

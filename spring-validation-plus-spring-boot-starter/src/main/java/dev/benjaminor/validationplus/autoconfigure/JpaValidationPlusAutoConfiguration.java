@@ -14,13 +14,18 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 
 /**
  * JPA auto-configuration for {@code @Unique} and {@code @Exists}.
+ *
+ * <p>Uses {@code afterName} for Spring Boot 3.x and 4.x Hibernate JPA auto-config class names
+ * (package moved in Boot 4).
  */
-@AutoConfiguration(after = HibernateJpaAutoConfiguration.class)
+@AutoConfiguration(afterName = {
+        "org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration",
+        "org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfiguration"
+})
 @ConditionalOnClass({EntityManager.class, EntityManagerFactory.class})
 @ConditionalOnBean(EntityManagerFactory.class)
 @ConditionalOnProperty(prefix = "spring.validation-plus", name = "enabled", havingValue = "true", matchIfMissing = true)

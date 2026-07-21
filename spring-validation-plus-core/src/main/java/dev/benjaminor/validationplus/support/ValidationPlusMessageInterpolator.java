@@ -102,6 +102,13 @@ public class ValidationPlusMessageInterpolator implements MessageInterpolator {
         parameters.put(
                 "condition",
                 ConditionalMessageSupport.conditionPhrase(operator, locale, isUnlessConstraint(context)));
+
+        if (operator == ConditionalOperator.IN) {
+            Object valueParameter = parameters.get("value");
+            if (valueParameter instanceof String csv) {
+                parameters.put("value", ValidationMessageUtils.formatCommaSeparatedList(csv));
+            }
+        }
     }
 
     private boolean isUnlessConstraint(Context context) {

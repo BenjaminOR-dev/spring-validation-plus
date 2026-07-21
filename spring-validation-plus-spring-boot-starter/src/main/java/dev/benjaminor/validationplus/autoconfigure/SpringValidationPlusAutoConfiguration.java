@@ -11,7 +11,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
-import org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -19,8 +18,16 @@ import org.springframework.web.servlet.DispatcherServlet;
 
 /**
  * Main Spring Validation Plus auto-configuration.
+ *
+ * <p>Uses {@code beforeName} (not {@code before = Class}) so ordering works on both
+ * Spring Boot 3.x ({@code org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration})
+ * and Spring Boot 4.x ({@code org.springframework.boot.validation.autoconfigure.ValidationAutoConfiguration})
+ * without a hard class reference that would break the other major version.
  */
-@AutoConfiguration(before = ValidationAutoConfiguration.class)
+@AutoConfiguration(beforeName = {
+        "org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration",
+        "org.springframework.boot.validation.autoconfigure.ValidationAutoConfiguration"
+})
 @ConditionalOnClass({LocalValidatorFactoryBean.class, DispatcherServlet.class})
 @ConditionalOnProperty(prefix = "spring.validation-plus", name = "enabled", havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties(SpringValidationPlusProperties.class)

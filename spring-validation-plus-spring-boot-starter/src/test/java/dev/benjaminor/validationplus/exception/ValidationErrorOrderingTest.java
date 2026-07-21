@@ -34,7 +34,7 @@ class ValidationErrorOrderingTest {
                         "Confirmed"),
                 new ValidationErrorOrdering.ValidationErrorEntry(
                         "passwordConfirmation",
-                        "El campo passwordConfirmation es obligatorio cuando password está presente.",
+                        "El campo passwordConfirmation es obligatorio cuando está presente alguno de estos campos: password.",
                         "RequiredWith"),
                 new ValidationErrorOrdering.ValidationErrorEntry(
                         "passwordConfirmation",
@@ -44,7 +44,7 @@ class ValidationErrorOrderingTest {
         Map<String, List<String>> ordered = ValidationErrorOrdering.order(SampleRequest.class, entries);
 
         assertThat(ordered.get("passwordConfirmation")).containsExactly(
-                "El campo passwordConfirmation es obligatorio cuando password está presente.",
+                "El campo passwordConfirmation es obligatorio cuando está presente alguno de estos campos: password.",
                 "La confirmación del campo password no coincide.",
                 "El campo passwordConfirmation debe tener al menos 5 caracteres.");
     }

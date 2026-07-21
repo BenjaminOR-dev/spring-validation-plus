@@ -38,4 +38,26 @@ class ValidationMessagesI18nTest {
 
         assertThat(message).isEqualTo("O campo nome é obrigatório.");
     }
+
+    @Test
+    void shouldResolveSpanishSizeAndInvalidValueMessages() {
+        assertThat(ValidationMessageUtils.resolve(
+                        "dev.benjaminor.validationplus.constraints.Size.message",
+                        Locale.forLanguageTag("es"),
+                        Map.of("field", "code", "value", 4)))
+                .isEqualTo("El campo code debe tener tamaño 4.");
+
+        assertThat(ValidationMessageUtils.resolve(
+                        "dev.benjaminor.validationplus.constraints.In.message",
+                        Locale.forLanguageTag("es"),
+                        Map.of("field", "role")))
+                .isEqualTo("El valor del campo role no es válido.");
+
+        assertThat(ValidationMessageUtils.resolve(
+                        "dev.benjaminor.validationplus.constraints.RequiredWith.message",
+                        Locale.forLanguageTag("es"),
+                        Map.of("field", "email", "other", "name, phone")))
+                .isEqualTo(
+                        "El campo email es obligatorio cuando está presente alguno de estos campos: name, phone.");
+    }
 }

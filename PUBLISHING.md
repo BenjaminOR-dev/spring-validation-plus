@@ -69,13 +69,13 @@ Para flujos sin Docker, puedes usar [docs/settings-central.xml.example](docs/set
 | `spring-validation-plus-example/pom.xml` | `<version>` del parent |
 
 ```xml
-<version>0.3.0</version>
+<version>0.3.1</version>
 ```
 
 ```xml
 <scm>
     ...
-    <tag>v0.3.0</tag>
+    <tag>v0.3.1</tag>
 </scm>
 ```
 
@@ -92,11 +92,11 @@ En cada uno actualiza **Maven**, **Gradle Kotlin** y **Gradle Groovy**:
 Ejemplo:
 
 ```xml
-<version>0.3.0</version>
+<version>0.3.1</version>
 ```
 
 ```kotlin
-implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.0")
+implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.1")
 ```
 
 #### Opcional (recomendado)
@@ -185,8 +185,8 @@ En unos minutos debería aparecer en [search.maven.org](https://search.maven.org
 El tag debe apuntar al **commit del paso 1** (POMs + README + `<scm><tag>` ya incluidos):
 
 ```bash
-git tag -a v0.3.0 -m "Release 0.3.0"
-git push origin v0.3.0
+git tag -a v0.3.1 -m "Release 0.3.1"
+git push origin v0.3.1
 ```
 
 > Si el workflow Release está activo, el push del tag dispara el deploy. Desactiva el workflow primero si solo mueves el tag sin republicar (ver nota en conversación de releases).
@@ -209,14 +209,14 @@ Los README **no** cambian aquí — siguen mostrando la última versión publica
 <dependency>
     <groupId>io.github.benjaminor-dev</groupId>
     <artifactId>spring-validation-plus-spring-boot-starter</artifactId>
-    <version>0.3.0</version>
+    <version>0.3.1</version>
 </dependency>
 ```
 
 **Gradle**
 
 ```kotlin
-implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.0")
+implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.1")
 ```
 
 Sin repositorios extra.

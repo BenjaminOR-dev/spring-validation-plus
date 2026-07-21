@@ -68,10 +68,24 @@ public final class ValidationMessageUtils {
     /**
      * Formats constraint parameter values for user-facing messages.
      * Whole numbers such as {@code 1.0} are rendered as {@code 1}.
+     * Arrays are joined with {@code ", "}.
      */
     public static String formatParameterValue(Object value) {
         if (value == null) {
             return "";
+        }
+        if (value instanceof String[] stringValues) {
+            return String.join(", ", stringValues);
+        }
+        if (value instanceof Object[] objectValues) {
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < objectValues.length; i++) {
+                if (i > 0) {
+                    builder.append(", ");
+                }
+                builder.append(formatParameterValue(objectValues[i]));
+            }
+            return builder.toString();
         }
         if (value instanceof BigDecimal decimal) {
             BigDecimal normalized = decimal.stripTrailingZeros();
@@ -88,6 +102,28 @@ public final class ValidationMessageUtils {
             return number.toString();
         }
         return String.valueOf(value);
+    }
+
+    /**
+     * Normalizes {@code "A,B"} / {@code "A, B"} into {@code "A, B"} for readable IN-list messages.
+     */
+    public static String formatCommaSeparatedList(String value) {
+        if (value == null || value.isBlank() || value.indexOf(',') < 0) {
+            return value == null ? "" : value;
+        }
+        String[] parts = value.split(",");
+        StringBuilder builder = new StringBuilder();
+        for (String part : parts) {
+            String trimmed = part.trim();
+            if (trimmed.isEmpty()) {
+                continue;
+            }
+            if (builder.length() > 0) {
+                builder.append(", ");
+            }
+            builder.append(trimmed);
+        }
+        return builder.length() > 0 ? builder.toString() : value;
     }
 
     /**

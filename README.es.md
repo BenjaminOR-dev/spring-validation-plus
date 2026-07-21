@@ -158,20 +158,20 @@ Añade **solo** el starter de Validation Plus. Maven resolverá el resto (Jakart
 <dependency>
     <groupId>io.github.benjaminor-dev</groupId>
     <artifactId>spring-validation-plus-spring-boot-starter</artifactId>
-    <version>0.3.0</version>
+    <version>0.3.1</version>
 </dependency>
 ```
 
 **Gradle (Kotlin DSL)**
 
 ```kotlin
-implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.0")
+implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.1")
 ```
 
 **Gradle (Groovy)**
 
 ```groovy
-implementation 'io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.0'
+implementation 'io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.1'
 ```
 
 **Multi-módulo Maven** (mismo repositorio):
@@ -816,16 +816,20 @@ public class ExampleRequest {
 - [ValidationMessages_es.properties](spring-validation-plus-core/src/main/resources/ValidationMessages_es.properties) — español
 - [ValidationMessages_pt.properties](spring-validation-plus-core/src/main/resources/ValidationMessages_pt.properties) — portugués
 
-**Placeholders disponibles:** `{field}`, `{min}`, `{max}`, `{value}`, `{other}`, `{validatedValue}`, `{integer}`, `{fraction}`
+**Placeholders disponibles:** `{field}`, `{other}`, `{value}`, `{values}`, `{min}`, `{max}`, `{condition}`, `{format}`, `{integer}`, `{fraction}`, `{validatedValue}`
 
 | Placeholder | Uso típico |
 |---|---|
 | `{field}` | Campo donde se reporta el error |
 | `{other}` | Campo(s) observado(s) en reglas entre campos (p. ej. el companion en `@RequiredWith`) |
-| `{value}` | Valor disparador en reglas condicionales (`@RequiredIf`, `@ProhibitedIf`, …) |
+| `{value}` | Valor disparador en reglas condicionales (`@RequiredIf`, `@ProhibitedIf`, …); listas CSV se muestran como `A, B` |
+| `{values}` | Listas de `@In` / MIME / extensiones |
 | `{min}` / `{max}` | Límites numéricos o de tamaño |
+| `{condition}` | Frase localizada del operador (`es` / `no es` / `es uno de`, …) |
+| `{format}` | Patrón de `@DateFormat` |
+| `{integer}` / `{fraction}` | Dígitos de `@Digits` |
 
-Los placeholders `{field}` y `{other}` los resuelve el interpolador incluido (`ValidationPlusMessageInterpolator`). Si ves `{other}` sin reemplazar en la respuesta, verifica que usas el starter de Spring Validation Plus y no un `LocalValidatorFactoryBean` custom sin ese interpolador.
+Los placeholders `{field}` y `{other}` los resuelve el interpolador incluido (`ValidationPlusMessageInterpolator`). Si ves `{field}` / `{other}` sin reemplazar en la respuesta: (1) usa el starter ≥ **0.3.1** en Spring Boot 4.x (en 0.3.0 el orden de auto-config no aplicaba y ganaba el validador por defecto de Boot); (2) verifica que no hayas definido un `LocalValidatorFactoryBean` custom sin ese interpolador.
 
 ## Handler de excepciones
 

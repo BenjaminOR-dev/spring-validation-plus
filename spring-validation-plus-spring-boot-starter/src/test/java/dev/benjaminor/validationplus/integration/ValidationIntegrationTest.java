@@ -147,7 +147,7 @@ class ValidationIntegrationTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errors.passwordConfirmation.length()").value(1))
                 .andExpect(jsonPath("$.errors.passwordConfirmation[0]")
-                        .value("El campo passwordConfirmation es obligatorio cuando password está presente."));
+                        .value("El campo passwordConfirmation es obligatorio cuando está presente alguno de estos campos: password."));
     }
 
     @Test
