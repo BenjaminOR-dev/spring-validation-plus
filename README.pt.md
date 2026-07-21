@@ -24,6 +24,7 @@ Spring Validation Plus adiciona mais de **85 anotações** (`@Required`, `@Confi
 - Integração JPA opcional para `@Unique` e `@Exists`
 - Core utilizável sem Spring Boot (`spring-validation-plus-core`)
 
+<a id="por-que-usar-o-validation-plus"></a>
 ## Por que usar o Validation Plus?
 
 Spring Boot já traz **Jakarta Validation**, mas o padrão define apenas **~22 constraints** genéricos (`@NotNull`, `@Size`, `@Email`, `@Past`, …). **Não inclui** regras entre campos, confirmação de senha, unicidade em BD nem a maioria das validações de formato que o Laravel traz prontas.
@@ -53,6 +54,7 @@ Spring Boot já traz **Jakarta Validation**, mas o padrão define apenas **~22 c
 
 Continua sendo Jakarta Validation por baixo: você pode misturar `@NotNull` com `@Required` ou `@Email` com `@EmailAddress` no mesmo DTO.
 
+<a id="indice"></a>
 ## Índice
 
 - [Por que usar o Validation Plus?](#por-que-usar-o-validation-plus)
@@ -82,6 +84,7 @@ Continua sendo Jakarta Validation por baixo: você pode misturar `@NotNull` com 
 - [Roadmap](#roadmap)
 - [Licença](#licenca)
 
+<a id="requisitos"></a>
 ## Requisitos
 
 - **Java 17+**
@@ -94,6 +97,7 @@ Continua sendo Jakarta Validation por baixo: você pode misturar `@NotNull` com 
 
 O mesmo JAR do starter serve nos dois. Use **≥ 0.3.3**. A ordem de auto-config (`beforeName` / `afterName`) e a interpolação de `{field}` foram feitas para Boot 3 e Boot 4.
 
+<a id="quais-dependencias-eu-instalo"></a>
 ### Quais dependências eu instalo?
 
 Em uma app Spring Boot **você só precisa adicionar o Validation Plus** para ter validação completa (constraints + motor + auto-config):
@@ -114,6 +118,7 @@ Em uma app Spring Boot **você só precisa adicionar o Validation Plus** para te
 
 O badge **Jakarta Validation 3.x** indica **compatibilidade** com o padrão, não um passo extra de instalação.
 
+<a id="jpa-para-unique-e-exists"></a>
 ### JPA para `@Unique` e `@Exists`
 
 **JPA não vem incluído** no Spring Boot nem no Validation Plus. Se você só usa regras de formato, tipos ou entre campos (`@Required`, `@Confirmed`, …), não precisa instalar nada mais.
@@ -149,12 +154,15 @@ runtimeOnly("com.h2database:h2")
 
 Com JPA ativo (um `EntityManagerFactory` em runtime), Validation Plus registra automaticamente os checkers de `@Unique` e `@Exists`. Se não usar JPA, você pode implementar `UniquenessChecker` / `ExistenceChecker` manualmente — ver [Banco de dados](#banco-de-dados-unique-exists).
 
+<a id="sem-spring-boot"></a>
 ### Sem Spring Boot
 
 Use o artefato `spring-validation-plus-core` e inclua você mesmo um motor de validação (ex.: `hibernate-validator`). Detalhes em [Arquitetura de módulos](#arquitetura-de-modulos).
 
+<a id="inicio-rapido"></a>
 ## Início rápido
 
+<a id="1-dependencia"></a>
 ### 1. Dependência
 
 Adicione **apenas** o starter do Validation Plus. Maven resolverá o resto (Jakarta Validation + Hibernate Validator):
@@ -195,6 +203,7 @@ implementation 'io.github.benjaminor-dev:spring-validation-plus-spring-boot-star
 
 > **`spring-boot-starter-validation` não é necessário** — o Validation Plus já inclui Jakarta Validation + Hibernate Validator. **`spring-boot-starter-web` só se sua API for REST com Spring MVC** (`@RestController`, `@RequestBody`): o Validation Plus não o instala; na prática a maioria dos projetos web já o tem.
 
+<a id="2-anote-seu-dto"></a>
 ### 2. Anote seu DTO
 
 ```java
@@ -228,6 +237,7 @@ public class UserCreateRequest {
 
 > Todos os blocos Java deste README incluem **imports completos** para que você possa copiar e colar sem dúvidas de origem.
 
+<a id="3-valide-no-controller"></a>
 ### 3. Valide no controller
 
 ```java
@@ -245,6 +255,7 @@ public ResponseEntity<User> create(@Valid @RequestBody UserCreateRequest request
 
 O starter configura automaticamente o `Validator` com i18n e, se habilitado, um `ControllerAdvice` que retorna erros em formato JSON unificado.
 
+<a id="configuracao"></a>
 ## Configuração
 
 Propriedades disponíveis em `application.properties`:
@@ -268,8 +279,10 @@ spring.web.locale-resolver=accept_header
 
 Se sua app já tem um `@RestControllerAdvice` próprio para validação, desative o handler da biblioteca e delegue apenas os erros de negócio (404, 401, etc.) ao seu advice local.
 
+<a id="guia-de-uso"></a>
 ## Guia de uso
 
+<a id="imports-de-referencia"></a>
 ### Imports de referência
 
 | Origem | Import típico | Quando |
@@ -282,6 +295,7 @@ Se sua app já tem um `@RestControllerAdvice` próprio para validação, desativ
 
 Todos os exemplos Java abaixo incluem os imports necessários.
 
+<a id="padrao-recomendado-por-campo"></a>
 ### Padrão recomendado por campo
 
 Empilhe as anotações nesta ordem:
@@ -325,6 +339,7 @@ public class ExampleRequest {
 
 > `@EmailAddress`, `@MinLength` e similares **ignoram valores null ou em branco**. Combine-os com `@Required` quando o campo for obrigatório.
 
+<a id="campos-opcionais-nullable"></a>
 ### Campos opcionais (`@Nullable`)
 
 Para campos que **não são obrigatórios** em updates parciais (senha, sobrenome, etc.):
@@ -357,6 +372,7 @@ public class UserUpdateRequest {
 
 O mesmo vale para filtros opcionais em query params: `@Nullable` + `@EmailAddress` permite deixar `email` vazio na URL.
 
+<a id="body-json-requestbody"></a>
 ### Body JSON (`@RequestBody`)
 
 Fluxo padrão para POST/PUT:
@@ -377,6 +393,7 @@ public ResponseEntity<?> create(@Valid @RequestBody UserCreateRequest request) {
 
 Se o JSON traz um tipo incorreto (`"size": "abc"`), o `ValidationExceptionHandler` traduz o erro do Jackson para uma mensagem i18n amigável.
 
+<a id="query-params-e-formularios-modelattribute"></a>
 ### Query params e formulários (`@ModelAttribute`)
 
 Para GET com filtros, paginação ou **POST** com `application/x-www-form-urlencoded`:
@@ -434,6 +451,7 @@ public class UserSearchRequest {
 
 `@IntegerType` em um campo `Integer` **não intercepta** texto não numérico em query params; isso ocorre na fase de binding. Uma vez convertido corretamente, `@IntegerType` e `@MinValue` se aplicam.
 
+<a id="path-variables-validated"></a>
 ### Path variables (`@Validated`)
 
 Para validar parâmetros de rota ou de método (não DTOs), anote o controller com `@Validated` e use constraints no parâmetro:
@@ -458,6 +476,7 @@ public class UserController {
 
 Os erros são retornados como `{ "errors": { "id": ["..."] } }` com mensagens i18n (mesmo formato que no body).
 
+<a id="arrays-e-listas"></a>
 ### Arrays e listas
 
 Há **dois níveis** de validação:
@@ -489,6 +508,7 @@ public class BulkTagRequest {
 
 `@Between` funciona sobre números, comprimento de strings **e tamanho de coleções/arrays**.
 
+<a id="validacao-aninhada-com-dtos"></a>
 ### Validação aninhada com DTOs
 
 Quando cada item do array é um objeto com regras próprias, use um DTO filho e `@Valid` do Jakarta:
@@ -541,10 +561,12 @@ Erros aninhados na resposta:
 
 > Os constraints do validation-plus **ainda não suportam** anotações inline em generics (`List<@EmailAddress String>`). Para validar cada string de uma lista, use um DTO wrapper ou um DTO filho com `@Valid`.
 
+<a id="regras-entre-campos-cross-field"></a>
 ### Regras entre campos (cross-field)
 
 Constraints que relacionam vários campos do mesmo DTO. Você pode colocá-los **no campo que é validado** (recomendado, estilo Laravel) ou **na classe** (forma clássica).
 
+<a id="no-campo-recomendado"></a>
 #### No campo (recomendado)
 
 Coloque a anotação diretamente sobre o campo que deve cumprir a regra. O parâmetro indica o(s) campo(s) observado(s):
@@ -601,6 +623,7 @@ Os constraints condicionais (`@RequiredIf`, `@RequiredUnless`, `@ProhibitedIf`, 
 
 `@RequiredIfAccepted` / `@RequiredIfDeclined` não usam `operator` (avaliam aceitação booleana do campo observado).
 
+<a id="na-classe-alternativa"></a>
 #### Na classe (alternativa)
 
 A sintaxe clássica continua suportada quando você prefere centralizar as regras:
@@ -620,14 +643,16 @@ public class UserRequest {
 }
 ```
 
-Ver [Referência de constraints → Entre campos](#entre-campos).
+Ver [Referência de constraints → Entre campos](#entre-campos-cross-field).
 
+<a id="banco-de-dados-unique-exists"></a>
 ### Banco de dados (`@Unique`, `@Exists`)
 
 Validações que consultam persistência em runtime. Requerem um **checker** registrado via SPI.
 
 > **JPA não vem por padrão:** nem Spring Boot nem Validation Plus instalam JPA automaticamente. Adicione `spring-boot-starter-data-jpa` (mais driver e DataSource) seguindo [JPA para `@Unique` e `@Exists`](#jpa-para-unique-e-exists), ou registre checkers custom.
 
+<a id="checklist-de-integracao-jpa"></a>
 #### Checklist de integração JPA
 
 1. Dependência `spring-boot-starter-data-jpa` no seu projeto (além do starter do validation-plus).
@@ -637,6 +662,7 @@ Validações que consultam persistência em runtime. Requerem um **checker** reg
 
 O starter registra automaticamente `JpaUniquenessChecker` e `JpaExistenceChecker` quando detecta um `EntityManagerFactory` (após a auto-config do Hibernate). As consultas de banco de dados são executadas em transação somente leitura, também com `spring.jpa.open-in-view=false`.
 
+<a id="checkers-custom-spring-boot"></a>
 #### Checkers custom (Spring Boot)
 
 Declare um bean em vez dos defaults JPA — o starter o registra automaticamente:
@@ -653,6 +679,7 @@ UniquenessChecker uniquenessChecker(UserRepository repository) {
 
 Se existir um bean `UniquenessChecker` ou `ExistenceChecker`, a implementação JPA não é criada.
 
+<a id="parametros-de-unique"></a>
 #### Parâmetros de `@Unique`
 
 | Parâmetro | Descrição |
@@ -666,6 +693,7 @@ Se existir um bean `UniquenessChecker` ou `ExistenceChecker`, a implementação 
 | `ignoreCase` | Comparação case-insensitive para strings (padrão: `true`) |
 | `message` | Mensagem personalizada (suporta i18n com chaves `{...}`) |
 
+<a id="criar-valor-unico"></a>
 #### Criar — valor único
 
 ```java
@@ -686,6 +714,7 @@ public class UserCreateRequest {
 }
 ```
 
+<a id="atualizar-excluir-o-registro-atual"></a>
 #### Atualizar — excluir o registro atual
 
 `excludeParameter` lê o id da requisição HTTP atual (path variable) via `RequestContextValueProvider`:
@@ -721,6 +750,7 @@ public User update(@PathVariable Long id, @Valid @RequestBody UserUpdateRequest 
 //                                    ↑ deve coincidir com excludeParameter = "id"
 ```
 
+<a id="exists-o-registro-deve-existir"></a>
 #### `@Exists` — o registro deve existir
 
 ```java
@@ -751,6 +781,7 @@ public class PersistenciaEstatusRequest { ... }
 
 `@Unique` aceita o mesmo atributo `persistenceUnit`.
 
+<a id="backend-sem-jpa-spi-manual"></a>
 #### Backend sem JPA (SPI manual)
 
 Fora do Spring Boot, ou se preferir registro explícito, use o registro SPI na inicialização:
@@ -768,6 +799,7 @@ ValidationPlusCheckers.registerExistenceChecker(request -> {
 
 Para valores de contexto HTTP (path variables), registre um `ContextValueProvider`. Em apps web Spring Boot, `RequestContextValueProvider` vem incluído por padrão; você pode substituí-lo pelo seu próprio `@Bean ContextValueProvider`.
 
+<a id="erros-frequentes-de-unique"></a>
 #### Erros frequentes de `@Unique`
 
 | Mensagem | Causa | Solução |
@@ -776,6 +808,7 @@ Para valores de contexto HTTP (path variables), registre um `ContextValueProvide
 | O email existe mas é o **mesmo** registro no update | Falta excluir o id atual | Use `excludeParameter = "id"` alinhado com `@PathVariable` |
 | Erro JPA / entidade não encontrada | `entity` ou `column` incorretos | `column` = nome do **atributo** na entidade Java |
 
+<a id="resposta-de-erros"></a>
 ## Resposta de erros
 
 Formato JSON estilo Laravel, retornado por `ValidationExceptionHandler`:
@@ -798,6 +831,7 @@ O handler cobre:
 
 Os erros de conversão (`typeMismatch`) são traduzidos para i18n com `FieldErrorMessageResolver` e `TypeMismatchMessageUtils` (`dev.benjaminor.validationplus.type.integer`, etc.).
 
+<a id="internacionalizacao-i18n"></a>
 ## Internacionalização (i18n)
 
 Mensagens incluídas no core:
@@ -852,6 +886,7 @@ public class ExampleRequest {
 
 Os placeholders `{field}` e `{other}` são resolvidos pelo interpolador incluído (`ValidationPlusMessageInterpolator`). Se você os ver sem substituir (ou o nome do campo vazio), use o starter **≥ 0.3.3** e verifique que não definiu um `LocalValidatorFactoryBean` custom sem esse interpolador.
 
+<a id="handler-de-excecoes"></a>
 ## Handler de exceções
 
 Por padrão, `ValidationExceptionHandler` é registrado como `@RestControllerAdvice`. Para usar apenas o validador e seu próprio advice:
@@ -862,6 +897,7 @@ spring.validation-plus.exception-handler.enabled=false
 
 Seu advice deve tratar pelo menos `MethodArgumentNotValidException` e `BindException` se quiser respostas 400 personalizadas. Os erros de conversão de query params (`typeMismatch` em `FieldError`) são traduzidos internamente por `FieldErrorMessageResolver` quando o handler da biblioteca está ativo.
 
+<a id="arquitetura-de-modulos"></a>
 ## Arquitetura de módulos
 
 ```text
@@ -894,6 +930,7 @@ spring-validation-plus/
 | `SpringValidationPlusAutoConfiguration` | `LocalValidatorFactoryBean` com i18n, `ValidationExceptionHandler`, `RequestContextValueProvider` |
 | `JpaValidationPlusAutoConfiguration` | `JpaUniquenessChecker` + `JpaExistenceChecker` (se houver JPA) |
 
+<a id="referencia-executavel-example"></a>
 ## Referência executável (example)
 
 O módulo **`spring-validation-plus-example`** é documentação **viva**: código executável + guia com curls.
@@ -908,8 +945,10 @@ Consulte **[spring-validation-plus-example/README.es.md](spring-validation-plus-
 - Exemplos de `@Unique`, `@ModelAttribute`, `@Valid` aninhado, `@RequiredIf`, `@Confirmed`
 - H2 em memória para testar regras de banco de dados sem instalar nada extra
 
+<a id="solucao-de-problemas"></a>
 ## Solução de problemas
 
+<a id="as-mensagens-saem-em-ingles"></a>
 ### As mensagens saem em inglês
 
 Postman e muitos clientes **não enviam** `Accept-Language`. Configure idioma padrão:
@@ -921,6 +960,7 @@ spring.web.locale-resolver=accept_header
 
 Ou envie o header `Accept-Language: es` em cada requisição.
 
+<a id="query-param-numerico-invalido-mostra-erro-em-ingles"></a>
 ### Query param numérico inválido mostra erro em inglês
 
 Ative o handler da biblioteca:
@@ -931,6 +971,7 @@ spring.validation-plus.exception-handler.enabled=true
 
 Se você usa seu próprio `@RestControllerAdvice`, deve traduzir erros `typeMismatch` em `FieldError` ou reutilizar a lógica de `FieldErrorMessageResolver`.
 
+<a id="unique-responde-nao-ha-um-verificador-de-unicidade-configurado"></a>
 ### `@Unique` responde "Não há um verificador de unicidade configurado"
 
 1. Confirme `spring-boot-starter-data-jpa` no classpath.
@@ -938,10 +979,12 @@ Se você usa seu próprio `@RestControllerAdvice`, deve traduzir erros `typeMism
 3. Use versão do starter que inclui `JpaValidationPlusAutoConfiguration` (ativa **depois** do Hibernate).
 4. Sem JPA: implemente e registre `UniquenessChecker` manualmente (ver [SPI custom](#backend-sem-jpa-spi-manual)).
 
+<a id="minlength-falha-em-um-campo-que-quero-deixar-vazio"></a>
 ### `@MinLength` falha em um campo que quero deixar vazio
 
 `""` **não é** o mesmo que `null`. Omita o campo do JSON ou envie `"campo": null`. Ver [Campos opcionais](#campos-opcionais-nullable).
 
+<a id="validacao-aninhada-nao-roda-em-uma-lista"></a>
 ### Validação aninhada não roda em uma lista
 
 Falta `@Valid` do Jakarta na coleção:
@@ -964,6 +1007,7 @@ public class CreateOrderRequest {
 }
 ```
 
+<a id="quero-desativar-apenas-o-handler-nao-o-validador"></a>
 ### Quero desativar apenas o handler, não o validador
 
 ```properties
@@ -971,8 +1015,10 @@ spring.validation-plus.exception-handler.enabled=false
 spring.validation-plus.enabled=true
 ```
 
+<a id="referencia-de-constraints"></a>
 ## Referência de constraints
 
+<a id="campo"></a>
 ### Campo
 
 | Constraint | Descrição |
@@ -1021,6 +1067,7 @@ spring.validation-plus.enabled=true
 | `@File` | Arquivo enviado (`MultipartFile`, `Part`) com tamanho/tipo opcional |
 | `@Image` | Imagem enviada com dimensões e tamanho opcionais |
 
+<a id="entre-campos-cross-field"></a>
 ### Entre campos (cross-field)
 
 Suportam nível **campo** (recomendado) e nível **classe**. Ver [Regras entre campos](#regras-entre-campos-cross-field).
@@ -1039,6 +1086,7 @@ Suportam nível **campo** (recomendado) e nível **classe**. Ver [Regras entre c
 | `@MissingWith` / `@MissingWithAll` | Ausente se companion(s) presente(s) |
 | `@InArray` | Valor deve existir em outro campo array/coleção |
 
+<a id="banco-de-dados-nivel-classe-spi"></a>
 ### Banco de dados (nível classe, SPI)
 
 | Constraint | Descrição |
@@ -1048,6 +1096,7 @@ Suportam nível **campo** (recomendado) e nível **classe**. Ver [Regras entre c
 
 > `@Unique` e `@Exists` são `@Repeatable`: você pode declarar várias regras no mesmo DTO.
 
+<a id="desenvolvimento"></a>
 ## Desenvolvimento
 
 ```text
@@ -1073,12 +1122,14 @@ docker compose run --rm maven mvn clean install
 
 Para compilar versões não publicadas a partir do código fonte, clone o repo e execute `mvn clean install` localmente. Os releases são publicados no Maven Central — ver [PUBLISHING.md](PUBLISHING.md) (mantenedores).
 
+<a id="roadmap"></a>
 ## Roadmap
 
 - Suporte `TYPE_USE` em constraints (`List<@EmailAddress String>`)
 - Melhorias de multipart em `ValidationExceptionHandler`
 - `autoPublish=true` no Central Portal quando a automação de releases estiver estável
 
+<a id="licenca"></a>
 ## Licença
 
 Copyright © 2026 **Benjamín Olvera R.**

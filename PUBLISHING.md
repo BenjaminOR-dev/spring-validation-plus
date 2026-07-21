@@ -43,7 +43,7 @@ Copia [.env.example](.env.example) a `.env` (gitignored) y rellena:
 | `GPG_KEY_ID` | `gpg --list-secret-keys --keyid-format long` |
 | `GPG_PASSPHRASE` | Passphrase de tu clave GPG |
 
-Backup de clave privada GPG: `.local/gpg-signing-private.asc` (ver [PUBLISHING.local.md](PUBLISHING.local.md) si lo tienes en local).
+Backup de clave privada GPG: `.local/gpg-signing-private.asc` (gitignored vía `.local/`).
 
 Para flujos sin Docker, puedes usar [docs/settings-central.xml.example](docs/settings-central.xml.example) en `~/.m2/settings.xml`.
 
