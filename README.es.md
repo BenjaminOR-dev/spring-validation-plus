@@ -10,13 +10,13 @@
 
 Validaciones estilo **Laravel** implementadas como **constraints de Jakarta Validation** (Bean Validation), con integración automática para **Spring Boot**.
 
-Spring Validation Plus añade más de **85 anotaciones** (`@Required`, `@Confirmed`, `@RequiredIf`, …) que funcionan igual que `@NotNull` o `@Size`: las pones en tus DTOs y se ejecutan con `@Valid` o `@Validated`. Incluye mensajes i18n (es/en/pt), manejo unificado de errores JSON y soporte opcional para reglas de base de datos (`@Unique`, `@Exists`).
+Spring Validation Plus añade más de **85 anotaciones** (`@Required`, `@Same`, `@RequiredIf`, …) que funcionan igual que `@NotNull` o `@Size`: las pones en tus DTOs y se ejecutan con `@Valid` o `@Validated`. Incluye mensajes i18n (es/en/pt), manejo unificado de errores JSON y soporte opcional para reglas de base de datos (`@Unique`, `@Exists`).
 
 > **Jakarta Validation** no es algo que instales aparte: es el **estándar** de validación en Java (`@Valid`, `@Constraint`). Esta librería lo **extiende** con reglas estilo Laravel; el motor (Hibernate Validator) **ya viene incluido** en el starter.
 
 **Incluye:**
 
-- Constraints estilo Laravel (`@Required`, `@EmailAddress`, `@Confirmed`, `@RequiredIf`, …)
+- Constraints estilo Laravel (`@Required`, `@EmailAddress`, `@Same`, `@RequiredIf`, …)
 - Reglas entre campos en el **campo** o en la **clase** (`@RequiredWith("password")`, `@Same("email")`, …)
 - Validación de tipos (`@StringType`, `@IntegerType`, `@ArrayType`, …)
 - Respuestas JSON `{ "errors": { "campo": ["mensaje"] } }`
@@ -33,7 +33,7 @@ Spring Boot ya trae **Jakarta Validation**, pero el estándar solo define **~22 
 
 **Lo que Jakarta no trae y aquí sí:**
 
-- **Entre campos** — `@RequiredWith`, `@Confirmed`, `@RequiredIf`, `@Same`, `@Different`, `@ProhibitedIf`, …
+- **Entre campos** — `@RequiredWith`, `@Same`, `@RequiredIf`, `@Different`, `@ProhibitedIf`, …
 - **Base de datos** — `@Unique` y `@Exists`; requiere JPA en **tu** app ([cómo instalarlo](#jpa-para-unique-y-exists))
 - **Tipos y presencia** — `@Required`, `@Nullable`, `@StringType`, `@IntegerType`, `@ArrayType`, …
 - **Formatos** — `@EmailAddress`, `@Url`, `@Uuid`, `@Ip`, `@Json`, `@Password`, `@Regex`, `@In`, …
@@ -41,7 +41,7 @@ Spring Boot ya trae **Jakarta Validation**, pero el estándar solo define **~22 
 | Con solo Jakarta / Spring (~22 reglas) | Con Validation Plus (85+ reglas) |
 |----------------------------------------|----------------------------------|
 | `@NotNull` no rechaza `""` ni `"   "` como “vacío” | `@Required` trata null, vacío y solo espacios como Laravel |
-| Sin `@Confirmed` ni `required_with` nativos | `@Confirmed("password")`, `@RequiredWith("password")` en el campo |
+| Sin matching de campos ni `required_with` nativos | `@Same("password")`, `@RequiredWith("password")` en el campo |
 | Sin `@Unique` / `@Exists`; la unicidad va en el servicio | p. ej. `@Unique(entity = User.class, field = "email")` en el DTO |
 | Reglas condicionales → validadores custom | `@RequiredIf`, `@RequiredUnless`, `@ProhibitedIf`, … |
 | Mensajes genéricos en inglés; i18n hay que montarla | Mensajes en **es / en / pt** con `{field}` y `{other}` ya resueltos |
@@ -50,7 +50,7 @@ Spring Boot ya trae **Jakarta Validation**, pero el estándar solo define **~22 
 
 **Cuándo te basta Jakarta estándar:** CRUD simples, pocas reglas, sin cross-field ni checks en BD, un solo idioma.
 
-**Cuándo compensa Validation Plus:** confirmación de contraseña, updates parciales (`@Nullable`), unicidad en BD (`@Unique`), reglas condicionales, respuestas de error listas para el frontend, i18n desde el día uno, o vienes de Laravel/PHP.
+**Cuándo compensa Validation Plus:** campos que coinciden (`@Same`), updates parciales (`@Nullable`), unicidad en BD (`@Unique`), reglas condicionales, respuestas de error listas para el frontend, i18n desde el día uno, o vienes de Laravel/PHP.
 
 Sigue siendo Jakarta Validation por debajo: puedes mezclar `@NotNull` con `@Required` o `@Email` con `@EmailAddress` en el mismo DTO.
 
@@ -121,7 +121,7 @@ El badge **Jakarta Validation 3.x** indica **compatibilidad** con el estándar, 
 <a id="jpa-para-unique-y-exists"></a>
 ### JPA para `@Unique` y `@Exists`
 
-**JPA no viene incluido** en Spring Boot ni en Validation Plus. Si solo usas reglas de formato, tipos o entre campos (`@Required`, `@Confirmed`, …), no necesitas instalar nada más.
+**JPA no viene incluido** en Spring Boot ni en Validation Plus. Si solo usas reglas de formato, tipos o entre campos (`@Required`, `@Same`, …), no necesitas instalar nada más.
 
 Para que `@Unique` y `@Exists` consulten la base de datos necesitas **añadir JPA tú mismo** en tu proyecto:
 
@@ -287,7 +287,7 @@ Si tu app ya tiene un `@RestControllerAdvice` propio para validación, desactiva
 
 | Origen | Import típico | Cuándo |
 |--------|---------------|--------|
-| Validation Plus | `import dev.benjaminor.validationplus.constraints.*;` | `@Required`, `@EmailAddress`, `@Confirmed`, … |
+| Validation Plus | `import dev.benjaminor.validationplus.constraints.*;` | `@Required`, `@EmailAddress`, `@Same`, … |
 | Jakarta Validation | `import jakarta.validation.Valid;` | `@Valid` en body, listas anidadas |
 | Spring Web | `import org.springframework.web.bind.annotation.*;` | Controllers REST |
 | Spring (path params) | `import org.springframework.validation.annotation.Validated;` | `@MinValue` en `@PathVariable` |
@@ -572,7 +572,7 @@ Constraints que relacionan varios campos del mismo DTO. Puedes colocarlos **en e
 Coloca la anotación directamente sobre el campo que debe cumplir la regla. El parámetro indica el/los campo(s) observado(s):
 
 ```java
-import dev.benjaminor.validationplus.constraints.Confirmed;
+import dev.benjaminor.validationplus.constraints.Same;
 import dev.benjaminor.validationplus.constraints.RequiredIf;
 import dev.benjaminor.validationplus.constraints.RequiredWith;
 import dev.benjaminor.validationplus.constraints.Same;
@@ -592,7 +592,7 @@ public class PasswordChangeRequest {
     @Same("password")
     private String passwordConfirmation;
 
-    @Confirmed("password")
+    @Same("password")
     private String passwordConfirmationAlt;
 }
 ```
@@ -606,7 +606,6 @@ public class PasswordChangeRequest {
 | Varios valores (`IN`) | `@RequiredIf(field = "role", value = "ADMIN,MODERATOR", operator = ConditionalOperator.IN)` |
 | `@RequiredIfAccepted` / `@RequiredIfDeclined` | `@RequiredIfAccepted("termsAccepted")` |
 | `@Same` / `@Different` | `@Same("password")` |
-| `@Confirmed` | `@Confirmed("password")` o `@Confirmed` si el campo termina en `Confirmation` |
 | `@ProhibitedIf` / `@ProhibitedUnless` | `@ProhibitedIf(field = "role", value = "ADMIN")` |
 | `@MissingIf` / `@MissingUnless` | `@MissingIf(field = "role", value = "GUEST")` |
 | `@MissingWith` / `@MissingWithAll` | `@MissingWith("email")` |
@@ -629,11 +628,11 @@ Los constraints condicionales (`@RequiredIf`, `@RequiredUnless`, `@ProhibitedIf`
 Sigue soportada la sintaxis clásica cuando prefieres centralizar las reglas:
 
 ```java
-import dev.benjaminor.validationplus.constraints.Confirmed;
+import dev.benjaminor.validationplus.constraints.Same;
 import dev.benjaminor.validationplus.constraints.RequiredIf;
 
 @RequiredIf(field = "role", value = "ADMIN", required = "adminCode")
-@Confirmed(field = "password")
+@Same(field = "password", other = "passwordConfirmation")
 public class UserRequest {
 
     private String role;
@@ -942,7 +941,7 @@ docker compose up example   # http://localhost:8080
 Consulta **[spring-validation-plus-example/README.es.md](spring-validation-plus-example/README.es.md)** — incluye:
 
 - Mapa **DTO → patrón → endpoint**
-- Ejemplos de `@Unique`, `@ModelAttribute`, `@Valid` anidado, `@RequiredIf`, `@Confirmed`
+- Ejemplos de `@Unique`, `@ModelAttribute`, `@Valid` anidado, `@RequiredIf`, `@Same`
 - H2 en memoria para probar reglas de base de datos sin instalar nada extra
 
 <a id="solucion-de-problemas"></a>
@@ -1039,6 +1038,7 @@ spring.validation-plus.enabled=true
 | `@Size` | Tamaño exacto (texto, colección o número) |
 | `@Accepted` / `@Declined` | Valores truthy/falsy: `true`/`false`, `yes`/`no`, `on`/`off`, `1`/`0`, strings `true`/`false`, `T`/`F` (sin distinguir mayúsculas) |
 | `@In` / `@NotIn` | Valor dentro/fuera de una lista |
+| `@MustBe` | Valor exactamente igual a una constante (p. ej. `@MustBe("T")`) |
 | `@Regex` / `@NotRegex` | Coincide/no coincide con patrón |
 | `@Url` | URL válida |
 | `@ActiveUrl` | URL http(s) con host (sin DNS/HTTP) |
@@ -1080,7 +1080,6 @@ Soportan nivel **campo** (recomendado) y nivel **clase**. Ver [Reglas entre camp
 | `@RequiredWithAll` / `@RequiredWithoutAll` | Obligatorio si todos/ausencia total de companions |
 | `@RequiredIfAccepted` / `@RequiredIfDeclined` | Obligatorio si campo aceptado/rechazado |
 | `@Same` / `@Different` | Dos campos deben coincidir / ser distintos |
-| `@Confirmed` | Debe coincidir con `{field}Confirmation` (o campo indicado) |
 | `@Prohibited` / `@ProhibitedIf` / `@ProhibitedUnless` | Campo prohibido (condicional) |
 | `@Missing` / `@MissingIf` / `@MissingUnless` | Campo debe estar ausente (condicional) |
 | `@MissingWith` / `@MissingWithAll` | Ausente si companion(s) presente(s) |
@@ -1127,7 +1126,6 @@ Para compilar versiones no publicadas desde el código fuente, clona el repo y e
 
 - Soporte `TYPE_USE` en constraints (`List<@EmailAddress String>`)
 - Mejoras de multipart en `ValidationExceptionHandler`
-- `autoPublish=true` en Central Portal cuando la automatización de releases esté estable
 
 <a id="licencia"></a>
 ## Licencia

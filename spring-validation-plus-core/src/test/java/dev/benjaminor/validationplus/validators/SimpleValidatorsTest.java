@@ -10,6 +10,7 @@ import dev.benjaminor.validationplus.constraints.Digits;
 import dev.benjaminor.validationplus.constraints.EndsWith;
 import dev.benjaminor.validationplus.constraints.In;
 import dev.benjaminor.validationplus.constraints.Json;
+import dev.benjaminor.validationplus.constraints.MustBe;
 import dev.benjaminor.validationplus.constraints.MinDigits;
 import dev.benjaminor.validationplus.constraints.NotIn;
 import dev.benjaminor.validationplus.constraints.NotRegex;
@@ -89,6 +90,23 @@ class SimpleValidatorsTest {
 
         assertThat(validator.validateProperty(dto, "inField")).isNotEmpty();
         assertThat(validator.validateProperty(dto, "notInField")).isNotEmpty();
+    }
+
+    @Test
+    void mustBeShouldRequireExactValue() {
+        SimpleDto dto = new SimpleDto();
+        dto.mustBeField = "T";
+
+        assertThat(validator.validateProperty(dto, "mustBeField")).isEmpty();
+
+        dto.mustBeField = "F";
+        assertThat(validator.validateProperty(dto, "mustBeField")).isNotEmpty();
+        assertThat(validator.validateProperty(dto, "mustBeField").iterator().next().getMessage())
+                .contains("exactamente")
+                .contains("T");
+
+        dto.mustBeField = null;
+        assertThat(validator.validateProperty(dto, "mustBeField")).isEmpty();
     }
 
     @Test
@@ -217,6 +235,9 @@ class SimpleValidatorsTest {
 
         @In({"admin", "editor"})
         String inField;
+
+        @MustBe("T")
+        String mustBeField;
 
         @NotIn({"admin", "banned"})
         String notInField;

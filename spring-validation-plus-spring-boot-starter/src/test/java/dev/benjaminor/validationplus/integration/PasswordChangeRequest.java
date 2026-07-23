@@ -1,9 +1,9 @@
 package dev.benjaminor.validationplus.integration;
 
-import dev.benjaminor.validationplus.constraints.Confirmed;
 import dev.benjaminor.validationplus.constraints.MinLength;
 import dev.benjaminor.validationplus.constraints.Nullable;
 import dev.benjaminor.validationplus.constraints.RequiredWith;
+import dev.benjaminor.validationplus.constraints.Same;
 import dev.benjaminor.validationplus.constraints.StringType;
 
 public class PasswordChangeRequest {
@@ -14,7 +14,7 @@ public class PasswordChangeRequest {
     private String password;
 
     @RequiredWith("password")
-    @Confirmed("password")
+    @Same("password")
     @StringType
     @MinLength(5)
     private String passwordConfirmation;

@@ -6,7 +6,7 @@
 
     <groupId>io.github.benjaminor-dev</groupId>
     <artifactId>spring-validation-plus</artifactId>
-    <version>0.3.4</version>
+    <version>0.3.5</version>
     <packaging>pom</packaging>
 
     <name>Spring Validation Plus</name>
@@ -218,7 +218,7 @@
                         <extensions>true</extensions>
                         <configuration>
                             <publishingServerId>central</publishingServerId>
-                            <autoPublish>false</autoPublish>
+                            <autoPublish>true</autoPublish>
                         </configuration>
                     </plugin>
                 </plugins>

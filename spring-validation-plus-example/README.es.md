@@ -44,7 +44,7 @@ spring-validation-plus-example/
 | — | `@Validated` + `@MinValue` en path variable | `GET` | `/api/users/{id}` |
 | `OrderCreateRequest` | `@ArrayType`, `@Between`, `@Distinct`, `@Valid` anidado | `POST` | `/api/orders` |
 | `ConditionalUserRequest` | Tipos Java + `@RequiredIf` | `POST` | `/api/demo/conditional` |
-| `PasswordRequest` | `@Confirmed` | `POST` | `/api/demo/password` |
+| `PasswordRequest` | `@Same` | `POST` | `/api/demo/password` |
 
 ## Configuración (`application.properties`)
 
@@ -128,10 +128,10 @@ curl -s -X POST http://localhost:8080/api/demo/conditional \
   -d '{"name":"Admin","email":"a@b.com","size":1,"role":"ADMIN"}'
 ```
 
-### 7. `@Confirmed`
+### 7. `@Same`
 
 ```bash
-# 400 — confirmación no coincide
+# 400 — los campos no coinciden
 curl -s -X POST http://localhost:8080/api/demo/password \
   -H "Content-Type: application/json" \
   -d '{"password":"secret","passwordConfirmation":"other"}'

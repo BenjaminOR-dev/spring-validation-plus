@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 /**
- * Demo endpoints for advanced rules (conditional fields, confirmation).
+ * Demo endpoints for advanced rules (conditional fields, matching fields).
  */
 @RestController
 @RequestMapping("/api/demo")
@@ -24,7 +24,7 @@ public class DemoController {
         return ResponseEntity.ok(Map.of("status", "ok"));
     }
 
-    /** Pattern: {@code @Confirmed} — password must match passwordConfirmation. */
+    /** Pattern: {@code @Same} — password must match passwordConfirmation. */
     @PostMapping("/password")
     public ResponseEntity<Map<String, String>> password(@Valid @RequestBody PasswordRequest request) {
         return ResponseEntity.ok(Map.of("status", "ok"));

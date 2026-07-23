@@ -1,10 +1,10 @@
 package dev.benjaminor.validationplus.integration;
 
-import dev.benjaminor.validationplus.constraints.Confirmed;
 import dev.benjaminor.validationplus.constraints.Required;
+import dev.benjaminor.validationplus.constraints.Same;
 import dev.benjaminor.validationplus.constraints.StringType;
 
-@Confirmed(field = "password")
+@Same(field = "password", other = "passwordConfirmation")
 public class PasswordRequest {
 
     @Required

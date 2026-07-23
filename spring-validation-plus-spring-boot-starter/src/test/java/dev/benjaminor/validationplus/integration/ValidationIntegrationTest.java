@@ -120,7 +120,7 @@ class ValidationIntegrationTest {
     }
 
     @Test
-    void shouldReturnConfirmedError() throws Exception {
+    void shouldReturnSameError() throws Exception {
         mockMvc.perform(post("/api/users/password")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Accept-Language", "es")
@@ -131,11 +131,11 @@ class ValidationIntegrationTest {
                                 }
                                 """))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errors.passwordConfirmation[0]").value(containsString("confirmación")));
+                .andExpect(jsonPath("$.errors.passwordConfirmation[0]").value(containsString("coincidir")));
     }
 
     @Test
-    void shouldReturnRequiredWithBeforeConfirmedWhenConfirmationIsMissing() throws Exception {
+    void shouldReturnRequiredWithWhenConfirmationIsMissing() throws Exception {
         mockMvc.perform(post("/api/users/password-change")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Accept-Language", "es")
@@ -162,7 +162,7 @@ class ValidationIntegrationTest {
                                 }
                                 """))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errors.passwordConfirmation[0]").value(containsString("confirmación")))
+                .andExpect(jsonPath("$.errors.passwordConfirmation[0]").value(containsString("coincidir")))
                 .andExpect(jsonPath("$.errors.passwordConfirmation[1]").value(containsString("al menos 5 caracteres")));
     }
 

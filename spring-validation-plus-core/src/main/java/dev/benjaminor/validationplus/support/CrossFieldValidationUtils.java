@@ -77,11 +77,4 @@ public final class CrossFieldValidationUtils {
     public static boolean isMissing(Object target, String fieldName) {
         return !isProvided(target, fieldName);
     }
-
-    public static String resolveConfirmationField(String field, String confirmation) {
-        if (confirmation != null && !confirmation.isBlank()) {
-            return confirmation;
-        }
-        return field + "Confirmation";
-    }
 }

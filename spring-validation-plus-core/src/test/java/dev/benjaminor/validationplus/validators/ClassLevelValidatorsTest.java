@@ -1,6 +1,5 @@
 package dev.benjaminor.validationplus.validators;
 
-import dev.benjaminor.validationplus.constraints.Confirmed;
 import dev.benjaminor.validationplus.constraints.Different;
 import dev.benjaminor.validationplus.constraints.ProhibitedIf;
 import dev.benjaminor.validationplus.constraints.RequiredIf;
@@ -102,29 +101,6 @@ class ClassLevelValidatorsTest {
 
         assertThat(violations).hasSize(1);
         assertThat(violations.iterator().next().getPropertyPath().toString()).isEqualTo("backupEmail");
-    }
-
-    @Test
-    void confirmedShouldFailWhenConfirmationDoesNotMatch() {
-        ConfirmedDto dto = new ConfirmedDto();
-        dto.password = "secret";
-        dto.passwordConfirmation = "other";
-
-        Set<ConstraintViolation<ConfirmedDto>> violations = validator.validate(dto);
-
-        assertThat(violations).hasSize(1);
-        assertThat(violations.iterator().next().getPropertyPath().toString()).isEqualTo("passwordConfirmation");
-        assertThat(violations.iterator().next().getMessage()).contains("confirmación");
-    }
-
-    @Test
-    void confirmedShouldIgnoreMissingConfirmation() {
-        ConfirmedDto dto = new ConfirmedDto();
-        dto.password = "secret";
-
-        Set<ConstraintViolation<ConfirmedDto>> violations = validator.validate(dto);
-
-        assertThat(violations).isEmpty();
     }
 
     @Test
@@ -359,12 +335,6 @@ class ClassLevelValidatorsTest {
     static class DifferentDto {
         private String email;
         private String backupEmail;
-    }
-
-    @Confirmed(field = "password")
-    static class ConfirmedDto {
-        private String password;
-        private String passwordConfirmation;
     }
 
     @RequiredIf(field = "role", value = "ADMIN", required = "adminCode")

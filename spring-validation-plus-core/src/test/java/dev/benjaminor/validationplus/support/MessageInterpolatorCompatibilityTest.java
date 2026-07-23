@@ -1,7 +1,6 @@
 package dev.benjaminor.validationplus.support;
 
 import dev.benjaminor.validationplus.constraints.Between;
-import dev.benjaminor.validationplus.constraints.Confirmed;
 import dev.benjaminor.validationplus.constraints.ConditionalOperator;
 import dev.benjaminor.validationplus.constraints.Digits;
 import dev.benjaminor.validationplus.constraints.MaxLength;
@@ -9,6 +8,7 @@ import dev.benjaminor.validationplus.constraints.MinLength;
 import dev.benjaminor.validationplus.constraints.Required;
 import dev.benjaminor.validationplus.constraints.RequiredIf;
 import dev.benjaminor.validationplus.constraints.RequiredWith;
+import dev.benjaminor.validationplus.constraints.Same;
 import dev.benjaminor.validationplus.constraints.Size;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
@@ -121,13 +121,13 @@ class MessageInterpolatorCompatibilityTest {
     }
 
     @Test
-    void confirmedInterpolatesFieldName() {
-        ConfirmedBean bean = new ConfirmedBean();
+    void sameInterpolatesFieldAndOther() {
+        SameBean bean = new SameBean();
         bean.password = "secret";
         bean.passwordConfirmation = "other";
 
         assertThat(message(esValidator, bean))
-                .isEqualTo("La confirmación del campo password no coincide.");
+                .isEqualTo("El campo passwordConfirmation debe coincidir con password.");
     }
 
     @Test
@@ -203,10 +203,10 @@ class MessageInterpolatorCompatibilityTest {
         String adminCode;
     }
 
-    static class ConfirmedBean {
+    static class SameBean {
         String password;
 
-        @Confirmed("password")
+        @Same("password")
         String passwordConfirmation;
     }
 }

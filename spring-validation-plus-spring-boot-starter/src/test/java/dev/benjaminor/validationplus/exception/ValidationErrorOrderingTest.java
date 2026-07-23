@@ -1,8 +1,8 @@
 package dev.benjaminor.validationplus.exception;
 
-import dev.benjaminor.validationplus.constraints.Confirmed;
 import dev.benjaminor.validationplus.constraints.MinLength;
 import dev.benjaminor.validationplus.constraints.RequiredWith;
+import dev.benjaminor.validationplus.constraints.Same;
 import dev.benjaminor.validationplus.constraints.StringType;
 import org.junit.jupiter.api.Test;
 
@@ -30,8 +30,8 @@ class ValidationErrorOrderingTest {
         List<ValidationErrorOrdering.ValidationErrorEntry> entries = List.of(
                 new ValidationErrorOrdering.ValidationErrorEntry(
                         "passwordConfirmation",
-                        "La confirmación del campo password no coincide.",
-                        "Confirmed"),
+                        "El campo passwordConfirmation debe coincidir con password.",
+                        "Same"),
                 new ValidationErrorOrdering.ValidationErrorEntry(
                         "passwordConfirmation",
                         "El campo passwordConfirmation es obligatorio cuando está presente alguno de estos campos: password.",
@@ -45,7 +45,7 @@ class ValidationErrorOrderingTest {
 
         assertThat(ordered.get("passwordConfirmation")).containsExactly(
                 "El campo passwordConfirmation es obligatorio cuando está presente alguno de estos campos: password.",
-                "La confirmación del campo password no coincide.",
+                "El campo passwordConfirmation debe coincidir con password.",
                 "El campo passwordConfirmation debe tener al menos 5 caracteres.");
     }
 
@@ -66,7 +66,7 @@ class ValidationErrorOrderingTest {
         private String password;
 
         @RequiredWith("password")
-        @Confirmed("password")
+        @Same("password")
         @StringType
         @MinLength(5)
         private String passwordConfirmation;

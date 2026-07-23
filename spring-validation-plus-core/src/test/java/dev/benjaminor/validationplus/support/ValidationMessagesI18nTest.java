@@ -50,8 +50,8 @@ class ValidationMessagesI18nTest {
         assertThat(ValidationMessageUtils.resolve(
                         "dev.benjaminor.validationplus.constraints.In.message",
                         Locale.forLanguageTag("es"),
-                        Map.of("field", "role")))
-                .isEqualTo("El valor del campo role no es válido.");
+                        Map.of("field", "role", "values", "admin, user")))
+                .isEqualTo("El campo role debe ser uno de los siguientes valores: admin, user.");
 
         assertThat(ValidationMessageUtils.resolve(
                         "dev.benjaminor.validationplus.constraints.RequiredWith.message",

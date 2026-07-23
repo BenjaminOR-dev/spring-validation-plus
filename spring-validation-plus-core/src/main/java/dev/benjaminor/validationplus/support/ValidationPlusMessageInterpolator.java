@@ -44,9 +44,14 @@ public class ValidationPlusMessageInterpolator implements MessageInterpolator {
         if (context.getConstraintDescriptor() != null && context.getConstraintDescriptor().getAttributes() != null) {
             Map<String, Object> attributes = new HashMap<>(context.getConstraintDescriptor().getAttributes());
             attributes.forEach((key, value) -> {
-                if (value != null && !"message".equals(key) && !"groups".equals(key) && !"payload".equals(key)) {
-                    parameters.put(key, value);
+                if (value == null || "message".equals(key) || "groups".equals(key) || "payload".equals(key)) {
+                    return;
                 }
+                // Blank annotation defaults must not wipe extracted placeholders (e.g. {field}).
+                if (value instanceof String stringValue && stringValue.isBlank()) {
+                    return;
+                }
+                parameters.put(key, value);
             });
 
             enrichCrossFieldParameters(parameters, attributes);
@@ -54,6 +59,18 @@ public class ValidationPlusMessageInterpolator implements MessageInterpolator {
             Object valueAttribute = attributes.get("value");
             if (valueAttribute instanceof String[] allowedValues) {
                 parameters.put("values", String.join(", ", allowedValues));
+            }
+
+            Object enumClassAttribute = attributes.get("enumClass");
+            if (enumClassAttribute instanceof Class<?> enumType && enumType.isEnum()) {
+                Object[] constants = enumType.getEnumConstants();
+                if (constants != null && constants.length > 0) {
+                    String[] names = new String[constants.length];
+                    for (int i = 0; i < constants.length; i++) {
+                        names[i] = ((Enum<?>) constants[i]).name();
+                    }
+                    parameters.put("values", String.join(", ", names));
+                }
             }
 
             Object mimeTypes = attributes.get("mimeTypes");
@@ -133,16 +150,6 @@ public class ValidationPlusMessageInterpolator implements MessageInterpolator {
                 parameters.put("other", String.join(", ", observedFieldsForTarget));
             } else if (isNonBlank(field)) {
                 parameters.put("other", field);
-            }
-            return;
-        }
-
-        if (attributes.containsKey("confirmation")) {
-            String referenceField = CrossFieldConstraintSupport.firstNonBlank(
-                    field != null ? String.valueOf(field) : "",
-                    attributes.get("value") != null ? String.valueOf(attributes.get("value")) : "");
-            if (isNonBlank(referenceField)) {
-                parameters.put("field", referenceField);
             }
             return;
         }

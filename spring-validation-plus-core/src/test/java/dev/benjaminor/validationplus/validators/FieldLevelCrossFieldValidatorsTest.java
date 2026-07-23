@@ -1,6 +1,5 @@
 package dev.benjaminor.validationplus.validators;
 
-import dev.benjaminor.validationplus.constraints.Confirmed;
 import dev.benjaminor.validationplus.constraints.Different;
 import dev.benjaminor.validationplus.constraints.ProhibitedIf;
 import dev.benjaminor.validationplus.constraints.RequiredIf;
@@ -81,29 +80,6 @@ class FieldLevelCrossFieldValidatorsTest {
     }
 
     @Test
-    void confirmedOnFieldShouldValidateAgainstReferenceField() {
-        FieldLevelConfirmedDto dto = new FieldLevelConfirmedDto();
-        dto.password = "secret";
-        dto.passwordConfirmation = "other";
-
-        Set<ConstraintViolation<FieldLevelConfirmedDto>> violations = validator.validate(dto);
-
-        assertThat(violations).hasSize(1);
-        assertThat(violations.iterator().next().getPropertyPath().toString()).isEqualTo("passwordConfirmation");
-        assertThat(violations.iterator().next().getMessage()).contains("confirmación");
-    }
-
-    @Test
-    void confirmedOnFieldShouldIgnoreMissingConfirmation() {
-        FieldLevelConfirmedDto dto = new FieldLevelConfirmedDto();
-        dto.password = "secret";
-
-        Set<ConstraintViolation<FieldLevelConfirmedDto>> violations = validator.validate(dto);
-
-        assertThat(violations).isEmpty();
-    }
-
-    @Test
     void requiredIfAcceptedOnFieldShouldUseValueShorthand() {
         FieldLevelRequiredIfAcceptedDto dto = new FieldLevelRequiredIfAcceptedDto();
         dto.termsAccepted = "yes";
@@ -172,13 +148,6 @@ class FieldLevelCrossFieldValidatorsTest {
 
         @Different("email")
         private String backupEmail;
-    }
-
-    static class FieldLevelConfirmedDto {
-        private String password;
-
-        @Confirmed("password")
-        private String passwordConfirmation;
     }
 
     static class FieldLevelRequiredIfAcceptedDto {

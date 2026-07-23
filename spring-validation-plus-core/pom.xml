@@ -7,7 +7,7 @@
     <parent>
         <groupId>io.github.benjaminor-dev</groupId>
         <artifactId>spring-validation-plus</artifactId>
-        <version>0.3.4</version>
+        <version>0.3.5</version>
     </parent>
 
     <artifactId>spring-validation-plus-core</artifactId>
