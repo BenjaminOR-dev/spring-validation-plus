@@ -60,4 +60,19 @@ class ValidationMessagesI18nTest {
                 .isEqualTo(
                         "El campo email es obligatorio cuando está presente alguno de estos campos: name, phone.");
     }
+
+    @Test
+    void shouldResolveExistsAndUniqueSpanishDefaults() {
+        assertThat(ValidationMessageUtils.resolve(
+                        "dev.benjaminor.validationplus.constraints.Exists.message",
+                        Locale.forLanguageTag("es"),
+                        Map.of("field", "idRegistro")))
+                .isEqualTo("No existe un valor registrado para el campo idRegistro.");
+
+        assertThat(ValidationMessageUtils.resolve(
+                        "dev.benjaminor.validationplus.constraints.Unique.message",
+                        Locale.forLanguageTag("es"),
+                        Map.of("field", "email")))
+                .isEqualTo("El valor del campo email ya está en uso.");
+    }
 }
