@@ -2,7 +2,7 @@
 
 Guía para publicar `spring-validation-plus-core` y `spring-validation-plus-spring-boot-starter` en [Maven Central](https://central.sonatype.com/).
 
-Opciones de deploy: **Docker** (`.env` local) o **GitHub Actions** (tag `v*` → Release + deploy automático a Maven Central con `autoPublish=true`; ver [.github/workflows/release.yml](.github/workflows/release.yml)).
+Opciones de deploy: **Docker** (`.env` local) o **GitHub Actions** (tag `v*` → draft Release → Publish release → Maven; `autoPublish=true` en Central Portal; ver [.github/workflows/release.yml](.github/workflows/release.yml)).
 
 ## Qué se publica
 
@@ -154,16 +154,18 @@ mvn clean deploy -Prelease \
 
 ### 4. Release con GitHub Actions
 
-Flujo en un paso ([.github/workflows/release.yml](.github/workflows/release.yml)):
+Flujo en dos pasos ([.github/workflows/release.yml](.github/workflows/release.yml)):
 
 ```text
-git push origin vX.Y.Z  →  Action crea el GitHub Release y hace deploy a Maven Central
+git push origin vX.Y.Z  →  Action crea un GitHub Release en draft
+tú: Publish release     →  Action hace deploy a Maven Central
 Central Portal          →  publicación automática (autoPublish=true)
 ```
 
 1. Deja el POM en versión **release** (sin `-SNAPSHOT`), commit y tag.
-2. `git push origin vX.Y.Z` → Release en GitHub + deploy de **core**, **starter** y el POM padre.
-3. En unos minutos debería aparecer en [search.maven.org](https://search.maven.org/).
+2. `git push origin vX.Y.Z` → aparece un **draft** en GitHub → Releases.
+3. Revisas notas / commit y pulsas **Publish release**.
+4. Eso dispara el deploy de **core**, **starter** y el POM padre.
 
 Configura estos [secrets del repositorio](https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions):
 
@@ -181,7 +183,7 @@ Configura estos [secrets del repositorio](https://docs.github.com/en/actions/sec
 
 Con `autoPublish=true` (config actual), tras el upload del paso 4 Central Portal publica automáticamente.
 
-No hace falta pulsar **Publish** a mano. Si un deployment queda en validación fallida, revisa [central.sonatype.com](https://central.sonatype.com/).
+No hace falta pulsar **Publish** en Sonatype. Si un deployment queda en validación fallida, revisa [central.sonatype.com](https://central.sonatype.com/).
 
 ### 6. Tag en Git
 
@@ -192,7 +194,7 @@ git tag -a v0.3.2 -m "Release 0.3.2"
 git push origin v0.3.2
 ```
 
-Eso dispara Release + deploy a Maven Central.
+Eso **solo** crea el draft en GitHub; el deploy a Maven ocurre cuando publiques el Release.
 ### 7. Subir versión de desarrollo
 
 En los **4 POMs** (mismo listado del paso 1), commit separado en `main`:
