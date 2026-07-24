@@ -1,6 +1,6 @@
 # Spring Validation Plus — Example
 
-[🇬🇧 English version](README.md)
+[🇬🇧 English version](README.md) | [🇧🇷 Versão em português](README.pt.md)
 
 Referencia **ejecutable** de integración. Cada paquete y endpoint demuestra un patrón del [README principal](../README.es.md).
 
@@ -21,6 +21,7 @@ La API queda en `http://localhost:8080`.
 ```text
 spring-validation-plus-example/
 ├── README.es.md                       ← esta guía
+├── README.md / README.pt.md           ← EN / PT
 ├── pom.xml                            ← starter + web + JPA + H2
 └── src/main/java/.../example/
     ├── ExampleApplication.java

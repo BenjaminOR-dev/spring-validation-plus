@@ -38,7 +38,7 @@ class PersistenceUnitEntityManagerResolverTest {
             EntityManager resolved = resolver.resolve("");
             assertThat(resolved).isNotNull();
 
-            EntityManager named = resolver.resolve("nomina");
+            EntityManager named = resolver.resolve("orders");
             assertThat(named).isNotNull();
         }
     }
@@ -61,25 +61,25 @@ class PersistenceUnitEntityManagerResolverTest {
 
         @Bean
         @Primary
-        DataSource capaDataSource() {
-            return embeddedDataSource("capa");
+        DataSource usersDataSource() {
+            return embeddedDataSource("users");
         }
 
         @Bean
-        DataSource nominaDataSource() {
-            return embeddedDataSource("nomina");
+        DataSource ordersDataSource() {
+            return embeddedDataSource("orders");
         }
 
         @Bean
         @Primary
-        LocalContainerEntityManagerFactoryBean entityManagerFactoryCapa(DataSource capaDataSource) {
-            return emf(capaDataSource, "capa");
+        LocalContainerEntityManagerFactoryBean entityManagerFactoryUsers(DataSource usersDataSource) {
+            return emf(usersDataSource, "users");
         }
 
         @Bean
-        LocalContainerEntityManagerFactoryBean entityManagerFactoryNomina(
-                @org.springframework.beans.factory.annotation.Qualifier("nominaDataSource") DataSource nominaDataSource) {
-            return emf(nominaDataSource, "nomina");
+        LocalContainerEntityManagerFactoryBean entityManagerFactoryOrders(
+                @org.springframework.beans.factory.annotation.Qualifier("ordersDataSource") DataSource ordersDataSource) {
+            return emf(ordersDataSource, "orders");
         }
 
         private static DataSource embeddedDataSource(String name) {

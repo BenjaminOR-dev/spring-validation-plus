@@ -69,13 +69,13 @@ Para flujos sin Docker, puedes usar [docs/settings-central.xml.example](docs/set
 | `spring-validation-plus-example/pom.xml` | `<version>` del parent |
 
 ```xml
-<version>0.3.2</version>
+<version>0.3.6</version>
 ```
 
 ```xml
 <scm>
     ...
-    <tag>v0.3.2</tag>
+    <tag>v0.3.6</tag>
 </scm>
 ```
 
@@ -92,11 +92,11 @@ En cada uno actualiza **Maven**, **Gradle Kotlin** y **Gradle Groovy**:
 Ejemplo:
 
 ```xml
-<version>0.3.2</version>
+<version>0.3.6</version>
 ```
 
 ```kotlin
-implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.2")
+implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.6")
 ```
 
 #### Opcional (recomendado)
@@ -119,8 +119,10 @@ Maven Central no acepta `-SNAPSHOT` en el repositorio de releases.
 
 ```bash
 docker compose run --rm maven mvn clean verify
+docker compose run --rm maven mvn clean verify -Phv9
 ```
 
+> `verify` = Boot 3 / HV 8 (por defecto). `verify -Phv9` = comprobación de compatibilidad Boot 4 (Hibernate Validator 9.x). No hay perfil `-Pboot4` de BOM en este repo.
 ### 3. Deploy con perfil `release`
 
 Asegúrate de tener `.env` (desde `.env.example`) y la clave GPG en `.local/`.
@@ -190,8 +192,8 @@ No hace falta pulsar **Publish** en Sonatype. Si un deployment queda en validaci
 El tag debe apuntar al **commit del paso 1** (POMs + README + `<scm><tag>` ya incluidos):
 
 ```bash
-git tag -a v0.3.2 -m "Release 0.3.2"
-git push origin v0.3.2
+git tag -a v0.3.6 -m "Release 0.3.6"
+git push origin v0.3.6
 ```
 
 Eso **solo** crea el draft en GitHub; el deploy a Maven ocurre cuando publiques el Release.
@@ -213,14 +215,14 @@ Los README **no** cambian aquí — siguen mostrando la última versión publica
 <dependency>
     <groupId>io.github.benjaminor-dev</groupId>
     <artifactId>spring-validation-plus-spring-boot-starter</artifactId>
-    <version>0.3.2</version>
+    <version>0.3.6</version>
 </dependency>
 ```
 
 **Gradle**
 
 ```kotlin
-implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.2")
+implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.6")
 ```
 
 Sin repositorios extra.

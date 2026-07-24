@@ -92,10 +92,12 @@ Sigue siendo Jakarta Validation por debajo: puedes mezclar `@NotNull` con `@Requ
 
 | Spring Boot | Hibernate Validator (típico) | Validation Plus |
 |-------------|------------------------------|-----------------|
-| 3.x | 8.x | Soportado (CI por defecto) |
-| 4.x | 9.x | Soportado (`mvn test -Phv9`) |
+| 3.x | 8.x | Soportado (CI por defecto: `verify`) |
+| 4.x | 9.x | Soportado (CI: `verify-hv9` → `mvn verify -Phv9`) |
 
-El mismo JAR del starter sirve en ambos. Usa **≥ 0.3.3**. El orden de auto-config (`beforeName` / `afterName`) y la interpolación de `{field}` están pensados para Boot 3 y Boot 4.
+El mismo JAR del starter sirve en ambos. Usa **≥ 0.3.6**. El orden de auto-config (`beforeName` / `afterName`) y la interpolación de `{field}` están pensados para Boot 3 y Boot 4.
+
+> Aquí no hay perfil `-Pboot4` de BOM (a diferencia de fluent-query / fluent-map). La compatibilidad con Boot 4 se comprueba compilando y testeando contra **Hibernate Validator 9.x** con `-Phv9`.
 
 <a id="que-dependencias-instalo-yo"></a>
 ### ¿Qué dependencias instalo yo?
@@ -173,20 +175,20 @@ Añade **solo** el starter de Validation Plus. Maven resolverá el resto (Jakart
 <dependency>
     <groupId>io.github.benjaminor-dev</groupId>
     <artifactId>spring-validation-plus-spring-boot-starter</artifactId>
-    <version>0.3.3</version>
+    <version>0.3.6</version>
 </dependency>
 ```
 
 **Gradle (Kotlin DSL)**
 
 ```kotlin
-implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.3")
+implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.6")
 ```
 
 **Gradle (Groovy)**
 
 ```groovy
-implementation 'io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.3'
+implementation 'io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.6'
 ```
 
 **Multi-módulo Maven** (mismo repositorio):
@@ -771,11 +773,11 @@ Con **varios** `EntityManagerFactory` (multi-datasource), indica el persistence 
 o el bean name). Vacío = EMF `@Primary` / único:
 
 ```java
-@Exists(entity = Registro.class, field = "idRegistro", column = "idRegistro",
-        persistenceUnit = "nomina")
-@Exists(entity = Estatus.class, field = "idEstatus", column = "idEstatus",
-        persistenceUnit = "nomina")
-public class PersistenciaEstatusRequest { ... }
+@Exists(entity = Order.class, field = "id", column = "id",
+        persistenceUnit = "orders")
+@Exists(entity = Status.class, field = "id", column = "id",
+        persistenceUnit = "orders")
+public class OrderStatusRequest { ... }
 ```
 
 `@Unique` acepta el mismo atributo `persistenceUnit`.
@@ -883,7 +885,7 @@ public class ExampleRequest {
 | `{format}` | Patrón de `@DateFormat` |
 | `{integer}` / `{fraction}` | Dígitos de `@Digits` |
 
-Los placeholders `{field}` y `{other}` los resuelve el interpolador incluido (`ValidationPlusMessageInterpolator`). Si los ves sin reemplazar (o el nombre del campo vacío), usa el starter **≥ 0.3.3** y verifica que no hayas definido un `LocalValidatorFactoryBean` custom sin ese interpolador.
+Los placeholders `{field}` y `{other}` los resuelve el interpolador incluido (`ValidationPlusMessageInterpolator`). Si los ves sin reemplazar (o el nombre del campo vacío), usa el starter **≥ 0.3.6** y verifica que no hayas definido un `LocalValidatorFactoryBean` custom sin ese interpolador.
 
 <a id="handler-de-excepciones"></a>
 ## Handler de excepciones
@@ -1105,9 +1107,17 @@ spring-validation-plus/
 └── spring-validation-plus-example/    ← referencia ejecutable (ver README.es.md)
 ```
 
+| Job CI | Comando | Significado |
+|--------|---------|-------------|
+| `verify` | `mvn clean verify` | Stack por defecto (Boot 3.x / HV 8.x) |
+| `verify-hv9` | `mvn clean verify -Phv9` | Compatibilidad Boot 4 (HV 9.x) |
+
 ```bash
-# Compilar y ejecutar todos los tests
+# Compilar y ejecutar todos los tests (HV 8.x por defecto)
 docker compose run --rm maven
+
+# Compatibilidad Boot 4 (Hibernate Validator 9.x)
+docker compose run --rm maven mvn clean verify -Phv9
 
 # Solo tests del core
 docker compose run --rm maven mvn -pl spring-validation-plus-core test
@@ -1117,6 +1127,14 @@ docker compose up example
 
 # Instalar en .m2 local (p. ej. para probar un SNAPSHOT de main)
 docker compose run --rm maven mvn clean install
+```
+
+Sin Docker:
+
+```bash
+mvn clean verify
+mvn clean verify -Phv9
+mvn -pl spring-validation-plus-example spring-boot:run
 ```
 
 Para compilar versiones no publicadas desde el código fuente, clona el repo y ejecuta `mvn clean install` localmente. Los releases se publican en Maven Central — ver [PUBLISHING.md](PUBLISHING.md) (mantenedores).

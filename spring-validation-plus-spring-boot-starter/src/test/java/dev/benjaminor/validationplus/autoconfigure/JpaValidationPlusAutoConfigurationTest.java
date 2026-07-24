@@ -76,8 +76,8 @@ class JpaValidationPlusAutoConfigurationTest {
 
         new ApplicationContextRunner()
                 .withConfiguration(AutoConfigurations.of(JpaValidationPlusAutoConfiguration.class))
-                .withBean("capaEmf", EntityManagerFactory.class, () -> secondary)
-                .withBean("nominaEmf", EntityManagerFactory.class, () -> primary,
+                .withBean("usersEmf", EntityManagerFactory.class, () -> secondary)
+                .withBean("ordersEmf", EntityManagerFactory.class, () -> primary,
                         definition -> definition.setPrimary(true))
                 .run(context -> {
                     assertThat(context).hasSingleBean(PersistenceUnitEntityManagerResolver.class);

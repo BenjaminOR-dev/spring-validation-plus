@@ -66,8 +66,8 @@ class ValidationMessagesI18nTest {
         assertThat(ValidationMessageUtils.resolve(
                         "dev.benjaminor.validationplus.constraints.Exists.message",
                         Locale.forLanguageTag("es"),
-                        Map.of("field", "idRegistro")))
-                .isEqualTo("No existe un valor registrado para el campo idRegistro.");
+                        Map.of("field", "id")))
+                .isEqualTo("No existe un valor registrado para el campo id.");
 
         assertThat(ValidationMessageUtils.resolve(
                         "dev.benjaminor.validationplus.constraints.Unique.message",
