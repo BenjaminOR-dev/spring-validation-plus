@@ -5,6 +5,7 @@ import dev.benjaminor.validationplus.constraints.ConditionalOperator;
 import dev.benjaminor.validationplus.constraints.Digits;
 import dev.benjaminor.validationplus.constraints.MaxLength;
 import dev.benjaminor.validationplus.constraints.MinLength;
+import dev.benjaminor.validationplus.constraints.ProhibitedIf;
 import dev.benjaminor.validationplus.constraints.Required;
 import dev.benjaminor.validationplus.constraints.RequiredIf;
 import dev.benjaminor.validationplus.constraints.RequiredWith;
@@ -109,6 +110,37 @@ class MessageInterpolatorCompatibilityTest {
 
         assertThat(message(esValidator, bean))
                 .isEqualTo("El campo adminCode es obligatorio cuando role es ADMIN.");
+        assertThat(message(enValidator, bean))
+                .isEqualTo("The adminCode field is required when role is ADMIN.");
+        assertThat(message(ptValidator, bean))
+                .isEqualTo("O campo adminCode é obrigatório quando role é ADMIN.");
+    }
+
+    @Test
+    void requiredIfOnFieldInterpolatesAnnotatedPropertyInAllLocales() {
+        RequiredIfFieldLevelBean bean = new RequiredIfFieldLevelBean();
+        bean.tipoCat = "CITY";
+
+        assertThat(message(esValidator, bean))
+                .isEqualTo("El campo categoryIdState es obligatorio cuando tipoCat es CITY.");
+        assertThat(message(enValidator, bean))
+                .isEqualTo("The categoryIdState field is required when tipoCat is CITY.");
+        assertThat(message(ptValidator, bean))
+                .isEqualTo("O campo categoryIdState é obrigatório quando tipoCat é CITY.");
+    }
+
+    @Test
+    void prohibitedIfOnFieldInterpolatesAnnotatedPropertyInAllLocales() {
+        ProhibitedIfFieldLevelBean bean = new ProhibitedIfFieldLevelBean();
+        bean.role = "ADMIN";
+        bean.nickname = "x";
+
+        assertThat(message(esValidator, bean))
+                .isEqualTo("El campo nickname está prohibido cuando role es ADMIN.");
+        assertThat(message(enValidator, bean))
+                .isEqualTo("The nickname field is prohibited when role is ADMIN.");
+        assertThat(message(ptValidator, bean))
+                .isEqualTo("O campo nickname é proibido quando role é ADMIN.");
     }
 
     @Test
@@ -195,6 +227,20 @@ class MessageInterpolatorCompatibilityTest {
     static class RequiredIfBean {
         String role;
         String adminCode;
+    }
+
+    static class RequiredIfFieldLevelBean {
+        String tipoCat;
+
+        @RequiredIf(field = "tipoCat", value = "CITY")
+        String categoryIdState;
+    }
+
+    static class ProhibitedIfFieldLevelBean {
+        String role;
+
+        @ProhibitedIf(field = "role", value = "ADMIN")
+        String nickname;
     }
 
     @RequiredIf(field = "role", value = "ADMIN,MODERATOR", operator = ConditionalOperator.IN, required = "adminCode")

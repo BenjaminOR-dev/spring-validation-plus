@@ -39,12 +39,18 @@ public class ValidationPlusMessageInterpolator implements MessageInterpolator {
 
     private Map<String, Object> buildParameters(Context context) {
         Map<String, Object> parameters = new HashMap<>();
+        // Property path of the failing node — never overwrite with annotation attribute "field"
+        // (that attribute means the *observed/reference* field in cross-field rules).
         parameters.put("field", ValidationMessageUtils.extractFieldName(context));
 
         if (context.getConstraintDescriptor() != null && context.getConstraintDescriptor().getAttributes() != null) {
             Map<String, Object> attributes = new HashMap<>(context.getConstraintDescriptor().getAttributes());
             attributes.forEach((key, value) -> {
                 if (value == null || "message".equals(key) || "groups".equals(key) || "payload".equals(key)) {
+                    return;
+                }
+                // Annotation attribute "field" is the observed/reference field; mapped to {other} below.
+                if ("field".equals(key)) {
                     return;
                 }
                 // Blank annotation defaults must not wipe extracted placeholders (e.g. {field}).
@@ -135,11 +141,18 @@ public class ValidationPlusMessageInterpolator implements MessageInterpolator {
         return context.getConstraintDescriptor().getAnnotation().annotationType().getSimpleName().endsWith("Unless");
     }
 
+    /**
+     * Maps cross-field annotation attributes onto message placeholders.
+     *
+     * <p>{@code {field}} = property that failed (path), or {@code required}/{@code missing}/{@code prohibited}
+     * at class level. {@code {other}} = observed/reference field(s) from annotation {@code field},
+     * {@code fields}, {@code value} shorthand, or {@code other}.
+     */
     private void enrichCrossFieldParameters(Map<String, Object> parameters, Map<String, Object> attributes) {
         Object required = attributes.get("required");
         Object missing = attributes.get("missing");
         Object prohibited = attributes.get("prohibited");
-        Object field = attributes.get("field");
+        Object observedOrReference = attributes.get("field");
         Object other = attributes.get("other");
 
         Object explicitTarget = firstNonBlank(required, missing, prohibited);
@@ -148,8 +161,8 @@ public class ValidationPlusMessageInterpolator implements MessageInterpolator {
             String[] observedFieldsForTarget = observedFieldNames(attributes);
             if (observedFieldsForTarget.length > 0) {
                 parameters.put("other", String.join(", ", observedFieldsForTarget));
-            } else if (isNonBlank(field)) {
-                parameters.put("other", field);
+            } else if (isNonBlank(observedOrReference)) {
+                parameters.put("other", observedOrReference);
             }
             return;
         }
@@ -160,30 +173,36 @@ public class ValidationPlusMessageInterpolator implements MessageInterpolator {
             return;
         }
 
-        if (isNonBlank(other) && isNonBlank(field)) {
+        // Class-level Same/Different: field=reference, other=validated property name
+        if (isNonBlank(other) && isNonBlank(observedOrReference)) {
             parameters.put("field", other);
-            parameters.put("other", field);
+            parameters.put("other", observedOrReference);
             return;
         }
 
-        if (isNonBlank(field) && isBlank(other)) {
-            parameters.put("other", field);
+        // Field-level RequiredIf/ProhibitedIf/MissingIf/Before(field=…): keep path as {field}
+        if (isNonBlank(observedOrReference) && isBlank(other)) {
+            parameters.put("other", observedOrReference);
             return;
         }
 
+        // Shorthand value = observed field name (RequiredWith, RequiredIfAccepted, Same("x"), …)
+        // Do not treat trigger values of conditional rules (RequiredIf value="CITY") as {other}:
+        // those annotations also declare attribute "field" (handled above) or "operator".
         if (attributes.get("value") instanceof String stringValue
                 && isNonBlank(stringValue)
                 && !attributes.containsKey("fields")
                 && isBlank(other)
+                && isBlank(observedOrReference)
+                && !attributes.containsKey("operator")
                 && !attributes.containsKey("format")) {
             parameters.put("other", stringValue);
             return;
         }
 
-        if (attributes.containsKey("format") && attributes.containsKey("value") && attributes.containsKey("field")) {
-            String referenceField = String.valueOf(field);
-            if (isNonBlank(referenceField)) {
-                parameters.put("other", referenceField);
+        if (attributes.containsKey("format") && attributes.containsKey("value")) {
+            if (isNonBlank(observedOrReference)) {
+                parameters.put("other", observedOrReference);
             } else if (isNonBlank(attributes.get("value"))) {
                 parameters.put("other", attributes.get("value"));
             }

@@ -95,7 +95,7 @@ Continua sendo Jakarta Validation por baixo: você pode misturar `@NotNull` com 
 | 3.x | 8.x | Suportado (CI padrão: `verify`) |
 | 4.x | 9.x | Suportado (CI: `verify-hv9` → `mvn verify -Phv9`) |
 
-O mesmo JAR do starter serve nos dois. Use **≥ 0.3.6**. A ordem de auto-config (`beforeName` / `afterName`) e a interpolação de `{field}` foram feitas para Boot 3 e Boot 4.
+O mesmo JAR do starter serve nos dois. Use **≥ 0.3.7**. A ordem de auto-config (`beforeName` / `afterName`) e a interpolação de `{field}` foram feitas para Boot 3 e Boot 4.
 
 > Não há perfil `-Pboot4` de BOM aqui (diferente de fluent-query / fluent-map). A compatibilidade com Boot 4 é verificada compilando e testando contra **Hibernate Validator 9.x** com `-Phv9`.
 
@@ -175,20 +175,20 @@ Adicione **apenas** o starter do Validation Plus. Maven resolverá o resto (Jaka
 <dependency>
     <groupId>io.github.benjaminor-dev</groupId>
     <artifactId>spring-validation-plus-spring-boot-starter</artifactId>
-    <version>0.3.6</version>
+    <version>0.3.7</version>
 </dependency>
 ```
 
 **Gradle (Kotlin DSL)**
 
 ```kotlin
-implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.6")
+implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.7")
 ```
 
 **Gradle (Groovy)**
 
 ```groovy
-implementation 'io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.6'
+implementation 'io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.7'
 ```
 
 **Multi-módulo Maven** (mesmo repositório):
@@ -885,7 +885,7 @@ public class ExampleRequest {
 | `{format}` | Padrão de `@DateFormat` |
 | `{integer}` / `{fraction}` | Dígitos de `@Digits` |
 
-Os placeholders `{field}` e `{other}` são resolvidos pelo interpolador incluído (`ValidationPlusMessageInterpolator`). Se você os ver sem substituir (ou o nome do campo vazio), use o starter **≥ 0.3.6** e verifique que não definiu um `LocalValidatorFactoryBean` custom sem esse interpolador.
+Os placeholders `{field}` e `{other}` são resolvidos pelo interpolador incluído (`ValidationPlusMessageInterpolator`). Em regras condicionais no nível do campo (`@RequiredIf`, `@ProhibitedIf`, …), `{field}` é a propriedade anotada que falhou e `{other}` o campo observado. Se você os ver sem substituir, o nome do campo vazio, ou o mesmo nome repetido dos dois lados (corrigido na **0.3.7**), use o starter **≥ 0.3.7** e verifique que não definiu um `LocalValidatorFactoryBean` custom sem esse interpolador.
 
 <a id="handler-de-excecoes"></a>
 ## Handler de exceções

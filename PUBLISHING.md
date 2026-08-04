@@ -69,13 +69,13 @@ Para flujos sin Docker, puedes usar [docs/settings-central.xml.example](docs/set
 | `spring-validation-plus-example/pom.xml` | `<version>` del parent |
 
 ```xml
-<version>0.3.6</version>
+<version>0.3.7</version>
 ```
 
 ```xml
 <scm>
     ...
-    <tag>v0.3.6</tag>
+    <tag>v0.3.7</tag>
 </scm>
 ```
 
@@ -92,11 +92,11 @@ En cada uno actualiza **Maven**, **Gradle Kotlin** y **Gradle Groovy**:
 Ejemplo:
 
 ```xml
-<version>0.3.6</version>
+<version>0.3.7</version>
 ```
 
 ```kotlin
-implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.6")
+implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.7")
 ```
 
 #### Opcional (recomendado)
@@ -192,8 +192,8 @@ No hace falta pulsar **Publish** en Sonatype. Si un deployment queda en validaci
 El tag debe apuntar al **commit del paso 1** (POMs + README + `<scm><tag>` ya incluidos):
 
 ```bash
-git tag -a v0.3.6 -m "Release 0.3.6"
-git push origin v0.3.6
+git tag -a v0.3.7 -m "Release 0.3.7"
+git push origin v0.3.7
 ```
 
 Eso **solo** crea el draft en GitHub; el deploy a Maven ocurre cuando publiques el Release.
@@ -215,14 +215,14 @@ Los README **no** cambian aquí — siguen mostrando la última versión publica
 <dependency>
     <groupId>io.github.benjaminor-dev</groupId>
     <artifactId>spring-validation-plus-spring-boot-starter</artifactId>
-    <version>0.3.6</version>
+    <version>0.3.7</version>
 </dependency>
 ```
 
 **Gradle**
 
 ```kotlin
-implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.6")
+implementation("io.github.benjaminor-dev:spring-validation-plus-spring-boot-starter:0.3.7")
 ```
 
 Sin repositorios extra.

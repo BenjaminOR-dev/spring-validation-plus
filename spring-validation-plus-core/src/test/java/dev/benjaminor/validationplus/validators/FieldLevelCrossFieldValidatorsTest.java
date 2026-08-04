@@ -48,9 +48,25 @@ class FieldLevelCrossFieldValidatorsTest {
         Set<ConstraintViolation<FieldLevelRequiredIfDto>> violations = validator.validate(dto);
 
         assertThat(violations).hasSize(1);
-        assertThat(violations.iterator().next().getPropertyPath().toString()).isEqualTo("adminCode");
-        assertThat(violations.iterator().next().getMessage()).contains("role");
-        assertThat(violations.iterator().next().getMessage()).doesNotContain("{other}");
+        ConstraintViolation<FieldLevelRequiredIfDto> violation = violations.iterator().next();
+        assertThat(violation.getPropertyPath().toString()).isEqualTo("adminCode");
+        assertThat(violation.getMessage())
+                .isEqualTo("El campo adminCode es obligatorio cuando role es ADMIN.");
+    }
+
+    @Test
+    void prohibitedIfOnFieldShouldValidateAnnotatedProperty() {
+        FieldLevelProhibitedIfDto dto = new FieldLevelProhibitedIfDto();
+        dto.role = "ADMIN";
+        dto.nickname = "admin-user";
+
+        Set<ConstraintViolation<FieldLevelProhibitedIfDto>> violations = validator.validate(dto);
+
+        assertThat(violations).hasSize(1);
+        ConstraintViolation<FieldLevelProhibitedIfDto> violation = violations.iterator().next();
+        assertThat(violation.getPropertyPath().toString()).isEqualTo("nickname");
+        assertThat(violation.getMessage())
+                .isEqualTo("El campo nickname está prohibido cuando role es ADMIN.");
     }
 
     @Test
@@ -87,23 +103,10 @@ class FieldLevelCrossFieldValidatorsTest {
         Set<ConstraintViolation<FieldLevelRequiredIfAcceptedDto>> violations = validator.validate(dto);
 
         assertThat(violations).hasSize(1);
-        assertThat(violations.iterator().next().getPropertyPath().toString()).isEqualTo("fullName");
-        assertThat(violations.iterator().next().getMessage()).contains("termsAccepted");
-        assertThat(violations.iterator().next().getMessage()).doesNotContain("{other}");
-    }
-
-    @Test
-    void prohibitedIfOnFieldShouldValidateAnnotatedProperty() {
-        FieldLevelProhibitedIfDto dto = new FieldLevelProhibitedIfDto();
-        dto.role = "ADMIN";
-        dto.nickname = "admin-user";
-
-        Set<ConstraintViolation<FieldLevelProhibitedIfDto>> violations = validator.validate(dto);
-
-        assertThat(violations).hasSize(1);
-        assertThat(violations.iterator().next().getPropertyPath().toString()).isEqualTo("nickname");
-        assertThat(violations.iterator().next().getMessage()).contains("role");
-        assertThat(violations.iterator().next().getMessage()).doesNotContain("{other}");
+        ConstraintViolation<FieldLevelRequiredIfAcceptedDto> violation = violations.iterator().next();
+        assertThat(violation.getPropertyPath().toString()).isEqualTo("fullName");
+        assertThat(violation.getMessage())
+                .isEqualTo("El campo fullName es obligatorio cuando termsAccepted es aceptado.");
     }
 
     static class FieldLevelRequiredWithDto {
